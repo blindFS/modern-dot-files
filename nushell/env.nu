@@ -44,7 +44,7 @@ $env.NU_PLUGIN_DIRS = [
     ($nu.default-config-dir | path join 'plugins') # add <nushell-config-dir>/plugins
 ]
 
-$env.LS_COLORS = (vivid generate jellybeans | str trim)
+$env.LS_COLORS = (vivid generate tokyonight-night | str trim)
 
 # To add entries to PATH (on Windows you might use Path), you can use the following pattern:
 # $env.PATH = ($env.PATH | split row (char esep) | prepend '/some/path')
@@ -67,4 +67,8 @@ starship init nu | save -f ($nu.default-config-dir | path join 'starship.nu')
 zoxide init nushell | save -f ($nu.default-config-dir | path join 'zoxide.nu')
 
 $env.FZF_DEFAULT_COMMAND = "fd --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9"
-$env.FZF_DEFAULT_OPTS = "--layout=reverse --tmux=center,70%,50%"
+$env.FZF_DEFAULT_OPTS = ("--layout=reverse --tmux=center,60%,50% " +
+    "--color=fg:#9aaaaa,hl:#bb9af7 " +
+    "--color=fg+:#c0caf5,bg+:#1a1b26,hl+:#f7768e " +
+    "--color=info:#7aa2f7,prompt:#e0af68,pointer:#f7768e " +
+    "--color=marker:#a9b1d6,spinner:#9ece6a,header:#a9b1d6")

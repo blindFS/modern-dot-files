@@ -5,7 +5,22 @@
 -- Discord: https://discord.com/invite/Xb9B4Ny
 
 lvim.plugins = {
-  {"mrjones2014/nvim-ts-rainbow"},
+  {"mrjones2014/nvim-ts-rainbow",
+    config = function()
+      require'nvim-treesitter.configs'.setup{
+        rainbow = {
+          -- Setting colors
+          colors = {
+            '#e0af68',
+            '#bb9af7',
+            '#7dcfff',
+            '#f7768e',
+            '#0dcf6f',
+          },
+        },
+      }
+    end
+  },
   {
     "kylechui/nvim-surround",
     version = "*",

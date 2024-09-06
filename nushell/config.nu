@@ -22,7 +22,7 @@ let private_vars = {
         })
         carapace $spans.0 nushell ...$spans | from json
     },
-    menu_text_color: "#CAD6FF"
+    menu_text_color: "#9aaaaa"
     prompt_symbol_color: "#111726"
 }
 
@@ -255,14 +255,14 @@ $env.config = {
             }
             style: {
                 text: $private_vars.menu_text_color
-                selected_text: blue_reverse
+                selected_text: light_blue_reverse
                 description_text: yellow
             }
         }
         {
             name: help_menu
             only_buffer_difference: true
-            marker: (prompt_decorator $private_vars.prompt_symbol_color "blue" "")
+            marker: (prompt_decorator $private_vars.prompt_symbol_color "light_blue" "")
             type: {
                 layout: description
                 columns: 4
@@ -273,7 +273,7 @@ $env.config = {
             }
             style: {
                 text: $private_vars.menu_text_color
-                selected_text: blue_reverse
+                selected_text: light_blue_reverse
                 description_text: yellow
             }
         }
@@ -311,11 +311,18 @@ $env.config = {
             modifier: control
             keycode: char_r
             mode: [emacs, vi_insert, vi_normal]
+            event: { send: menu name: history_menu }
+        }
+        {
+            name: history_menu
+            modifier: control
+            keycode: char_h
+            mode: [emacs, vi_insert, vi_normal]
             event: { send: menu name: my_history_menu }
         }
         {
             name: vicmd_history_menu
-            modifier: none
+            modifier: shift
             keycode: char_k
             mode: vi_normal
             event: { send: menu name: my_history_menu }
@@ -566,13 +573,6 @@ $env.config = {
             event: { edit: delete }
         }
         {
-            name: delete_one_character_backward
-            modifier: control
-            keycode: char_h
-            mode: [emacs, vi_insert]
-            event: { edit: backspace }
-        }
-        {
             name: delete_one_word_backward
             modifier: control
             keycode: char_w
@@ -797,6 +797,7 @@ $env.config = {
 use starship.nu
 use scripts/extractor.nu extract
 source zoxide.nu
+source themes/tokyo-night.nu
 
 alias vim = lvim
 alias boc = brew outdated --cask --greedy

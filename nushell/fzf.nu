@@ -35,6 +35,7 @@ def get_completed_command_by_fzf [cursor_pos:int] {
     let dir_preview_cmd = "eza --tree -L 3 --color=always {} | head -200"
     let file_preview_cmd = "bat -n --color=always --line-range :200 {}"
     let default_preview_cmd = "if ({} | path type) == 'dir'" + $" {($dir_preview_cmd)} else {($file_preview_cmd)}"
+    let help_preview_cmd = "try {help {}} catch {'custom command or alias'}"
 
     let terms = (commandline | str substring ..($cursor_pos - 1) | split row " ")
     let suffix = (commandline | str substring $cursor_pos..)
@@ -56,7 +57,7 @@ def get_completed_command_by_fzf [cursor_pos:int] {
             _ => {
                 help commands | get name
                 | str join "\n"
-                | fzf_with_query $query "try {help {}} catch {'custom command or alias'}"
+                | fzf_with_query $query $help_preview_cmd
             }
         }
     } else {
@@ -71,7 +72,7 @@ def get_completed_command_by_fzf [cursor_pos:int] {
                 | get name
                 | uniq
                 | str join "\n"
-                | fzf_with_query $query
+                | fzf_with_query $query $help_preview_cmd
             }
             "ssh" => {
                 cat ~/.ssh/known_hosts

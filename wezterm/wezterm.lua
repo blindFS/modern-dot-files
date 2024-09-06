@@ -1,7 +1,10 @@
 local wezterm = require 'wezterm'
 local config = {}
 
-config.color_scheme = 'Adventure'
+config.color_scheme = 'tokyonight_night'
+config.colors = {
+  background = 'black'
+}
 config.hide_tab_bar_if_only_one_tab = true
 config.use_fancy_tab_bar = false
 config.window_background_opacity = 0.8
