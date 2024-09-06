@@ -4,11 +4,7 @@
 
 # The prompt indicators are environmental variables that represent
 # the state of the prompt
-$env.PROMPT_INDICATOR = {|| "> " }
-$env.PROMPT_INDICATOR_VI_INSERT = {|| "\e[36m\e[30;46m󰏫\e[0m\e[36m\e[0m " }
-$env.PROMPT_INDICATOR_VI_NORMAL = {|| "\e[33m\e[30;43m\e[0m\e[33m\e[0m " }
-$env.PROMPT_MULTILINE_INDICATOR = {|| "-> " }
-
+source style.nu
 # If you want previously entered commands to have a different prompt from the usual one,
 # you can uncomment one or more of the following lines.
 # This can be useful if you have a 2-line prompt and it's taking up a lot of space
@@ -71,4 +67,4 @@ starship init nu | save -f ($nu.default-config-dir | path join 'starship.nu')
 zoxide init nushell | save -f ($nu.default-config-dir | path join 'zoxide.nu')
 
 $env.FZF_DEFAULT_COMMAND = "fd --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9"
-$env.FZF_DEFAULT_OPTS = "--layout=reverse"
+$env.FZF_DEFAULT_OPTS = "--layout=reverse --tmux=center,70%,50%"

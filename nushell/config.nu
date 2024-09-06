@@ -7,107 +7,23 @@
 # And here is the theme collection
 # https://github.com/nushell/nu_scripts/tree/main/themes
 
-def quote_if_not_empty [s:string] {
-    if (($s | str trim) == "") {""} else {$"`($s)`"}
-}
+use fzf.nu complete_by_fzf
 
-def fzf_with_query [query:string, preview_cmd?:string] {
-    if ($preview_cmd == null) or ($preview_cmd == "") {
-        fzf -q $query
-    } else {
-        fzf -q $query --preview $preview_cmd
-    }
-}
-
-def complete_variable_by_fzf [query:string] {
-    let variable_list = ($query | split row ".")
-    let var_query = ($variable_list | last)
-    let var_view_cmd = ($variable_list | range ..-2 | str join ".")
-    if ($var_view_cmd | is-empty) {
-        return (("$env\n$nu" | fzf_with_query $var_query) + ".")
-    }
-    let preview_cmd = $"if \(($var_view_cmd).{} | describe\) == 'closure' {view source ($var_view_cmd).{} | bat -l zsh -n --color=always} else {($var_view_cmd).{}}"
-    ($var_view_cmd + "." +
-    (nu -c $"($var_view_cmd) | to json"
-    | from json
-    | columns
-    | str join "\n"
-    | fzf_with_query $var_query $preview_cmd))
-}
-
-def get_completed_command_by_fzf [cursor_pos:int] {
-    let dir_preview_cmd = "eza --tree -L 3 --color=always {} | head -200"
-    let file_preview_cmd = "bat -n --color=always --line-range :200 {}"
-    let default_preview_cmd = "if ({} | path type) == 'dir'" + $" {($dir_preview_cmd)} else {($file_preview_cmd)}"
-
-    let terms = (commandline | str substring ..($cursor_pos - 1) | split row " ")
-    let suffix = (commandline | str substring $cursor_pos..)
-    let cmd = ($terms | first)
-    let query = ($terms | last)
-    let cmd_without_query = ($terms | range ..-2 | str join " ")
-    # shell variable search with preview
-    if ($query | str starts-with "$") {
-        let trimmed_cmd_prefix = ($cmd_without_query + " " | str trim --left)
-        return $"($trimmed_cmd_prefix)(complete_variable_by_fzf $query)($suffix)"
-    }
-    (if ($query == $cmd) {
-        match $cmd {
-            "_" => {
-                $env.PATH | each {|f| ls -s $f | get name}
-                | flatten | uniq | str join "\n"
-                | fzf_with_query "" "try {tldr -C {}} catch {'No doc yet'}"
-            },
-            _ => {
-                help commands | get name
-                | str join "\n"
-                | fzf_with_query $query "try {help {}} catch {'custom command or alias'}"
-            }
-        }
-    } else {
-        $cmd_without_query + " " + match $cmd {
-            "cd" => {
-                let res = (fd --type=d --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9
-                                | fzf_with_query $query $dir_preview_cmd)
-                quote_if_not_empty $res
-            },
-            "ssh" => {
-                cat ~/.ssh/known_hosts
-                | lines
-                | each { |line| $line | split column " " | get column1 | get -i 0 | str replace -r '\[(.*?)\]' '$1'}
-                | str join "\n"
-                | fzf_with_query $query "dig {} | jc --dig | from json | get answer | get -i 0"
-            },
-            _ => {
-                let res = (fzf_with_query $query $default_preview_cmd)
-                quote_if_not_empty $res
-            }
-        }
-    }) + $suffix
-}
-
-def complete_by_fzf [] {
-    let initial_length = (commandline | str length)
-    let cursor_pos = (commandline get-cursor)
-    let completed_command = (get_completed_command_by_fzf $cursor_pos)
-    let finial_pos = ($completed_command | str length) - $initial_length + $cursor_pos
-    commandline edit --replace $completed_command
-    commandline set-cursor $finial_pos
-}
-
-# External completer example
-let carapace_completer = {|spans|
-  # if the current command is an alias, get it's expansion
-  let expanded_alias = (scope aliases | where name == $spans.0 | get -i 0 | get -i expansion)
-
-  # overwrite
-  let spans = (if $expanded_alias != null  {
-    # put the first word of the expanded alias first in the span
-    $spans | skip 1 | prepend ($expanded_alias | split row " " | take 1)
-  } else {
-    $spans
-  })
-
-  carapace $spans.0 nushell ...$spans | from json
+let private_vars = {
+    completer: {|spans|
+        # if the current command is an alias, get it's expansion
+        let expanded_alias = (scope aliases | where name == $spans.0 | get -i 0 | get -i expansion)
+        # overwrite
+        let spans = (if $expanded_alias != null  {
+            # put the first word of the expanded alias first in the span
+            $spans | skip 1 | prepend ($expanded_alias | split row " " | take 1)
+        } else {
+            $spans
+        })
+        carapace $spans.0 nushell ...$spans | from json
+    },
+    menu_text_color: "#CAD6FF"
+    prompt_symbol_color: "#111726"
 }
 
 # The default config record. This is where much of your global configuration is setup.
@@ -148,7 +64,7 @@ $env.config = {
     }
 
     explore: {
-        status_bar_background: { fg: "#1D1F21", bg: "#C4C9C6" },
+        status_bar_background: { bg: "#1D1F21", fg: "#C4C9C6" },
         command_bar_text: { fg: "#C4C9C6" },
         highlight: { fg: "black", bg: "yellow" },
         status: {
@@ -156,11 +72,11 @@ $env.config = {
             warn: {}
             info: {}
         },
-        selected_cell: { bg: light_blue },
+        selected_cell: { bg: light_blue fg: "black"},
     }
 
     history: {
-        max_size: 100_000 # Session has to be reloaded for this to take effect
+        max_size: 1000 # Session has to be reloaded for this to take effect
         sync_on_enter: true # Enable to share history between multiple sessions, else you have to close the session to write history to file
         file_format: "plaintext" # "sqlite" or "plaintext"
         isolation: false # only available with sqlite file_format. true enables history isolation, false disables it. true will allow the history to be isolated to the current session using up/down arrows. false will allow the history to be shared across all sessions.
@@ -175,7 +91,7 @@ $env.config = {
         external: {
             enable: true # set to false to prevent nushell looking into $env.PATH to find more suggestions, `false` recommended for WSL users as this look up may be very slow
             max_results: 100 # setting it lower can improve completion performance at the cost of omitting some options
-            completer: $carapace_completer # check 'carapace_completer' above as an example
+            completer: $private_vars.completer # check 'carapace_completer' above as an example
         }
         use_ls_colors: true # set this to true to enable file/path/directory completions using LS_COLORS
     }
@@ -263,9 +179,25 @@ $env.config = {
         # Configuration for default nushell menus
         # Note the lack of source parameter
         {
+            name: my_history_menu
+            only_buffer_difference: false
+            marker: (prompt_decorator $private_vars.prompt_symbol_color "light_blue" "")
+            type: { layout: ide }
+            style: {}
+            source: { |buffer, position|
+                {
+                    value: (history
+                    | get command
+                    | uniq
+                    | str join (char nul)
+                    | fzf --read0 -q $buffer)
+                }
+            }
+        }
+        {
             name: completion_menu
             only_buffer_difference: false
-            marker: "| "
+            marker: (prompt_decorator $private_vars.prompt_symbol_color "yellow" "")
             type: {
                 layout: columnar
                 columns: 4
@@ -273,7 +205,7 @@ $env.config = {
                 col_padding: 2
             }
             style: {
-                text: green
+                text: $private_vars.menu_text_color
                 selected_text: { attr: r }
                 description_text: yellow
                 match_text: { attr: u }
@@ -283,7 +215,7 @@ $env.config = {
         {
             name: ide_completion_menu
             only_buffer_difference: false
-            marker: "| "
+            marker: (prompt_decorator $private_vars.prompt_symbol_color "yellow" "")
             type: {
                 layout: ide
                 min_completion_width: 0,
@@ -306,7 +238,7 @@ $env.config = {
                 correct_cursor_pos: false
             }
             style: {
-                text: green
+                text: $private_vars.menu_text_color
                 selected_text: { attr: r }
                 description_text: yellow
                 match_text: { attr: u }
@@ -315,22 +247,22 @@ $env.config = {
         }
         {
             name: history_menu
-            only_buffer_difference: true
-            marker: "? "
+            only_buffer_difference: false
+            marker: (prompt_decorator $private_vars.prompt_symbol_color "light_blue" "")
             type: {
                 layout: list
-                page_size: 10
+                page_size: 30
             }
             style: {
-                text: green
-                selected_text: green_reverse
+                text: $private_vars.menu_text_color
+                selected_text: blue_reverse
                 description_text: yellow
             }
         }
         {
             name: help_menu
             only_buffer_difference: true
-            marker: "? "
+            marker: (prompt_decorator $private_vars.prompt_symbol_color "blue" "")
             type: {
                 layout: description
                 columns: 4
@@ -340,8 +272,8 @@ $env.config = {
                 description_rows: 10
             }
             style: {
-                text: green
-                selected_text: green_reverse
+                text: $private_vars.menu_text_color
+                selected_text: blue_reverse
                 description_text: yellow
             }
         }
@@ -365,7 +297,7 @@ $env.config = {
             name: ide_completion_menu
             modifier: control
             keycode: char_n
-            mode: [vi_normal vi_insert emacs]
+            mode: [vi_insert emacs]
             event: {
                 until: [
                     { send: menu name: ide_completion_menu }
@@ -379,7 +311,14 @@ $env.config = {
             modifier: control
             keycode: char_r
             mode: [emacs, vi_insert, vi_normal]
-            event: { send: menu name: history_menu }
+            event: { send: menu name: my_history_menu }
+        }
+        {
+            name: vicmd_history_menu
+            modifier: none
+            keycode: char_k
+            mode: vi_normal
+            event: { send: menu name: my_history_menu }
         }
         {
             name: help_menu
@@ -855,11 +794,11 @@ $env.config = {
     ]
 }
 
-use ($nu.default-config-dir | path join 'starship.nu')
-source ($nu.default-config-dir | path join 'zoxide.nu')
-source ($nu.default-config-dir | path join 'extractor.nu')
+use starship.nu
+use scripts/extractor.nu extract
+source zoxide.nu
 
 alias vim = lvim
 alias boc = brew outdated --cask --greedy
 alias ll  = ls -al
-alias cd  = z
+alias c   = zi

@@ -1,5 +1,5 @@
 # Function to extract archives with different extensions.
-export def extract [name:string] {
+export def extract [name:path] {
   let handlers = [ [extension command];
                    ['tar\.bz2|tbz|tbz2' 'tar xvjf']
                    ['tar\.gz|tgz'       'tar xvzf']
