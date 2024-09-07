@@ -14,7 +14,7 @@ export def main [] {
         nothing: '#f7567e'
         range: '#e0af68'
         record: '#1d8f8f'
-        string: '#9e9e8a'
+        string: '#ce9e8a'
 
         bool: {|| if $in { '#0dcf6f' } else { '#e0af68' } }
 
@@ -77,7 +77,7 @@ export def main [] {
         shape_record: { fg: '#1d8f8f' attr: 'b' }
         shape_redirection: { fg: '#bb9af7' attr: 'b' }
         shape_signature: { fg: '#9ece6a' attr: 'b' }
-        shape_string: '#9e9e8a'
+        shape_string: '#ce9e8a'
         shape_string_interpolation: { fg: '#0dcf6f' attr: 'b' }
         shape_table: { fg: '#7aa2f7' attr: 'b' }
         shape_vardecl: { fg: '#7aa2f7' attr: 'u' }

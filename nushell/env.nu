@@ -2,19 +2,7 @@
 #
 # version = "0.97.1"
 
-# The prompt indicators are environmental variables that represent
-# the state of the prompt
 source style.nu
-# If you want previously entered commands to have a different prompt from the usual one,
-# you can uncomment one or more of the following lines.
-# This can be useful if you have a 2-line prompt and it's taking up a lot of space
-# because every command entered takes up 2 lines instead of 1. You can then uncomment
-# the line below so that previously entered commands show with a single `🚀`.
-# $env.TRANSIENT_PROMPT_COMMAND = {|| (do $env.PROMPT_COMMAND | split row "\n" | take 2) }
-# $env.TRANSIENT_PROMPT_INDICATOR = {|| "" }
-# $env.TRANSIENT_PROMPT_INDICATOR_VI_INSERT = {|| "" }
-# $env.TRANSIENT_PROMPT_INDICATOR_VI_NORMAL = {|| "" }
-# $env.TRANSIENT_PROMPT_MULTILINE_INDICATOR = {|| "" }
 
 # Specifies how environment variables are:
 # - converted from a string to a value on Nushell startup (from_string)
@@ -62,8 +50,7 @@ path add ($env.HOME | path join ".elan" "bin")
 path add ($env.HOME | path join ".local" "bin")
 
 # To load from a custom file you can use:
-# source ($nu.default-config-dir | path join 'custom.nu')
-starship init nu | save -f ($nu.default-config-dir | path join 'starship.nu')
+# starship init nu | save -f ($nu.default-config-dir | path join 'starship.nu')
 zoxide init nushell | save -f ($nu.default-config-dir | path join 'zoxide.nu')
 
 $env.FZF_DEFAULT_COMMAND = "fd --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9"
@@ -72,3 +59,6 @@ $env.FZF_DEFAULT_OPTS = ("--layout=reverse --tmux=center,60%,50% " +
     "--color=fg+:#c0caf5,bg+:#1a1b26,hl+:#f7768e " +
     "--color=info:#7aa2f7,prompt:#e0af68,pointer:#f7768e " +
     "--color=marker:#a9b1d6,spinner:#9ece6a,header:#a9b1d6")
+
+$env.CARAPACE_LENIENT = 1
+$env.CARAPACE_BRIDGES = 'zsh,bash'

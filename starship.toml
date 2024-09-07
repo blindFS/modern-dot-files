@@ -1,28 +1,27 @@
 format = """
-[░▒▓](#a3aed2)\
-[  ](bg:#a3aed2 fg:#090c0c)\
-[](fg:#a3aed2)\
-[](fg:#769ff0)\
-$directory\
-[](fg:#769ff0)\
-\n$character"""
+$cmd_duration\
+$character\
+"""
 
 right_format = """
+$directory\
 $env_var\
 $git_branch\
-$git_status \
+$git_status\
 $nodejs\
 $rust\
 $golang\
 $python\
-$cmd_duration\
 """
+
+[fill]
+symbol = " "
 
 [directory]
 style = "fg:#111726 bg:#769ff0"
-format = "[ $path ]($style)"
+format = "[](fg:#769ff0)[ $path ]($style)[](fg:#769ff0)"
 truncation_length = 3
-truncation_symbol = "…/"
+truncation_symbol = " 󰇘/"
 home_symbol = ""
 
 [directory.substitutions]
@@ -32,14 +31,14 @@ home_symbol = ""
 "Pictures" = " "
 
 [character]
-success_symbol = "[](fg:#000000 bg:#a3aed2)"
+success_symbol = "[](fg:#000000 bg:#a3aed2)"
 error_symbol = "[󰊠](fg:#FF4B14 bg:#a3aed2)"
 vimcmd_symbol = "[](fg:#000000 bg:#a3aed2)"
-format = '[▒▓](fg:#a3aed2)[ $symbol ](bg:#a3aed2)[](fg:#a3aed2)'
+format = '[░▒▓](fg:#a3aed2)[ $symbol ](bg:#a3aed2)'
 
 [cmd_duration]
 min_time = 500
-format = "️[](fg:#111726)[ $duration](fg:#E0AF68 bg:#111726)[](fg:#111726) "
+format = "️[](fg:#111726)[ $duration](fg:#E0AF68 bg:#111726)"
 
 [env_var.proxy]
 symbol = "🌐"
