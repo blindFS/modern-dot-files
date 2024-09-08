@@ -189,8 +189,10 @@ $env.config = {
                     value: (history
                     | get command
                     | uniq
+                    | each {|item| $item | nu-highlight}
                     | str join (char nul)
-                    | fzf --read0 -q $buffer)
+                    | fzf --read0 --ansi -q $buffer
+                    | ansi strip)
                 }
             }
         }

@@ -25,10 +25,10 @@ truncation_symbol = " 󰇘/"
 home_symbol = ""
 
 [directory.substitutions]
-"Documents" = "󰈙 "
-"Downloads" = " "
-"Music" = " "
-"Pictures" = " "
+"Documents" = "󰈙"
+"Downloads" = ""
+"Music" = ""
+"Pictures" = ""
 
 [character]
 success_symbol = "[](fg:#000000 bg:#a3aed2)"
@@ -38,7 +38,7 @@ format = '[░▒▓](fg:#a3aed2)[ $symbol ](bg:#a3aed2)'
 
 [cmd_duration]
 min_time = 500
-format = "️[](fg:#111726)[ $duration](fg:#E0AF68 bg:#111726)"
+format = "️[](fg:#111726)[ $duration ](fg:#E0AF68 bg:#111726)"
 
 [env_var.proxy]
 symbol = "🌐"
@@ -70,5 +70,5 @@ format = '[](fg:#212736)[$symbol ($version)](fg:#769ff0 bg:#212736)[](fg:#
 
 [time]
 disabled = false
-time_format = "%R" # Hour:Minute Format
+time_format = "%R"                            # Hour:Minute Format
 format = '[  $time ](fg:#a0a9cb bg:#1d2230)'

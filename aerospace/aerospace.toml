@@ -1,0 +1,92 @@
+# Reference: https://github.com/i3/i3/blob/next/etc/config
+
+# i3 doesn't have "normalizations" feature that why we disable them here.
+# But the feature is very helpful.
+# Normalizations eliminate all sorts of weird tree configurations that don't make sense.
+# Give normalizations a chance and enable them back.
+enable-normalization-flatten-containers = false
+enable-normalization-opposite-orientation-for-nested-containers = false
+
+# Mouse follows focus when focused monitor changes
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+after-startup-command = [
+  'exec-and-forget borders active_color=0xff7aa2f7 inactive_color=0xff494d64 width=5.0 hidpi=on'
+]
+
+[gaps]
+inner.horizontal = 5
+inner.vertical =   5
+outer.left =       5
+outer.bottom =     5
+outer.top =        5
+outer.right =      5
+
+[mode.main.binding]
+alt-f = 'mode operation'
+alt-s = 'mode resize'
+alt-shift-semicolon = 'mode service'
+
+[mode.service.binding]
+esc = ['reload-config', 'mode main']
+r = ['flatten-workspace-tree', 'mode main']
+
+[mode.operation.binding]
+leftSquareBracket = 'focus-monitor prev'
+rightSquareBracket = 'focus-monitor next'
+shift-leftSquareBracket = ['move-node-to-monitor prev', 'focus-monitor prev']
+shift-rightSquareBracket = ['move-node-to-monitor next', 'focus-monitor next']
+esc = 'mode main'
+h = 'focus left'
+j = 'focus down'
+k = 'focus up'
+l = 'focus right'
+
+shift-h = ['layout tiling', 'move left']
+shift-j = ['layout tiling', 'move down']
+shift-k = ['layout tiling', 'move up']
+shift-l = ['layout tiling', 'move right']
+
+# Consider using 'join-with' command as a 'split' replacement if you want to enable normalizations
+backslash = 'split vertical'
+minus = 'split horizontal'
+
+f = ['layout floating', 'fullscreen']
+space = 'layout floating tiling' # 'floating toggle' in i3
+
+# Not supported, because this command is redundant in AeroSpace mental model.
+# See: https://nikitabobko.github.io/AeroSpace/guide#floating-windows
+#alt-space = 'focus toggle_tiling_floating'
+
+# `focus parent`/`focus child` are not yet supported, and it's not clear whether they
+# should be supported at all https://github.com/nikitabobko/AeroSpace/issues/5
+# alt-a = 'focus parent'
+
+1 = 'workspace 1'
+2 = 'workspace 2'
+3 = 'workspace 3'
+4 = 'workspace 4'
+5 = 'workspace 5'
+6 = 'workspace 6'
+7 = 'workspace 7'
+8 = 'workspace 8'
+9 = 'workspace 9'
+0 = 'workspace 10'
+
+shift-1 = 'move-node-to-workspace 1'
+shift-2 = 'move-node-to-workspace 2'
+shift-3 = 'move-node-to-workspace 3'
+shift-4 = 'move-node-to-workspace 4'
+shift-5 = 'move-node-to-workspace 5'
+shift-6 = 'move-node-to-workspace 6'
+shift-7 = 'move-node-to-workspace 7'
+shift-8 = 'move-node-to-workspace 8'
+shift-9 = 'move-node-to-workspace 9'
+shift-0 = 'move-node-to-workspace 10'
+
+[mode.resize.binding]
+h = 'resize width -50'
+j = 'resize height +50'
+k = 'resize height -50'
+l = 'resize width +50'
+enter = 'mode main'
+esc = 'mode main'
