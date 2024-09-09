@@ -1,0 +1,204 @@
+# This is a demo config to showcase some of the most important commands.
+# It is meant to be changed and configured, as it is intentionally kept sparse.
+# For a (much) more advanced configuration example see my dotfiles:
+# https://github.com/FelixKratz/dotfiles
+
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+
+##### Bar Appearance #####
+# Configuring the general appearance of the bar.
+# These are only some of the options available. For all options see:
+# https://felixkratz.github.io/SketchyBar/config/bar
+# If you are looking for other colors, see the color picker:
+# https://felixkratz.github.io/SketchyBar/config/tricks#color-picker
+
+sketchybar --bar position=top height=25 blur_radius=2 color=0x00000000
+
+##### Changing Defaults #####
+# We now change some default values, which are applied to all further items.
+# For a full list of all available item properties see:
+# https://felixkratz.github.io/SketchyBar/config/items
+source $CONFIG_DIR/colors.sh
+
+default=(
+  align=center
+  padding_left=2
+  padding_right=2
+  icon.font="Sarasa Term SC Nerd:Bold:17.0"
+  label.font="Sarasa Term SC Nerd:Bold:12.0"
+  icon.color=0xffffffff
+  label.color=0x88ffffff
+  icon.padding_left=8
+  icon.padding_right=2
+  label.padding_left=2
+  label.padding_right=8
+  background.corner_radius=10
+  background.color=$C_BG
+  background.border_width=1
+  background.border_color=$C_BG
+)
+sketchybar --default "${default[@]}"
+
+##### Aerospace integration #####
+
+sketchybar --add event aerospace_workspace_change
+
+for sid in $(aerospace list-workspaces --all); do
+    sketchybar --add item space.$sid left \
+        --subscribe space.$sid aerospace_workspace_change \
+        --set space.$sid \
+        background.height=20 \
+        background.drawing=off \
+        icon="$sid" \
+        click_script="aerospace workspace $sid" \
+        script="$CONFIG_DIR/plugins/aerospace.sh $sid"
+done
+
+##### Adding Left Items #####
+# We add some regular items to the left side of the bar, where
+# only the properties deviating from the current defaults need to be set
+
+sketchybar --add item front_app left \
+           --set front_app icon.drawing=on script="$PLUGIN_DIR/front_app.sh" \
+           --subscribe front_app front_app_switched
+
+##### Adding Right Items #####
+# In the same way as the left items we can add items to the right side.
+# Additional position (e.g. center) are available, see:
+# https://felixkratz.github.io/SketchyBar/config/items#adding-items-to-sketchybar
+
+# Some items refresh on a fixed cycle, e.g. the clock runs its script once
+# every 10s. Other items respond to events they subscribe to, e.g. the
+# volume.sh script is only executed once an actual change in system audio
+# volume is registered. More info about the event system can be found here:
+# https://felixkratz.github.io/SketchyBar/config/events
+
+cpu_percent=(
+  icon=
+	update_freq=10
+	script="$PLUGIN_DIR/cpu.nu"
+	icon.color=$C_YELLOW
+  background.border_color=$C_YELLOW
+)
+
+memory=(
+  icon=﬙
+	update_freq=10
+	script="$PLUGIN_DIR/mem.nu"
+	icon.color=$C_BLUE
+  background.border_color=$C_BLUE
+)
+
+temp_cpu=(
+  icon=
+  label.font.size=7
+  label.y_offset=-4
+  icon.font.size=16
+  update_freq=10
+  padding_left=-58
+	script="$PLUGIN_DIR/temp.nu"
+)
+
+temp_gpu=(
+  label.font.size=7
+  padding_left=0
+  padding_right=0
+  icon.font.size=16
+  icon.drawing=off
+  label.y_offset=4
+  background.drawing=off
+)
+
+network_down=(
+  icon=󰖩
+  label.font.size=7
+  label.y_offset=-4
+  update_freq=3
+  padding_left=-69
+  padding_right=23
+	script="$PLUGIN_DIR/network.nu"
+  icon.color=$C_PURPLE
+  label.highlight_color=$C_PURPLE
+  background.border_color=$C_PURPLE
+)
+
+network_up=(
+  label.font.size=7
+  padding_left=0
+  padding_right=0
+  icon.drawing=off
+  label.y_offset=4
+  background.drawing=off
+  label.highlight_color=$C_PURPLE
+)
+
+separator_right=(
+  icon=
+  label.drawing=off
+  background.padding_left=0
+  background.drawing=off
+  click_script='sketchybar --trigger toggle_stats'
+)
+
+# ============ After system info items ============
+
+clock=(
+  update_freq=10
+  icon=
+  script="$PLUGIN_DIR/clock.nu"
+  background.corner_radius=3
+  padding_right=1
+  padding_left=1
+  label.font.size=10
+)
+
+volume=(
+  script="$PLUGIN_DIR/volume.sh"
+  background.corner_radius=3
+  padding_right=1
+  padding_left=1
+)
+
+battery=(
+  update_freq=120
+  script="$PLUGIN_DIR/battery.sh"
+  background.corner_radius=3
+  padding_right=1
+)
+
+sketchybar --add item clock right \
+           --set clock "${clock[@]}" \
+           --add item volume right \
+           --set volume "${volume[@]}" \
+           --subscribe volume volume_change \
+           --add item battery right \
+           --set battery "${battery[@]}" \
+           --subscribe battery system_woke power_source_change
+
+sketchybar 	--add event 				hide_stats \
+           	--add event 				show_stats \
+           	--add event 				toggle_stats \
+           	--add item         	animator right \
+           	--set animator     	drawing=off \
+                              	updates=on \
+                              	script="$PLUGIN_DIR/toggle_stats.sh" \
+           	--subscribe        	animator hide_stats show_stats toggle_stats
+
+sketchybar  --add item separator_right right \
+	          --set separator_right "${separator_right[@]}"
+
+sketchybar 	--add item cpu.percent right \
+						--set cpu.percent "${cpu_percent[@]}" \
+            --add item memory right \
+						--set memory "${memory[@]}" \
+            --add item temp.cpu right \
+						--set temp.cpu "${temp_cpu[@]}" \
+            --add item temp.gpu right \
+						--set temp.gpu "${temp_gpu[@]}" \
+            --add item net.down right \
+						--set net.down "${network_down[@]}" \
+            --add item net.up right \
+						--set net.up "${network_up[@]}" \
+
+##### Force all scripts to run the first time (never do this in a script) #####
+sketchybar --update
