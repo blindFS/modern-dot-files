@@ -1,16 +1,17 @@
 #!/usr/bin/env nu
 
 let stats = [
-	"cpu.percent"
+	"disk"
+	"cpu"
 	"memory"
-	"temp.cpu"
-	"temp.gpu"
-	"net.down"
-	"net.up"
+	"temp_cpu"
+	"temp_gpu"
+	"network_down"
+	"network_up"
 ]
 
 def toggle_stats [] {
-	let state = (sketchybar --query separator_right | from json | get icon.value)
+	let state = (sketchybar --query $env.NAME | from json | get icon.value)
 	let new_icon = (if $state == "" {""} else "")
 	let draw = (if $state == "" {"off"} else "on")
 	let args = (
@@ -18,7 +19,7 @@ def toggle_stats [] {
 		| each {|item| ["--set" $item $"drawing=($draw)"]}
 		| flatten
 	)
-	sketchybar ...($args) --set separator_right icon=$"($new_icon)"
+	sketchybar ...($args) --set $env.NAME icon=($new_icon)
 }
 
 match $env.SENDER {

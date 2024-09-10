@@ -3,8 +3,6 @@
 let cpu_temp = smctemp -c | into float
 let gpu_temp = smctemp -g | into float
 
-let msg = $"($gpu_temp | into string --decimals 0)  ($cpu_temp | into string --decimals 0)"
-
 let deg = match ([$cpu_temp $gpu_temp] | math max) {
     $t if $t > 80 => {icon: "", color: "0xfff7768e"}
     $t if $t > 60 => {icon: "", color: "0xffe0af68"}
@@ -12,5 +10,5 @@ let deg = match ([$cpu_temp $gpu_temp] | math max) {
     _ => {icon: "", color: "0xff7dcfff"}
 }
 
-sketchybar --animate sin 60 --set temp.cpu label=$"CPU ($cpu_temp | into string --decimals 0) ℃" icon=$"($deg.icon)" icon.color=$"($deg.color)" background.border_color=$"($deg.color)"
-sketchybar --set temp.gpu label=$"GPU ($gpu_temp | into string --decimals 0) ℃"
+sketchybar --animate sin 60 --set temp_cpu label=$"CPU ($cpu_temp | into string --decimals 0) ℃" icon=($deg.icon) icon.color=($deg.color) background.border_color=($deg.color)
+sketchybar --set temp_gpu label=$"GPU ($gpu_temp | into string --decimals 0) ℃"

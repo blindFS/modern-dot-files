@@ -12,5 +12,5 @@ let table = ifstat -i "en0" -b 0.1 1 | lines | last | parse --regex '\s*(?<down>
 let up_d = format_bps $table.up 9
 let down_d = format_bps $table.down 9
 
-sketchybar --animate tanh 30 --set net.down label=$" ($down_d.msg)" label.highlight=$"($down_d.highlight)"
-sketchybar --animate tanh 30 --set net.up label=$" ($up_d.msg)" label.highlight=$"($up_d.highlight)"
+sketchybar --animate tanh 30 --set network_down label=$" ($down_d.msg)" label.highlight=($down_d.highlight)
+sketchybar --animate tanh 30 --set network_up label=$" ($up_d.msg)" label.highlight=($up_d.highlight)

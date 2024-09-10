@@ -5,5 +5,5 @@
 # https://felixkratz.github.io/SketchyBar/config/events#events-and-scripting
 
 let msg = date now | format date "%a %m-%d %H:%M:%S"
-sketchybar --set $env.NAME label=$"($msg)"
+sketchybar --set $env.NAME label=($msg)
 

@@ -1,4 +1,0 @@
-C_BG=0x88000000
-C_YELLOW=0xffe0af68
-C_BLUE=0xff7dcfff
-C_PURPLE=0xffbb9af7

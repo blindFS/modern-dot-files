@@ -75,11 +75,11 @@ space = 'layout tiles horizontal vertical' # 'floating toggle' in i3
 4 = 'workspace 4'
 5 = 'workspace 5'
 
-shift-1 = 'move-node-to-workspace 1'
-shift-2 = 'move-node-to-workspace 2'
-shift-3 = 'move-node-to-workspace 3'
-shift-4 = 'move-node-to-workspace 4'
-shift-5 = 'move-node-to-workspace 5'
+shift-1 = ['move-node-to-workspace 1', 'workspace 1']
+shift-2 = ['move-node-to-workspace 2', 'workspace 2']
+shift-3 = ['move-node-to-workspace 3', 'workspace 3']
+shift-4 = ['move-node-to-workspace 4', 'workspace 4']
+shift-5 = ['move-node-to-workspace 5', 'workspace 5']
 
 [mode.resize.binding]
 h = 'resize width -50'
