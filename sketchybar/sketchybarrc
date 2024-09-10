@@ -12,6 +12,7 @@ source config.nu
   --bar position=top height=25 blur_radius=2 color=0x00000000
   --add event aerospace_workspace_change 
   --add event toggle_stats
+  --add event aerospace_mode_change
   --default ...($config.default | arg_to_setting $plugin_dir)
 )
 

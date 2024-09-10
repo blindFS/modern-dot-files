@@ -4,6 +4,7 @@ const colors = {
     fg: 0x88ffffff
     bg: 0x55000000
     white: 0xffffffff
+    black: 0xff000000
     transparent: 0x00000000
     yellow: 0xffe0af68
     blue: 0xff7dcfff
@@ -51,10 +52,16 @@ const config = {
         {
             name: front_app
             pos: left
-            events: [front_app_switched]
+            events: [front_app_switched aerospace_mode_change]
             args: {
+                label.color: $colors.black
+                icon.color: $colors.black
                 icon.drawing: on
-                background.drawing: off
+                background.color: $colors.blue
+                background.corner_radius: 3
+                background.shadow.drawing: on
+                background.shadow.color: $colors.bg
+                background.shadow.distance: 3
                 script: front_app.nu
             }
         }
@@ -204,13 +211,13 @@ def build_sketchybar_args [plugin_dir: string] {
     let args = $in | get -i args | default []
     mut arg_list = ['--add' 'item' $name $pos]
 
-    if not ($events | is-empty) {
+    if ($events | is-not-empty) {
         $arg_list = $arg_list
         | append ['--subscribe' $name]
         | append $events
     }
 
-    if not ($args | is-empty) {
+    if ($args | is-not-empty) {
         $arg_list = $arg_list
         | append ['--set' $name]
         | append ($args | arg_to_setting $plugin_dir)

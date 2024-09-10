@@ -12,8 +12,8 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 
 # Mouse follows focus when focused monitor changes
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
-exec-on-workspace-change = ['/bin/bash', '-c',
-    'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+exec-on-workspace-change = [ '/bin/sh', '-c',
+  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
 ]
 after-startup-command = [
   'exec-and-forget borders active_color=0xdd7aa2f7 inactive_color=0xdd494d64 width=6.0 hidpi=on',
@@ -29,16 +29,16 @@ outer.top =        30
 outer.right =      8
 
 [mode.main.binding]
-alt-f = ['mode operation', 'exec-and-forget borders active_color=0xffe0af68']
-alt-s = ['mode resize', 'exec-and-forget borders active_color=0xff0dcf6f']
-alt-shift-semicolon = ['mode service', 'exec-and-forget borders active_color=0xffbb9af7']
+alt-f = ['mode operation', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=operation']
+alt-s = ['mode resize', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=resize']
+alt-shift-semicolon = ['mode service', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=service']
 
 [mode.service.binding]
-esc = ['reload-config', 'mode main', 'exec-and-forget borders active_color=0xdd7aa2f7']
-r = ['flatten-workspace-tree', 'mode main', 'exec-and-forget borders active_color=0xdd7aa2f7']
+esc = ['reload-config', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
+r = ['flatten-workspace-tree', 'mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
 
 [mode.operation.binding]
-esc = ['mode main', 'exec-and-forget borders active_color=0xdd7aa2f7']
+esc = ['mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
 
 leftSquareBracket = 'focus-monitor prev'
 rightSquareBracket = 'focus-monitor next'
@@ -86,8 +86,8 @@ h = 'resize width -50'
 j = 'resize height +50'
 k = 'resize height -50'
 l = 'resize width +50'
-enter = ['mode main', 'exec-and-forget borders active_color=0xdd7aa2f7']
-esc = ['mode main', 'exec-and-forget borders active_color=0xdd7aa2f7']
+enter = ['mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
+esc = ['mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
 
 [[on-window-detected]]
 if.app-id = 'com.github.wez.wezterm'
