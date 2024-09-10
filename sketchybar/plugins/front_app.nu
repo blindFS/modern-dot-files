@@ -11,6 +11,12 @@ const app_icons = {
     code: 󰨞
     wezterm: 
     emacs: 
+    finder: 󰀶
+    mail: 
+    photos: 
+    preview: 
+    books: 
+    'app store': 
     'system settings': 󰒓
 }
 

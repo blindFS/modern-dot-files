@@ -16,8 +16,8 @@ exec-on-workspace-change = [ '/bin/sh', '-c',
   'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
 ]
 after-startup-command = [
-  'exec-and-forget borders active_color=0xdd7aa2f7 inactive_color=0xdd494d64 width=6.0 hidpi=on',
-  'exec-and-forget sketchybar --reload'
+  'exec-and-forget brew services restart borders',
+  'exec-and-forget brew services restart sketchybar',
 ]
 
 [gaps]
