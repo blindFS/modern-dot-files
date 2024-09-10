@@ -11,6 +11,13 @@ const app_icons = {
     photos: 
     preview: 
     books: 
+    podcasts: 
+    music: 
+    calendar: 
+    calculator: 
+    notes: 󰎚
+    gimp: 
+    'steam helper':  󰓓
     'app store': 
     'system settings': 󰒓
 }

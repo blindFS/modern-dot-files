@@ -42,8 +42,8 @@ esc = ['mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change 
 
 leftSquareBracket = 'focus-monitor prev'
 rightSquareBracket = 'focus-monitor next'
-shift-leftSquareBracket = ['move-node-to-monitor prev', 'focus-monitor prev']
-shift-rightSquareBracket = ['move-node-to-monitor next', 'focus-monitor next']
+shift-leftSquareBracket = ['move-workspace-to-monitor prev', 'focus-monitor prev']
+shift-rightSquareBracket = ['move-workspace-to-monitor next', 'focus-monitor next']
 h = 'focus --ignore-floating left'
 j = 'focus --ignore-floating down'
 k = 'focus --ignore-floating up'
