@@ -7,7 +7,8 @@ const colors = {
     black: 0xff000000
     transparent: 0x00000000
     yellow: 0xffe0af68
-    blue: 0xff7dcfff
+    cyan: 0xff7dcfff
+    blue: 0xdd7aa2f7
     green: 0xff0dcf6f
     orange: 0xfff7768e
     purple: 0xffbb9af7
@@ -34,12 +35,13 @@ const config = {
       }
 
     workspace_default_args: {
-        updates: on
-        drawing: off
-        icon.shadow.drawing: on
-        icon.shadow.color: $colors.bg
-        icon.shadow.distance: 3
-        icon.highlight_color: $colors.green
+        icon.font.size: 12
+        label.font.size: 17
+        label.shadow.drawing: on
+        label.shadow.color: $colors.bg
+        label.shadow.distance: 3
+        label.highlight_color: $colors.green
+        background.drawing: off
         background.color: $colors.transparent
         background.border_width: 2
         background.border_color: $colors.fg
@@ -50,13 +52,23 @@ const config = {
 
     plugin_configs: [
         {
+            name: ws_listener
+            pos: left
+            events: [aerospace_workspace_change space_windows_change]
+            args: {
+                updates: on
+                drawing: off
+                script: aerospace.nu
+            }
+        }
+        {
             name: front_app
             pos: left
             events: [front_app_switched aerospace_mode_change]
             args: {
                 label.color: $colors.black
                 icon.color: $colors.black
-                icon.drawing: on
+                icon.font.size: 20
                 background.color: $colors.blue
                 background.corner_radius: 3
                 background.shadow.drawing: on
@@ -68,7 +80,7 @@ const config = {
         {
             name: clock
             args: {
-                update_freq: 10
+                update_freq: 30
                 icon: 
                 script: clock.nu
                 background.corner_radius: 3
@@ -93,6 +105,7 @@ const config = {
             args: {
                 update_freq: 120
                 script: battery.nu
+                click_script: 'open x-apple.systempreferences:com.apple.preference.battery'
                 background.corner_radius: 3
                 padding_right: 1
             }
@@ -105,8 +118,8 @@ const config = {
                 padding_left: 0
                 label.drawing: off
                 background.drawing: off
-                click_script: 'sketchybar --trigger toggle_stats'
                 script: toggle_stats.nu
+                click_script: 'sketchybar --trigger toggle_stats'
             }
         }
         {
@@ -115,6 +128,7 @@ const config = {
                 icon: 
                 update_freq: 120
                 script: disk.nu
+                click_script: 'open -a "Disk Utility"'
                 icon.color: $colors.green
                 background.border_color: $colors.green
             }
@@ -125,6 +139,7 @@ const config = {
                 icon: 
                 update_freq: 10
                 script: cpu.nu
+                click_script: 'open -a "Activity Monitor"'
                 icon.color: $colors.yellow
                 background.border_color: $colors.yellow
             }
@@ -135,8 +150,9 @@ const config = {
                 icon: ﬙
                 update_freq: 10
                 script: mem.nu
-                icon.color: $colors.blue
-                background.border_color: $colors.blue
+                click_script: 'open -a "Activity Monitor"'
+                icon.color: $colors.cyan
+                background.border_color: $colors.cyan
             }
         }
         {
@@ -146,7 +162,7 @@ const config = {
                 label.font.size: 7
                 label.y_offset: -4
                 icon.font.size: 16
-                update_freq: 10
+                update_freq: 5
                 padding_left: -58
                 script: temp.nu
             }
@@ -170,7 +186,7 @@ const config = {
                 label.font.size: 7
                 label.y_offset: -4
                 update_freq: 3
-                padding_left: -69
+                padding_left: -73
                 padding_right: 23
                 script: network.nu
                 icon.color: $colors.purple

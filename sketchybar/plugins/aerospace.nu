@@ -1,47 +1,50 @@
 #!/usr/bin/env nu
 
 const app_icons = {
+    'app store': 
+    'steam helper':  󰓓
+    'system settings': 󰒓
     arc: 󰣇
-    safari: 󰀹
+    books: 
+    calculator: 
+    calendar: 
     code: 󰨞
-    wezterm: 
+    dictionary: 
+    discord: 󰙯
     emacs: 
     finder: 󰀶
-    mail: 
-    photos: 
-    preview: 
-    books: 
-    podcasts: 
-    music: 
-    calendar: 
-    calculator: 
-    notes: 󰎚
     gimp: 
-    'steam helper':  󰓓
-    'app store': 
-    'system settings': 󰒓
+    mail: 
+    maps: 
+    music: 
+    notes: 󰎚
+    photos: 
+    podcasts: 
+    preview: 
+    safari: 󰀹
+    wechat: 
+    wezterm: 
 }
 
 const focused_border_color = 0xff0dcf6f
 const default_border_color = 0x88ffffff
-const animation_frames = 60
+const animation_frames = 20
 
 def modify_args_per_workspace [sid: string focused_sid: string] {
     let windows = (aerospace list-windows --workspace $sid
-                        | lines
-                        | each {|it| $it
-                                | split row '|'
-                                | get 1
-                                | str trim
-                                | str downcase
-                                })
+        | lines
+        | each {|it| $it
+            | split row '|'
+            | get 1
+            | str trim
+            | str downcase
+            })
     let icons = $windows
-    | each {|name| $app_icons
+        | each {|name| $app_icons
             | get -i $name
             | default ''}
-    | uniq
-    | str join ' '
-    | fill -c '░' -w 1
+        | uniq
+        | str join ' '
 
     let extra = (if $sid == $focused_sid
         {{
@@ -53,13 +56,24 @@ def modify_args_per_workspace [sid: string focused_sid: string] {
             border_color: $default_border_color
         }})
 
-    ['--animate' 'sin' $animation_frames '--set' $"space.($sid)"]
+    ['--set' $"space.($sid)"]
     | append (if (($windows | is-empty) and ($sid != $focused_sid)) {
-        "drawing=off"
+        [
+            background.drawing=off
+            label=
+            padding_left=-2
+            padding_right=-2
+        ]
     } else {
-        ["drawing=on" $"icon=($icons)" $"icon.highlight=($extra.highlight)"]
+        [
+            background.drawing=on
+            label=($icons)
+            label.highlight=($extra.highlight)
+            padding_left=2
+            padding_right=2
+        ]
     })
-    | append $"background.border_color=($extra.border_color)"
+    | append background.border_color=($extra.border_color)
 }
 
 def modify_workspaces [last_sid: string] {
@@ -76,7 +90,7 @@ def modify_workspaces [last_sid: string] {
     | each {|sid| modify_args_per_workspace $sid $focused_sid}
     | flatten
     | append ["--set" $env.NAME $"label=($focused_sid)"])
-    sketchybar ...($batched_args)
+    sketchybar --animate linear $animation_frames ...($batched_args)
 }
 
 match $env.SENDER {

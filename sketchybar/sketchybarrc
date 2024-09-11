@@ -8,19 +8,11 @@
 let plugin_dir = $"($env.CONFIG_DIR)/plugins"
 source config.nu
 
-(sketchybar
-  --bar position=top height=25 blur_radius=2 color=0x00000000
-  --add event aerospace_workspace_change 
-  --add event toggle_stats
-  --add event aerospace_mode_change
-  --default ...($config.default | arg_to_setting $plugin_dir)
-)
-
 ##### Aerospace integration #####
 
 def args_per_workspace [it: string] {
   ['--add' 'item' $"space.($it)" 'left']
-  | append ['--set' $"space.($it)" $"label=($it)" $"click_script=aerospace workspace ($it)"]
+  | append ['--set' $"space.($it)" $"icon=($it)" $"click_script=aerospace workspace ($it)"]
   | append ($config.workspace_default_args | arg_to_setting $plugin_dir)
 }
 
@@ -29,16 +21,18 @@ let workspace_args = (aerospace list-workspaces --all
   | each {|it| args_per_workspace $it})
   | flatten
 
-(sketchybar ...($workspace_args)
-  --add item ws_listener left
-  --subscribe ws_listener aerospace_workspace_change space_windows_change
-  --set ws_listener drawing=off updates=on script=($plugin_dir)/aerospace.nu
+(sketchybar
+  --bar position=top height=25 blur_radius=20 color=0x00000000
+  --add event toggle_stats
+  --add event aerospace_mode_change
+  --add event aerospace_workspace_change
+  --default ...($config.default | arg_to_setting $plugin_dir)
+  ...($workspace_args)
+  ...($config.plugin_configs
+      | each {|it| $it
+        | build_sketchybar_args $plugin_dir}
+      | flatten)
 )
-
-sketchybar ...($config.plugin_configs
-              | each {|it| $it
-                | build_sketchybar_args $plugin_dir}
-                | flatten)
 
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update

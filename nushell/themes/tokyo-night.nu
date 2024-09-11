@@ -52,7 +52,7 @@ export def main [] {
         shape_custom: '#9ece8a'
         shape_datetime: { fg: '#0dcf6f' attr: 'b' }
         shape_directory: '#7dcfff'
-        shape_external: '#0dcf8f'
+        shape_external: '#f7768e'
         shape_external_resolved: { fg: '#0dcf8f' attr: 'b' }
         shape_externalarg: { fg: '#9e9e7a' attr: 'b' }
         shape_filepath: '#7dcfff'

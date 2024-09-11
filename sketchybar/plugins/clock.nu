@@ -4,6 +4,5 @@
 # the item invoking this script:
 # https://felixkratz.github.io/SketchyBar/config/events#events-and-scripting
 
-let msg = date now | format date "%a %m-%d %H:%M:%S"
+let msg = date now | format date "%a %m-%d %H:%M"
 sketchybar --set $env.NAME label=($msg)
-

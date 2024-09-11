@@ -6,25 +6,29 @@
 # https://felixkratz.github.io/SketchyBar/config/events#events-and-scripting
 
 const app_icons = {
+    'app store': 
+    'steam helper':  󰓓
+    'system settings': 󰒓
     arc: 󰣇
-    safari: 󰀹
+    books: 
+    calculator: 
+    calendar: 
     code: 󰨞
-    wezterm: 
+    dictionary: 
+    discord: 󰙯
     emacs: 
     finder: 󰀶
-    mail: 
-    photos: 
-    preview: 
-    books: 
-    podcasts: 
-    music: 
-    calendar: 
-    calculator: 
-    notes: 󰎚
     gimp: 
-    'steam helper':  󰓓
-    'app store': 
-    'system settings': 󰒓
+    mail: 
+    maps: 
+    music: 
+    notes: 󰎚
+    photos: 
+    podcasts: 
+    preview: 
+    safari: 󰀹
+    wechat: 
+    wezterm: 
 }
 
 const mode_colors = {
@@ -41,7 +45,7 @@ match $env.SENDER {
     }
     "aerospace_mode_change" => {
         let color = ($mode_colors | get -i ($env.MODE | str downcase) | default $mode_colors.main)
-        sketchybar --set $env.NAME background.color=($color)
+        sketchybar --animate linear 30 --set $env.NAME background.color=($color)
         # change borders color if it is running
         if (ps | where name == 'borders' | is-not-empty) {
             borders active_color=($color)

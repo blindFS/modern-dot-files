@@ -1,4 +1,6 @@
 #!/usr/bin/env nu
 
-let free = memory_pressure | lines | last | split row ":" | last | parse " {num}%" | get 0.num | into int
-sketchybar --set $env.NAME label=$'(100 - $free)%'
+let free_percentage = sys mem
+    | do {|| ($in.available / $in.total) * 100
+        | into string --decimals 0}
+sketchybar --set $env.NAME label=($free_percentage)%

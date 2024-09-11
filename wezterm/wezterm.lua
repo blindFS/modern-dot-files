@@ -8,7 +8,7 @@ config.colors = {
 config.hide_tab_bar_if_only_one_tab = true
 config.use_fancy_tab_bar = false
 config.window_background_opacity = 0.8
-config.macos_window_background_blur = 3
+-- config.macos_window_background_blur = 20
 config.window_decorations = "RESIZE"
 config.font = wezterm.font("Sarasa Term SC Nerd", {weight="DemiBold", stretch="Normal", style="Normal"})
 config.font_size  = 15.0

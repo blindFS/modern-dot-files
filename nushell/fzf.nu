@@ -74,6 +74,13 @@ def get_completed_command_by_fzf [cursor_pos:int] {
                 | str join "\n"
                 | fzf_with_query $query $help_preview_cmd
             }
+            "kill" => {
+                ps
+                | each {|r| $"($r.pid)\t($r.name)"}
+                | str join "\n"
+                | fzf_with_query $query 'ps | where pid == ({} | split row "\t" | get -i 0 | into int) | transpose'
+                | split row "\t" | get -i 0
+            }
             "ssh" => {
                 cat ~/.ssh/known_hosts
                 | lines

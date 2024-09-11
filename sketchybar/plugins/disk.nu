@@ -1,5 +1,9 @@
 #!/usr/bin/env nu
 
-let table = df -h | jc --df | from json | where mounted_on == '/System/Volumes/Data'
+let free_percentage = sys disks
+    | where mount == '/'
+    | first
+    | do {|| ($in.free) / ($in.total) * 100
+        | into string --decimals 0}
 
-sketchybar --set $env.NAME label=$"($table | get 0.capacity_percent)%"
+sketchybar --set $env.NAME label=($free_percentage)%

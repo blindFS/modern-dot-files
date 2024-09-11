@@ -10,7 +10,15 @@
 use fzf.nu complete_by_fzf
 
 let private_vars = {
-    completer: {|spans|
+    completer: {|raw_spans|
+        # remove the leading pipe char
+        let spans = (
+            if $raw_spans.0 == '|' {
+                $raw_spans | skip 1
+            } else $raw_spans
+            # remove the external sign
+            | update 0 {|cmd| $cmd | str trim --left --char '^'}
+        )
         # if the current command is an alias, get it's expansion
         let expanded_alias = (scope aliases | where name == $spans.0 | get -i 0 | get -i expansion)
         # overwrite
@@ -145,7 +153,7 @@ $env.config = {
     }
     render_right_prompt_on_last_line: false # true or false to enable or disable right prompt to be rendered on last line of the prompt.
     use_kitty_protocol: false # enables keyboard enhancement protocol implemented by kitty console, only if your terminal support this.
-    highlight_resolved_externals: false # true enables highlighting of external commands in the repl resolved by which.
+    highlight_resolved_externals: true # true enables highlighting of external commands in the repl resolved by which.
     recursion_limit: 50 # the maximum number of times nushell allows recursion before stopping it
 
     plugins: {} # Per-plugin configuration. See https://www.nushell.sh/contributor-book/plugins.html#configuration.
@@ -221,8 +229,8 @@ $env.config = {
             type: {
                 layout: ide
                 min_completion_width: 0,
-                max_completion_width: 50,
-                max_completion_height: 10, # will be limited by the available lines in the terminal
+                max_completion_width: 80,
+                max_completion_height: 50, # will be limited by the available lines in the terminal
                 padding: 0,
                 border: true,
                 cursor_offset: 0,

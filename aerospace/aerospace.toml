@@ -89,10 +89,10 @@ l = 'resize width +50'
 enter = ['mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
 esc = ['mode main', 'exec-and-forget sketchybar --trigger aerospace_mode_change MODE=main']
 
-[[on-window-detected]]
-if.app-id = 'com.github.wez.wezterm'
-run = 'layout floating'
+# [[on-window-detected]]
+# if.app-id = 'com.github.wez.wezterm'
+# run = 'layout floating'
 
-[[on-window-detected]]
-if.app-id = 'com.apple.Safari'
-run = 'layout floating'
+# [[on-window-detected]]
+# if.app-id = 'com.apple.Safari'
+# run = 'layout floating'
