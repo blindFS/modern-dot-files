@@ -7,29 +7,10 @@
 # And here is the theme collection
 # https://github.com/nushell/nu_scripts/tree/main/themes
 
-use fzf.nu complete_by_fzf
+use fzf.nu [carapace_by_fzf complete_line_by_fzf]
 
 let private_vars = {
-    completer: {|raw_spans|
-        # remove the leading pipe char
-        let spans = (
-            if $raw_spans.0 == '|' {
-                $raw_spans | skip 1
-            } else $raw_spans
-            # remove the external sign
-            | update 0 {|cmd| $cmd | str trim --left --char '^'}
-        )
-        # if the current command is an alias, get it's expansion
-        let expanded_alias = (scope aliases | where name == $spans.0 | get -i 0 | get -i expansion)
-        # overwrite
-        let spans = (if $expanded_alias != null  {
-            # put the first word of the expanded alias first in the span
-            $spans | skip 1 | prepend ($expanded_alias | split row " " | take 1)
-        } else {
-            $spans
-        })
-        carapace $spans.0 nushell ...$spans | from json
-    },
+    completer: {|span| carapace_by_fzf $span}
     menu_text_color: "#aaeaea"
     prompt_symbol_color: "#111726"
 }
@@ -545,16 +526,6 @@ $env.config = {
             }
         }
         {
-            name: fuzzy_complete
-            modifier: control
-            keycode: char_t
-            mode: [emacs, vi_normal, vi_insert]
-            event: {
-              send: executehostcommand
-              cmd: "complete_by_fzf"
-            }
-        }
-        {
             name: delete_one_character_backward
             modifier: none
             keycode: backspace
@@ -800,6 +771,16 @@ $env.config = {
             keycode: char_a
             mode: emacs
             event: { edit: selectall }
+        }
+        {
+            name: fuzzy_complete
+            modifier: control
+            keycode: char_t
+            mode: [emacs, vi_normal, vi_insert]
+            event: {
+              send: executehostcommand
+              cmd: complete_line_by_fzf
+            }
         }
     ]
 }

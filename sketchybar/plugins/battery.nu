@@ -21,4 +21,4 @@ let icon = (if ($raw_info | str contains 'AC Power')
 
 # The item invoking this script (name $NAME) will get its icon and label
 # updated with the current battery status
-sketchybar --set $env.NAME icon=($icon) label=$"($percentage)%"
+sketchybar --set $env.NAME icon=($icon) label=($percentage)%

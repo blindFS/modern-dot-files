@@ -5,6 +5,7 @@ const colors = {
     bg: 0x55000000
     white: 0xffffffff
     black: 0xff000000
+    dark: 0xcc000000
     transparent: 0x00000000
     yellow: 0xffe0af68
     cyan: 0xff7dcfff
@@ -165,7 +166,23 @@ const config = {
                 update_freq: 5
                 padding_left: -58
                 script: temp.nu
+                click_script: 'sketchybar -m --set $NAME popup.drawing=toggle'
+                popup.align: left
+                popup.background.border_width: 2
+                popup.background.corner_radius: 3
+                popup.background.border_color: $colors.yellow
+                popup.background.color: $colors.dark
             }
+            popups: [
+                {
+                    name: temp_detail
+                    args: {
+                        label: "test \n test"
+                        icon.drawing: off
+                        background.drawing: off
+                    }
+                }
+            ]
         }
         {
             name: temp_gpu
@@ -221,22 +238,41 @@ def arg_to_setting [plugin_dir: string] {
 }
 
 def build_sketchybar_args [plugin_dir: string] {
-    let name = $in | get name
+    let name = $in | get -i name | default temp_name
     let pos = $in | get -i pos | default right
     let events = $in | get -i events | default []
     let args = $in | get -i args | default []
-    mut arg_list = ['--add' 'item' $name $pos]
+    let popups = $in | get -i popups | default []
+    mut arg_list = [--add item $name $pos]
 
     if ($events | is-not-empty) {
         $arg_list = $arg_list
-        | append ['--subscribe' $name]
+        | append [--subscribe $name]
         | append $events
     }
 
     if ($args | is-not-empty) {
         $arg_list = $arg_list
-        | append ['--set' $name]
+        | append [--set $name]
         | append ($args | arg_to_setting $plugin_dir)
     }
+
+    if ($popups | is-not-empty) {
+        $arg_list = $arg_list
+        | append ($popups
+            | each {|p_it|
+                mut p_it_cml_args = [--add item $p_it.name popup.($name)]
+                let p_it_args = $p_it | get -i args | default []
+                if ($p_it_args | is-not-empty) {
+                    $p_it_cml_args = $p_it_cml_args
+                    | append [--set $p_it.name]
+                    | append ($p_it_args | arg_to_setting $plugin_dir)
+                }
+                $p_it_cml_args
+            }
+            | flatten
+        )
+    }
+
     $arg_list
 }
