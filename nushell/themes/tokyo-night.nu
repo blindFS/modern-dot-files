@@ -12,7 +12,7 @@ export def main [] {
         int: '#bb9af7'
         list: '#7dcfff'
         nothing: '#f7567e'
-        range: '#e0af68'
+        range: '#f0af68'
         record: '#1d8f8f'
         string: '#ce9e8a'
 
@@ -81,7 +81,7 @@ export def main [] {
         shape_string_interpolation: { fg: '#0dcf6f' attr: 'b' }
         shape_table: { fg: '#7aa2f7' attr: 'b' }
         shape_vardecl: { fg: '#7aa2f7' attr: 'u' }
-        shape_variable: '#bb9af7'
+        shape_variable: '#db9af7'
 
         foreground: '#9aaaaa'
         background: '#1a1b26'
@@ -111,9 +111,9 @@ export def "update terminal" [] {
     let osc_screen_background_color = '11;'
     let osc_cursor_color = '12;'
         
-    # (ansi -o $osc_screen_background_color)($theme.background)(char bel)
     $"
     (ansi -o $osc_screen_foreground_color)($theme.foreground)(char bel)
+    (ansi -o $osc_screen_background_color)($theme.background)(char bel)
     (ansi -o $osc_cursor_color)($theme.cursor)(char bel)
     "
     # Line breaks above are just for source readability
@@ -126,7 +126,7 @@ export def "update terminal" [] {
 export module activate {
     export-env {
         set color_config
-        update terminal
+        # update terminal
     }
 }
 
