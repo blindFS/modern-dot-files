@@ -794,7 +794,8 @@ set auto_pair_keybindings
 source zoxide.nu
 source themes/tokyo-night.nu
 
-alias vim = lvim
-alias boc = brew outdated --cask --greedy
-alias ll  = ls -al
-alias c   = zi
+alias vim  = lvim
+alias boc  = brew outdated --cask --greedy
+alias ll   = ls -al
+alias c    = zi
+alias less = less -R

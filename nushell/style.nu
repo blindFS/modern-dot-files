@@ -2,9 +2,9 @@ def prompt_decorator [
     font_color: string
     bg_color: string
     symbol: string
-    use_starship_bg?: bool
+    use_starship_bg?: bool = true
 ] {
-    let bg1 = if ($use_starship_bg | default true) {'#A3AED2'} else $bg_color
+    let bg1 = if $use_starship_bg {'#A3AED2'} else $bg_color
     let fg = {fg: $bg_color}
     let bg = {fg: $font_color, bg: $bg_color}
     $"(ansi --escape {fg: $bg_color, bg: $bg1})(ansi --escape $bg)($symbol)(ansi reset)(ansi --escape $fg)(ansi reset) "

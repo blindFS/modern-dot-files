@@ -22,6 +22,7 @@ const fzf_prompt_info = {
         bg: '#c0caf5'
         symbol: 󰳗
     }
+    variable: { symbol: 󱄑 }
     directory: { symbol:  }
     file: { symbol: 󰈔 }
     remote: { symbol: 󰛳 }
@@ -29,8 +30,35 @@ const fzf_prompt_info = {
     command: { symbol:  }
 }
 
+export def get_variable_by_name [
+    name: string # $foo.bar style
+] {
+    let segs = $name
+    | split row '.'
+    mut content = {
+        '$env': $env
+        '$nu': $nu
+    }
+    for var in (scope variables) {
+        $content = $content
+        | default $var.value $var.name
+    }
+    try {
+        for seg in $segs {
+            if ($content | describe | str starts-with 'list') {
+                $content = $content
+                | get ($seg | into int)
+            } else {
+                $content = $content
+                | get $seg
+            }
+        }
+    } catch { {} }
+    $content
+}
+
 def quote_if_not_empty [s: string] {
-    if (($s | str trim) | is-empty) {''} else {$"`($s)`"}
+    if ($s | str trim | is-empty) {''} else {$"`($s)`"}
 }
 
 def build_fzf_prompt [
@@ -190,13 +218,37 @@ def _carapace_by_fzf [command: string spans: list<string>] {
     }
 }
 
-def _carapace_env_by_fzf [query: string] {
-    if not ('$' in $query) {null} else {
-        let parsed = $query | parse --regex '(?<prefix>.*)\$(?<true_query>[^$]*)'
-        let prefix = $parsed.0.prefix
-        let true_query = $parsed.0.true_query
-        let res = _carapace_by_fzf 'get-env' [get-env $true_query]
+def _env_by_fzf [
+    query: string
+    use_carapace?: bool = false
+] {
+    if not ('$' in $query) {
+        return null
+    }
+    let parsed = $query | parse --regex '(?<prefix>.*)(?<true_query>\$[^$]*)'
+    let prefix = $parsed.0.prefix
+    let true_query = $parsed.0.true_query
+    if $use_carapace {
+        let res = _carapace_by_fzf 'get-env' [get-env ($true_query | str substring 1..)]
         if ($res | is-empty) {$query} else {$prefix + '$env.' + $res}
+    } else {
+        let segs = $true_query | split row '.'
+        let seg_prefix = $segs | drop 1 | append '' | str join '.'
+        let content = get_variable_by_name $true_query
+        let res = (if ($content | describe | str starts-with 'list') {
+            0..(($content | length) - 1)
+            | each {|n| $n | into string}
+        } else {
+            $content
+            | columns
+        })
+        | str join "\n"
+        | (fzf ...(build_fzf_args ($segs | last)
+            'variable' ("print r#'" + ($content | table -i false) + "'#"))
+            --tmux center,90%,50%
+            --preview-window right,70%
+        )
+        if ($res | is-empty) {$query} else {$prefix + $seg_prefix + $res}
     }
 }
 
@@ -243,7 +295,7 @@ export def carapace_by_fzf [
     let res = (
         match $query {
             _ if "$" in $query => {
-                _carapace_env_by_fzf $query
+                _env_by_fzf $query
             }
             _ if $query in ['**' '*^'] => {
                 _complete_by_fzf $spans.0 ''
@@ -283,7 +335,7 @@ export def complete_line_by_fzf [] {
     let query = $parsed.query
     let fzf_res = (
         if ('$' in $query) {
-            _carapace_env_by_fzf $query
+            _env_by_fzf $query
         } else {
             _complete_by_fzf $cmd_head $query
         })

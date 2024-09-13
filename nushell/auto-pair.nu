@@ -106,7 +106,7 @@ def backspace_delete_by_replace [
   commandline set-cursor ($pos - $left_offset)
 }
 
-export def --env auto_pair_backspace [] {
+export def auto_pair_backspace [] {
   let cmd_info = analyse_commandline
   let need_check = $auto_pair_key_maps
   | transpose
@@ -124,7 +124,7 @@ export def --env auto_pair_backspace [] {
   }
 }
 
-export def --env auto_pair_complete [
+export def auto_pair_complete [
   char: string # which key is pressed
 ] {
   let key_pairs = $auto_pair_key_maps | get -i $char
@@ -148,7 +148,7 @@ export def --env auto_pair_complete [
   let operation = (match $which_side {
     'right' if $is_matched and ($char == $cmd_info.char_next) => 'move'
     'both' if $char == $cmd_info.char_next => 'move'
-    'both' if $is_matched => 'pair'
+    'both' if $is_matched and ($cmd_info.char_next in r#''`"[({})]'#) => 'pair'
     'left' if $is_matched => 'pair'
     _ => 'default'
   })
