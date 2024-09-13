@@ -1,12 +1,18 @@
-def prompt_decorator [font_color: string, bg_color: string, symbol: string] {
+def prompt_decorator [
+    font_color: string
+    bg_color: string
+    symbol: string
+    use_starship_bg?: bool
+] {
+    let bg1 = if ($use_starship_bg | default true) {'#A3AED2'} else $bg_color
     let fg = {fg: $bg_color}
     let bg = {fg: $font_color, bg: $bg_color}
-    $"(ansi --escape {fg: $bg_color, bg: '#A3AED2'})(ansi --escape $bg)($symbol)(ansi reset)(ansi --escape $fg)(ansi reset) "
+    $"(ansi --escape {fg: $bg_color, bg: $bg1})(ansi --escape $bg)($symbol)(ansi reset)(ansi --escape $fg)(ansi reset) "
 }
 
 $env.PROMPT_INDICATOR = {|| "> " }
-$env.PROMPT_INDICATOR_VI_INSERT = {|| (prompt_decorator "#111726" "#0DCF6F" "󰏫") }
-$env.PROMPT_INDICATOR_VI_NORMAL = {|| (prompt_decorator "#111726" "#E0AF68" "") }
+$env.PROMPT_INDICATOR_VI_INSERT = {|| prompt_decorator "#111726" "#0DCF6F" "󰏫" }
+$env.PROMPT_INDICATOR_VI_NORMAL = {|| prompt_decorator "#111726" "#E0AF68" "" }
 # $env.PROMPT_MULTILINE_INDICATOR = {|| "-> " }
 
 # If you want previously entered commands to have a different prompt from the usual one,

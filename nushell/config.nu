@@ -30,7 +30,7 @@ $env.config = {
 
     table: {
         mode: rounded # basic, compact, compact_double, light, thin, with_love, rounded, reinforced, heavy, none, other
-        index_mode: always # "always" show indexes, "never" show indexes, "auto" = show indexes when a table has "index" column
+        index_mode: auto # "always" show indexes, "never" show indexes, "auto" = show indexes when a table has "index" column
         show_empty: true # show 'empty list' and 'empty record' placeholders for command output
         padding: { left: 1, right: 1 } # a left right padding of each column in a table
         trim: {
@@ -170,7 +170,7 @@ $env.config = {
         {
             name: my_history_menu
             only_buffer_difference: false
-            marker: (prompt_decorator $private_vars.prompt_symbol_color "light_blue" "")
+            marker: ''
             type: { layout: ide }
             style: {}
             source: { |buffer, position|
@@ -180,7 +180,11 @@ $env.config = {
                     | uniq
                     | each {|item| $item | nu-highlight}
                     | str join (char nul)
-                    | fzf --read0 --ansi -q $buffer
+                    | (fzf --read0 --ansi -q $buffer
+                        --no-tmux --height 40%
+                        --prompt $"(prompt_decorator
+                            $private_vars.prompt_symbol_color
+                            "light_blue" "" false)")
                     | ansi strip)
                 }
             }
@@ -280,7 +284,6 @@ $env.config = {
                 until: [
                     { send: menu name: completion_menu }
                     { send: menunext }
-                    { edit: complete }
                 ]
             }
         }
@@ -293,7 +296,6 @@ $env.config = {
                 until: [
                     { send: menu name: ide_completion_menu }
                     { send: menunext }
-                    { edit: complete }
                 ]
             }
         }
@@ -525,13 +527,13 @@ $env.config = {
                 ]
             }
         }
-        {
-            name: delete_one_character_backward
-            modifier: none
-            keycode: backspace
-            mode: [emacs, vi_insert]
-            event: { edit: backspace }
-        }
+        # {
+        #     name: delete_one_character_backward
+        #     modifier: none
+        #     keycode: backspace
+        #     mode: [emacs, vi_insert]
+        #     event: { edit: backspace }
+        # }
         {
             name: delete_one_word_backward
             modifier: control
@@ -787,6 +789,8 @@ $env.config = {
 
 use starship.nu
 use scripts/extractor.nu extract
+use auto-pair.nu *
+set auto_pair_keybindings
 source zoxide.nu
 source themes/tokyo-night.nu
 

@@ -54,12 +54,13 @@ path add ($env.HOME | path join ".local" "bin")
 zoxide init nushell | save -f ($nu.default-config-dir | path join 'zoxide.nu')
 
 $env.FZF_DEFAULT_COMMAND = "fd --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9"
-$env.FZF_DEFAULT_OPTS = ("--layout=reverse --tmux=center,60%,50% " +
+$env.FZF_DEFAULT_OPTS = (
+    "--layout reverse --tmux center,60%,50% --pointer ▶ --marker ⇒ " +
     "--bind 'bs:backward-delete-char/eof,tab:toggle' " +
+    $"--prompt '(prompt_decorator '#111726' '#9ece6a' '' false)' " +
     "--color=fg:#9aaaaa,hl:#f7768e " +
     "--color=fg+:#c0caf5,bg+:#1a1b26,hl+:#f7768e " +
     "--color=info:#7aa2f7,prompt:#e0af68,pointer:#f7768e " +
     "--color=marker:#a9b1d6,spinner:#9ece6a,header:#a9b1d6")
 
 $env.CARAPACE_LENIENT = 1
-$env.CARAPACE_BRIDGES = 'zsh,bash'

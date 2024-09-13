@@ -1,3 +1,4 @@
+const fzf_carapace_extra_args = [--read0 --ansi --no-tmux --height=50%]
 const fzf_window_first_column_max_length = 36
 const dir_preview_cmd = "eza --tree -L 3 --color=always {} | head -200"
 const file_preview_cmd = "bat -n --color=always --line-range :200 {}"
@@ -11,17 +12,59 @@ if ($content.type | ansi strip) == 'EXTERNAL' {"
     + ($help_preview_cmd | str replace '{}' '($content.cmd | ansi strip)')
     + "}"
 )
+const fzf_prompt_default_setting = {
+    fg: '#000000'
+    bg: '#7aa2f7'
+    symbol: 'FZF'
+}
+const fzf_prompt_info = {
+    carapace: {
+        bg: '#c0caf5'
+        symbol: 󰳗
+    }
+    directory: { symbol:  }
+    file: { symbol: 󰈔 }
+    remote: { symbol: 󰛳 }
+    process: { symbol:  }
+    command: { symbol:  }
+}
 
 def quote_if_not_empty [s: string] {
     if (($s | str trim) | is-empty) {''} else {$"`($s)`"}
 }
 
-def fzf_with_query [query: string preview_cmd?: string] {
-    if ($preview_cmd | is-empty) {
-        fzf -q $query
-    } else {
-        fzf -q $query --preview $preview_cmd
+def build_fzf_prompt [
+    key: string
+] {
+    let prompt_config = $fzf_prompt_info
+    | get -i $key
+    | default {}
+    | default $fzf_prompt_default_setting.fg fg 
+    | default $fzf_prompt_default_setting.bg bg
+    | default $fzf_prompt_default_setting.symbol symbol
+
+    (prompt_decorator
+    $prompt_config.fg
+    $prompt_config.bg
+    $prompt_config.symbol
+    false)
+}
+
+def build_fzf_args [
+    query: string
+    prompt_key?: string
+    preview_cmd?: string
+] {
+    mut args = [-q $query]
+    if ($preview_cmd | is-not-empty) {
+        $args = $args
+        | append [--preview $preview_cmd]
     }
+    if ($prompt_key | is-not-empty) {
+        $args = $args
+        | append [--prompt (build_fzf_prompt $prompt_key)]
+    }
+    $args
 }
 
 def padding_to_length [input_string: string length?: int] {
@@ -37,7 +80,9 @@ def _list_internal_commands [] {
 
 def _list_external_commands [] {
     $env.PATH
-    | each {|f| ls -s $f | get name}
+    | each {|f| if ($f | path exists) {
+        ls -s $f | get name
+    } else []}
     | flatten
     | uniq
 }
@@ -48,13 +93,13 @@ export def _complete_by_fzf [cmd: string query: string] {
         _ if ($cmd in ['**' 'view']) => {
             _list_internal_commands
             | str join "\n"
-            | fzf_with_query $query $help_preview_cmd
+            | fzf ...(build_fzf_args $query 'command' $help_preview_cmd)
         }
         # Search for external commands
         "*^" => {
             _list_external_commands
             | str join "\n"
-            | fzf_with_query "" $external_tldr_cmd
+            | fzf ...(build_fzf_args "" 'command' $external_tldr_cmd)
         }
         # combine internals and externals
         '' => {
@@ -65,7 +110,8 @@ export def _complete_by_fzf [cmd: string query: string] {
                 | each {|ext| $"(padding_to_length $ext)\t\t(ansi blue_italic)EXTERNAL(ansi reset)"}
             )
             | str join "\n"
-            | fzf --ansi --header $"(padding_to_length "Command")\t\tType" -q $query --preview $hybrid_help_cmd
+            | (fzf --ansi --header $"(padding_to_length "Command")\t\tType"
+                ...(build_fzf_args $query 'command' $hybrid_help_cmd))
             | split row "\t"
             | get -i 0
             | default $query
@@ -73,14 +119,14 @@ export def _complete_by_fzf [cmd: string query: string] {
         }
         _ if ($cmd in ['z' '__zoxide_z' 'cd' 'zoxide' 'ls' 'eza']) => {
             let res = (fd --type=d --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9
-                            | fzf_with_query $query $dir_preview_cmd)
+                | fzf ...(build_fzf_args $query 'directory' $dir_preview_cmd))
             quote_if_not_empty $res
         }
         "kill" => {
             ps
             | each {|r| $"($r.pid)\t($r.name)"}
             | str join "\n"
-            | fzf_with_query $query 'ps | where pid == ({} | split row "\t" | get -i 0 | into int) | transpose'
+            | fzf ...(build_fzf_args $query 'process' 'ps | where pid == ({} | split row "\t" | get -i 0 | into int) | transpose')
             | split row "\t" | get -i 0
         }
         "ssh" => {
@@ -91,7 +137,7 @@ export def _complete_by_fzf [cmd: string query: string] {
                 | get -i 0.column1
                 | str replace -r '.*\[(.+)\].*' '$1'}
             | str join "\n"
-            | fzf_with_query $query "dig {} | jc --dig | from json | get answer | get -i 0"
+            | fzf ...(build_fzf_args $query 'remote' "dig {} | jc --dig | from json | get answer | get -i 0")
         }
         _ if ($cmd in ['use' 'source']) => {
             $env.NU_LIB_DIRS
@@ -100,11 +146,13 @@ export def _complete_by_fzf [cmd: string query: string] {
             | flatten
             | uniq
             | str join "\n"
-            | fzf_with_query $query ($file_preview_cmd + " -l zsh")
+            | fzf ...(build_fzf_args $query 'file' ($file_preview_cmd + " -l zsh"))
         }
         _ => {
-            let res = fzf_with_query $query $default_preview_cmd
-            quote_if_not_empty $res
+            fzf --multi ...(build_fzf_args $query 'file' $default_preview_cmd)
+            | split row "\n"
+            | each {|line| quote_if_not_empty $line}
+            | str join ' '
         }
     }
 }
@@ -130,7 +178,9 @@ def _carapace_by_fzf [command: string spans: list<string>] {
                 $"($value_style)(padding_to_length $item.value)(ansi reset)(ansi purple_bold)\t\t($item
                     | get -i description)(ansi reset)"}
             | str join (char nul)
-            | fzf --read0 --ansi -q $query --header $"(padding_to_length "Value")\t\tDescription"
+            | (fzf ...(build_fzf_args $query 'carapace')
+                --header $"(padding_to_length "Value")\t\tDescription"
+                ...($fzf_carapace_extra_args))
             | split row "\t"
             | get -i 0
             | default $query
@@ -151,7 +201,7 @@ def _carapace_env_by_fzf [query: string] {
 }
 
 # if the current command is an alias, get it's expansion
-export def expand_alias_if_exist [cmd: string] {
+def expand_alias_if_exist [cmd: string] {
     scope aliases
     | where name == $cmd
     | get -i 0.expansion
@@ -162,13 +212,13 @@ export def expand_alias_if_exist [cmd: string] {
 # example1: `(foo | bar baz` should => [bar baz]
 # example2: `(foo | (b` should => [b]
 # also expands aliases
-export def _trim_spans [
+def _trim_spans [
     spans: list<string> # original spans of space splited terms of current command, provided by nushell
 ] {
     let trimmed = ($spans
-        # reversely take until ( or | or { is found
+        # reversely take until ( or | or { or ; is found
         | reverse
-        | take until {|r| $r =~ '\s*[|({]\s*'}
+        | take until {|r| $r =~ '[ \n]*[|({;][ \n]*'}
         | reverse
     )
 
@@ -187,6 +237,7 @@ export def _trim_spans [
 export def carapace_by_fzf [
     raw_spans: list<string> # list of commandline arguments to trigger `carapace <command> nushell ...($spans)`
 ] {
+    # return ($raw_spans | each {|it| $"=====($it)====="})
     let spans = _trim_spans $raw_spans
     let query = $spans | last
     let res = (
@@ -204,11 +255,11 @@ export def carapace_by_fzf [
                 _carapace_by_fzf $spans.0 $spans
         }
     })
-    if ($res | is-empty) {
-        null
-    } else {
-        [({description: 'From customized external completer'}
-        | default $res 'value')]
+    match $res {
+        null => null # continue with built-in completer, may cause another trigger of this completer
+        '' => [$query] # nothing changes
+        _ => [({description: 'From customized external completer'}
+                | default $res 'value')]
     }
 }
 
@@ -221,16 +272,23 @@ export def complete_line_by_fzf [] {
     let suffix = $cmd_raw | str substring $cursor_pos..
     let cmd_before_pos = $cmd_raw | str substring ..($cursor_pos - 1)
     let parsed = $cmd_before_pos
-        | parse --regex '^(?<prefix>(.*[(|{])*)(?<cmd>\s*([^ ]+\s+)*)(?<query>[^ |({]*)$'
+        | str replace --all "\n" (char nul) # workarounds for bugs of parse command
+        | parse --regex '^(?<prefix>(.*[(|{;])*)(?<cmd>[ \x00]*([^ ]+\s+)*)(?<query>[^\x00 |({;]*)$' #\x00 for nul character
         | get -i 0
-    let cmd_head = $parsed.cmd | str trim | split row ' ' | get -i 0 | default ''
+    let cmd_head = $parsed.cmd
+        | str trim
+        | split row ' '
+        | get -i 0 | default ''
+        | str replace --all (char nul) ''
+    let query = $parsed.query
     let fzf_res = (
-        if ('$' in $parsed.query) {
-            _carapace_env_by_fzf $parsed.query
+        if ('$' in $query) {
+            _carapace_env_by_fzf $query
         } else {
-            _complete_by_fzf $cmd_head $parsed.query
+            _complete_by_fzf $cmd_head $query
         })
     let completed_before_pos = $parsed.prefix + $parsed.cmd + $fzf_res
+        | str replace --all (char nul) "\n"
     commandline edit --replace ($completed_before_pos + $suffix)
     commandline set-cursor ($completed_before_pos | str length)
 }

@@ -64,7 +64,7 @@ export def main [] {
         shape_int: { fg: '#bb9af7' attr: 'b' }
         shape_internalcall: { fg: '#1d8f8f' attr: 'b' }
         shape_keyword: { fg: '#bb9af7' attr: 'b' }
-        shape_list: { fg: '#0dcf6f' attr: 'b' }
+        shape_list: { fg: '#dddddd' attr: 'b' }
         shape_literal: '#7aa2f7'
         shape_match_pattern: '#9ece6a'
         shape_matching_brackets: { attr: 'u' }
