@@ -235,19 +235,26 @@ def _env_by_fzf [
         let segs = $true_query | split row '.'
         let seg_prefix = $segs | drop 1 | append '' | str join '.'
         let content = get_variable_by_name $true_query
-        let res = (if ($content | describe | str starts-with 'list') {
-            0..(($content | length) - 1)
-            | each {|n| $n | into string}
-        } else {
-            $content
-            | columns
-        })
+        let res = (
+            match ($content | describe | str substring 0..4) {
+                'list<' => {
+                    0..(($content | length) - 1)
+                    | each {|n| $n | into string}
+                }
+                'recor' => {
+                    $content
+                    | columns
+                }
+                _ => {
+                    []
+                }
+            }
         | str join "\n"
         | (fzf ...(build_fzf_args ($segs | last)
             'variable' ("print r#'" + ($content | table -i false) + "'#"))
             --tmux center,90%,50%
             --preview-window right,70%
-        )
+        ))
         if ($res | is-empty) {$query} else {$prefix + $seg_prefix + $res}
     }
 }
