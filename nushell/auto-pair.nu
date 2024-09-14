@@ -148,8 +148,8 @@ export def auto_pair_complete [
   let operation = (match $which_side {
     'right' if $is_matched and ($char == $cmd_info.char_next) => 'move'
     'both' if $char == $cmd_info.char_next => 'move'
-    'both' if $is_matched and ($cmd_info.char_next in r#''`"[({})]'#) => 'pair'
-    'left' if $is_matched => 'pair'
+    'both' if $is_matched and ($cmd_info.char_next in r#''`" '#) => 'pair'
+    'left' if $is_matched and ($cmd_info.char_next in r#' '#) => 'pair'
     _ => 'default'
   })
 
@@ -173,5 +173,5 @@ export def --env "set auto_pair_keybindings" [] {
   $env.config.keybindings = $env
   | get -i config.keybindings | default []
   | append $new_kbs
-  | append $auto_pair_backspace_binding
+  # | append $auto_pair_backspace_binding
 }

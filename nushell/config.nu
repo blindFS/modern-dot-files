@@ -184,7 +184,7 @@ $env.config = {
                         --no-tmux --height 40%
                         --prompt $"(prompt_decorator
                             $private_vars.prompt_symbol_color
-                            "light_blue" "" false)")
+                            'light_blue' '▓▒░ ' false)")
                     | ansi strip)
                 }
             }

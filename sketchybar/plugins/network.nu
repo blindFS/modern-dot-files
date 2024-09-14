@@ -1,14 +1,13 @@
 #!/usr/bin/env nu
-
-let start_info = sys net | select sent recv | math sum
-sleep 1sec
-let end_info = sys net | select sent recv | math sum
-
 const symbols = {
     up: 
     down: 
     fill: ░
 }
+
+let start_info = sys net | select sent recv | math sum
+sleep 1sec
+let end_info = sys net | select sent recv | math sum
 
 let new_args = [$start_info $end_info]
     | rename up down

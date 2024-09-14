@@ -1,5 +1,5 @@
 const fzf_carapace_extra_args = [--read0 --ansi --no-tmux --height=50%]
-const fzf_window_first_column_max_length = 36
+const fzf_window_first_column_max_length = 25
 const dir_preview_cmd = "eza --tree -L 3 --color=always {} | head -200"
 const file_preview_cmd = "bat -n --color=always --line-range :200 {}"
 const default_preview_cmd = "if ({} | path type) == 'dir'" + $" {($dir_preview_cmd)} else {($file_preview_cmd)}"
@@ -14,23 +14,22 @@ if ($content.type | ansi strip) == 'EXTERNAL' {"
 )
 const fzf_prompt_default_setting = {
     fg: '#000000'
-    bg: '#7aa2f7'
-    symbol: 'FZF'
+    bg: '#c0caf5'
+    symbol: ''
 }
 const fzf_prompt_info = {
-    carapace: {
-        bg: '#c0caf5'
-        symbol: 󰳗
-    }
-    variable: { symbol: 󱄑 }
-    directory: { symbol:  }
-    file: { symbol: 󰈔 }
-    remote: { symbol: 󰛳 }
-    process: { symbol:  }
-    command: { symbol:  }
+    Carapace: { bg: '#1d8f8f' symbol: 󰳗 }
+    Variable: { symbol: 󱄑 }
+    Directory: { symbol:  }
+    File: { symbol: 󰈔 }
+    Remote: { symbol: 󰛳 }
+    Process: { symbol:  }
+    Command: { symbol:  }
+    Internals: {bg: '#0dcf6f' symbol:  }
+    Externals: {bg: '#7aa2f7' symbol:  }
 }
 
-export def get_variable_by_name [
+def get_variable_by_name [
     name: string # $foo.bar style
 ] {
     let segs = $name
@@ -57,11 +56,22 @@ export def get_variable_by_name [
     $content
 }
 
-def quote_if_not_empty [s: string] {
-    if ($s | str trim | is-empty) {''} else {$"`($s)`"}
+def _quote_if_not_empty [] {
+    if ($in | str trim | is-empty) {''} else {$"`($in)`"}
 }
 
-def build_fzf_prompt [
+def _prompt_decorator [
+    fg_color: string
+    bg_color: string
+    symbol: string
+    type: string
+] {
+    let fg = {fg: $bg_color}
+    let bg = {fg: $fg_color, bg: $bg_color}
+    $"(ansi --escape $bg)▓▒░ ($type) ($symbol)(ansi reset)(ansi --escape $fg)(ansi reset) "
+}
+
+def _build_fzf_prompt [
     key: string
 ] {
     let prompt_config = $fzf_prompt_info
@@ -71,14 +81,15 @@ def build_fzf_prompt [
     | default $fzf_prompt_default_setting.bg bg
     | default $fzf_prompt_default_setting.symbol symbol
 
-    (prompt_decorator
+    (_prompt_decorator
     $prompt_config.fg
     $prompt_config.bg
     $prompt_config.symbol
-    false)
+    $key
+    )
 }
 
-def build_fzf_args [
+def _build_fzf_args [
     query: string
     prompt_key?: string
     preview_cmd?: string
@@ -90,14 +101,23 @@ def build_fzf_args [
     }
     if ($prompt_key | is-not-empty) {
         $args = $args
-        | append [--prompt (build_fzf_prompt $prompt_key)]
+        | append [--prompt (_build_fzf_prompt $prompt_key)]
     }
     $args
 }
 
-def padding_to_length [input_string: string length?: int] {
+def _padding_to_length [input_string: string length?: int] {
     let length = $length | default $fzf_window_first_column_max_length
     $input_string | fill -a l -w $length
+}
+
+def _two_column_item [
+    item1: string
+    item2: string
+    style1?: string = (ansi yellow_reverse)
+    style2?: string = (ansi purple_reverse)
+] {
+    $"($style1)(_padding_to_length $item1)\t\t($style2)($item2)(ansi reset)"
 }
 
 def _list_internal_commands [] {
@@ -121,40 +141,41 @@ export def _complete_by_fzf [cmd: string query: string] {
         _ if ($cmd in ['**' 'view']) => {
             _list_internal_commands
             | str join "\n"
-            | fzf ...(build_fzf_args $query 'command' $help_preview_cmd)
+            | fzf ...(_build_fzf_args $query 'Internals'
+            $help_preview_cmd)
         }
         # Search for external commands
         "*^" => {
             _list_external_commands
             | str join "\n"
-            | fzf ...(build_fzf_args "" 'command' $external_tldr_cmd)
+            | fzf ...(_build_fzf_args "" 'Externals' $external_tldr_cmd)
         }
         # combine internals and externals
         '' => {
             _list_internal_commands
-            | each {|in| $"(padding_to_length $in)\t\t(ansi green_italic)NUSHELL_INTERNAL(ansi reset)"}
+            | each {|in| _two_column_item $in 'NUSHELL_INTERNAL' '' (ansi green_italic)}
             | append (
                 _list_external_commands
-                | each {|ext| $"(padding_to_length $ext)\t\t(ansi blue_italic)EXTERNAL(ansi reset)"}
+                | each {|ext| _two_column_item $ext 'EXTERNAL' '' (ansi blue_italic)}
             )
             | str join "\n"
-            | (fzf --ansi --header $"(padding_to_length "Command")\t\tType"
-                ...(build_fzf_args $query 'command' $hybrid_help_cmd))
+            | (fzf --ansi --header (_two_column_item 'Command' 'Type')
+                ...(_build_fzf_args $query 'Command' $hybrid_help_cmd))
             | split row "\t"
             | get -i 0
             | default $query
             | str trim
         }
         _ if ($cmd in ['z' '__zoxide_z' 'cd' 'zoxide' 'ls' 'eza']) => {
-            let res = (fd --type=d --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9
-                | fzf ...(build_fzf_args $query 'directory' $dir_preview_cmd))
-            quote_if_not_empty $res
+            (fd --type=d --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9
+                | fzf ...(_build_fzf_args $query 'Directory' $dir_preview_cmd))
+            | _quote_if_not_empty
         }
         "kill" => {
             ps
             | each {|r| $"($r.pid)\t($r.name)"}
             | str join "\n"
-            | fzf ...(build_fzf_args $query 'process' 'ps | where pid == ({} | split row "\t" | get -i 0 | into int) | transpose')
+            | fzf ...(_build_fzf_args $query 'Process' 'ps | where pid == ({} | split row "\t" | get -i 0 | into int) | transpose')
             | split row "\t" | get -i 0
         }
         "ssh" => {
@@ -165,7 +186,7 @@ export def _complete_by_fzf [cmd: string query: string] {
                 | get -i 0.column1
                 | str replace -r '.*\[(.+)\].*' '$1'}
             | str join "\n"
-            | fzf ...(build_fzf_args $query 'remote' "dig {} | jc --dig | from json | get answer | get -i 0")
+            | fzf ...(_build_fzf_args $query 'Remote' "dig {} | jc --dig | from json | get answer | get -i 0")
         }
         _ if ($cmd in ['use' 'source']) => {
             $env.NU_LIB_DIRS
@@ -174,12 +195,12 @@ export def _complete_by_fzf [cmd: string query: string] {
             | flatten
             | uniq
             | str join "\n"
-            | fzf ...(build_fzf_args $query 'file' ($file_preview_cmd + " -l zsh"))
+            | fzf ...(_build_fzf_args $query 'File' ($file_preview_cmd + " -l zsh"))
         }
         _ => {
-            fzf --multi ...(build_fzf_args $query 'file' $default_preview_cmd)
+            fzf --multi ...(_build_fzf_args $query 'File' $default_preview_cmd)
             | split row "\n"
-            | each {|line| quote_if_not_empty $line}
+            | each {|line| $line | _quote_if_not_empty}
             | str join ' '
         }
     }
@@ -193,6 +214,28 @@ def _final_spans_for_carapace [spans: list<string>] {
         | str replace -r '\w*$' '')
 }
 
+# post process for multi selected items
+# select the first column if is a table
+# ansi strip
+def _fzf_post_process [] {
+    let lines = $in
+    if ($lines | is-empty) { return null }
+    let lines = $lines
+    | split row "\n"
+    | each {|line| $line
+        | split row "\t"
+        | get -i 0
+        | ansi strip
+        | str trim
+    }
+    # multiple items only triggered for files
+    (if ($lines | length) > 1 {
+        $lines
+        | each {|line| $line | _quote_if_not_empty }
+    } else {$lines})
+    | str join ' '
+}
+
 def _carapace_by_fzf [command: string spans: list<string>] {
     let query = $spans | last
     let carapace_completion = carapace $command nushell ...(_final_spans_for_carapace $spans)
@@ -203,17 +246,19 @@ def _carapace_by_fzf [command: string spans: list<string>] {
         _ => ($carapace_completion
             | each {|item|
                 let value_style = ansi --escape ($item | get -i style | default {fg: yellow})
-                $"($value_style)(padding_to_length $item.value)(ansi reset)(ansi purple_bold)\t\t($item
-                    | get -i description)(ansi reset)"}
+                (_two_column_item
+                $item.value # drop items with no value field
+                ($item | get -i description | default '')
+                $value_style
+                (ansi purple_italic))
+            }
             | str join (char nul)
-            | (fzf ...(build_fzf_args $query 'carapace')
-                --header $"(padding_to_length "Value")\t\tDescription"
-                ...($fzf_carapace_extra_args))
-            | split row "\t"
-            | get -i 0
+            | (fzf ...(_build_fzf_args $query 'Carapace')
+                --header (_two_column_item 'Value' 'Description')
+                ...($fzf_carapace_extra_args)
+                ...(_carapace_git_diff_preview $spans))
+            | _fzf_post_process
             | default $query
-            | ansi strip
-            | str trim
         )
     }
 }
@@ -245,13 +290,21 @@ def _env_by_fzf [
                     $content
                     | columns
                 }
+                'table' => {
+                    $content
+                    | columns
+                }
                 _ => {
                     []
                 }
             }
         | str join "\n"
-        | (fzf ...(build_fzf_args ($segs | last)
-            'variable' ("print r#'" + ($content | table -i false) + "'#"))
+        | (fzf ...(_build_fzf_args ($segs | last)
+            'Variable'
+            ("(r#'" + ($content | default {} | table -t basic -i false)
+                + "'# | find {} | each {|r| let row = ($r | split row '|');
+                {name: ($row.1 | str trim | str trim --left --char '$')
+                value: ($row.2 | str trim)}} | table -i false)"))
             --tmux center,90%,50%
             --preview-window right,70%
         ))
@@ -259,8 +312,25 @@ def _env_by_fzf [
     }
 }
 
+def _carapace_git_diff_preview [
+    spans: list<string>
+] {
+    match $spans.0 {
+        'git' if ($spans | get -i 1 | default '') in [
+            'add' 'show' 'diff'
+        ] => [--preview
+            r#'let fp = ({} | split row "\t" | first | str trim); if ($fp | path exists) {git diff $fp | delta} else {git log}'#
+            --height=100%
+            --multi
+            '--preview-window=right,65%'
+            '--tmux=center,80%,80%'
+        ]
+        _ => []
+    }
+}
+
 # if the current command is an alias, get it's expansion
-def expand_alias_if_exist [cmd: string] {
+def _expand_alias_if_exist [cmd: string] {
     scope aliases
     | where name == $cmd
     | get -i 0.expansion
@@ -286,7 +356,7 @@ def _trim_spans [
     } else {
         $trimmed
         | skip 1
-        | prepend (expand_alias_if_exist $trimmed.0
+        | prepend (_expand_alias_if_exist $trimmed.0
             | split row ' ')
     }
 }
@@ -300,7 +370,7 @@ export def carapace_by_fzf [
     let spans = _trim_spans $raw_spans
     let query = $spans | last
     let res = (
-        match $query {
+        match $spans.0 {
             _ if "$" in $query => {
                 _env_by_fzf $query
             }
@@ -309,6 +379,12 @@ export def carapace_by_fzf [
             }
             _ if ($spans | length) == 1 => {
                 _complete_by_fzf '' $query
+            }
+            '__zoxide_z' => {
+                _complete_by_fzf 'cd' $query
+            }
+            '__zoxide_zi' => {
+                $'(zoxide query --interactive ...($spans | skip 1) | str trim -r -c "\n")'
             }
             _ => {
                 _carapace_by_fzf $spans.0 $spans
