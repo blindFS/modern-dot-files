@@ -6,33 +6,18 @@
 # https://github.com/FelixKratz/dotfiles
 
 let plugin_dir = $"($env.CONFIG_DIR)/plugins"
-source config.nu
+use ./plugins/constants.nu config
+use config.nu *
 
 ##### Aerospace integration #####
-
-def args_per_workspace [it: string] {
-  ['--add' 'item' $"space.($it)" 'left']
-  | append ['--set' $"space.($it)" $"icon=($it)" $"click_script=aerospace workspace ($it)"]
-  | append ($config.workspace_default_args | arg_to_setting $plugin_dir)
-}
-
-let workspace_args = (aerospace list-workspaces --all
-  | lines
-  | each {|it| args_per_workspace $it})
-  | flatten
-
 (sketchybar
   --bar position=top height=25 blur_radius=20 color=0x00000000
-  --add event toggle_stats
   --add event aerospace_mode_change
   --add event aerospace_workspace_change
   --default ...($config.default | arg_to_setting $plugin_dir)
-  ...($workspace_args)
-  ...($config.plugin_configs
-      | each {|it| $it
-        | build_sketchybar_args $plugin_dir}
-      | flatten)
+  ...(workspace_args $config.workspace_default_args $plugin_dir)
+  ...($config.plugin_configs | build_all_plugin_args $plugin_dir)
 )
+sketchybar --update
 
 ##### Force all scripts to run the first time (never do this in a script) #####
-sketchybar --update

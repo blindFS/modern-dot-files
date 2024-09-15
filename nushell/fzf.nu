@@ -85,8 +85,7 @@ def _build_fzf_prompt [
     $prompt_config.fg
     $prompt_config.bg
     $prompt_config.symbol
-    $key
-    )
+    $key)
 }
 
 def _build_fzf_args [
@@ -150,21 +149,31 @@ export def _complete_by_fzf [cmd: string query: string] {
             | str join "\n"
             | fzf ...(_build_fzf_args "" 'Externals' $external_tldr_cmd)
         }
-        # combine internals and externals
         '' => {
-            _list_internal_commands
-            | each {|in| _two_column_item $in 'NUSHELL_INTERNAL' '' (ansi green_italic)}
-            | append (
-                _list_external_commands
-                | each {|ext| _two_column_item $ext 'EXTERNAL' '' (ansi blue_italic)}
-            )
-            | str join "\n"
-            | (fzf --ansi --header (_two_column_item 'Command' 'Type')
-                ...(_build_fzf_args $query 'Command' $hybrid_help_cmd))
-            | split row "\t"
-            | get -i 0
-            | default $query
-            | str trim
+            let dirname = ($query + (char nul)) | path dirname
+            # search for executable in path
+            if ($dirname | path exists) {
+                (fd --exclude .git --exclude .cache --hidden
+                --max-depth 5 --type x '' $dirname --color always)
+                | (fzf ...(_build_fzf_args ($query | path basename) 'File' $file_preview_cmd)
+                    --ansi --no-tmux --preview-window down,50%)
+                | ansi strip
+            } else {
+                # combine internals and externals
+                _list_internal_commands
+                | each {|in| _two_column_item $in 'NUSHELL_INTERNAL' '' (ansi green_italic)}
+                | append (
+                    _list_external_commands
+                    | each {|ext| _two_column_item $ext 'EXTERNAL' '' (ansi blue_italic)}
+                )
+                | str join "\n"
+                | (fzf --ansi --header (_two_column_item 'Command' 'Type')
+                    ...(_build_fzf_args $query 'Command' $hybrid_help_cmd))
+                | split row "\t"
+                | get -i 0
+                | default $query
+                | str trim
+            }
         }
         _ if ($cmd in ['z' '__zoxide_z' 'cd' 'zoxide' 'ls' 'eza']) => {
             (fd --type=d --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9
@@ -279,7 +288,7 @@ def _env_by_fzf [
     } else {
         let segs = $true_query | split row '.'
         let seg_prefix = $segs | drop 1 | append '' | str join '.'
-        let content = get_variable_by_name $true_query
+        let content = get_variable_by_name $seg_prefix
         let res = (
             match ($content | describe | str substring 0..4) {
                 'list<' => {
@@ -292,22 +301,28 @@ def _env_by_fzf [
                 }
                 'table' => {
                     $content
-                    | columns
+                    | get ($content | columns | first)
                 }
                 _ => {
                     []
                 }
             }
-        | str join "\n"
-        | (fzf ...(_build_fzf_args ($segs | last)
-            'Variable'
-            ("(r#'" + ($content | default {} | table -t basic -i false)
-                + "'# | find {} | each {|r| let row = ($r | split row '|');
-                {name: ($row.1 | str trim | str trim --left --char '$')
-                value: ($row.2 | str trim)}} | table -i false)"))
-            --tmux center,90%,50%
-            --preview-window right,70%
-        ))
+            | str join "\n"
+            | (fzf ...(_build_fzf_args ($segs | last)
+                'Variable'
+                ($"const raw = ($content | to json); "
+                + `(match ($raw | describe | str substring ..4) {
+                'list<' => {$raw | get -i ({} | into int)},
+                _ => {$raw | table -i false -t basic | find {}
+                    | each {|line| let segs = $line | split row '|'
+                        {$'name': ($segs | get 1)
+                        $'value': ($segs | get (($segs | length) - 2))}}
+                    | table -i false}})
+                | str replace --regex '((│(\s*\w+\s*))*│)\n├' $"(ansi green)$1(ansi reset)\n├"
+                | str replace --regex --all '([╭├][┬┼─]+[┤╮])' $'(ansi green)$1(ansi reset)'`
+                ))
+                --tmux center,90%,50%
+                --preview-window right,70%))
         if ($res | is-empty) {$query} else {$prefix + $seg_prefix + $res}
     }
 }
@@ -317,9 +332,9 @@ def _carapace_git_diff_preview [
 ] {
     match $spans.0 {
         'git' if ($spans | get -i 1 | default '') in [
-            'add' 'show' 'diff'
+            'add' 'show' 'diff' 'stage'
         ] => [--preview
-            r#'let fp = ({} | split row "\t" | first | str trim); if ($fp | path exists) {git diff $fp | delta} else {git log}'#
+            r#'let fp = ({} | split row "\t" | first | str trim); if ($fp | path exists) {git diff $fp | delta} else {git log --color}'#
             --height=100%
             --multi
             '--preview-window=right,65%'
@@ -377,7 +392,7 @@ export def carapace_by_fzf [
             _ if $query in ['**' '*^'] => {
                 _complete_by_fzf $spans.0 ''
             }
-            _ if ($spans | length) == 1 => {
+            _ if $spans.0 == 'which' or ($spans | length) == 1 => {
                 _complete_by_fzf '' $query
             }
             '__zoxide_z' => {

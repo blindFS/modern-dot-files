@@ -8,3 +8,4 @@
 | [carapace](https://carapace-sh.github.io/carapace-bin/setup.html)       | `brew tap rsteube/homebrew-tap && brew install rsteube/tap/carapace`         |
 | [zoxide](https://github.com/ajeetdsouza/zoxide)                         | `brew install zoxide`                                                        |
 | others                                                                  | `brew install ripgrep bat eza fzf tmux nushell jc font-sarasa-nerd starship` |
+| more                                                                    | iSMC, `brew install nowplaying-cli git-delta`                                |

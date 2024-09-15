@@ -109,9 +109,9 @@ def backspace_delete_by_replace [
 export def auto_pair_backspace [] {
   let cmd_info = analyse_commandline
   let need_check = $auto_pair_key_maps
-  | transpose
-  | any {|r| ($cmd_info.char_current == $r.column1.left
-    and $cmd_info.char_next == $r.column1.right)}
+    | transpose
+    | any {|r| ($cmd_info.char_current == $r.column1.left
+      and $cmd_info.char_next == $r.column1.right)}
   if $need_check and (is_pair_matched
     $cmd_info.all_chars $cmd_info.char_current) {
       (backspace_delete_by_replace

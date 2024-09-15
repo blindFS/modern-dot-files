@@ -45,9 +45,13 @@ $env.LS_COLORS = (vivid generate tokyonight-night | str trim)
 # path add ($env.HOME | path join ".local" "bin")
 # $env.PATH = ($env.PATH | uniq)
 
-use std "path add"
-path add ($env.HOME | path join ".elan" "bin")
-path add ($env.HOME | path join ".local" "bin")
+$env.PATH = ($env.PATH
+    | split row (char esep)
+    | append '/usr/local/bin'
+    | append ($env.HOME | path join ".elan" "bin")
+    | append ($env.HOME | path join ".local" "bin")
+    | uniq)
+$env.SHELL = (which nu).path.0
 
 # To load from a custom file you can use:
 # starship init nu | save -f ($nu.default-config-dir | path join 'starship.nu')
@@ -55,7 +59,7 @@ zoxide init nushell | save -f ($nu.default-config-dir | path join 'zoxide.nu')
 
 $env.FZF_DEFAULT_COMMAND = "fd --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9"
 $env.FZF_DEFAULT_OPTS = (
-    "--layout reverse --tmux center,80%,60% " +
+    "--layout reverse --header-first --tmux center,80%,60% " +
     "--pointer ▶ --marker ⇒ --preview-window right,65% " +
     "--bind 'bs:backward-delete-char/eof,tab:toggle' " +
     $"--prompt '(prompt_decorator '#111726' '#9ece6a' '▓▒░ ' false)' " +
