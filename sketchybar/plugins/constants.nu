@@ -19,7 +19,7 @@ export const mode_colors = {
     main: '0xdd7aa2f7'
     operation: '0xfff7768e'
     resize: '0xff0dcf6f'
-    service: '0xff000000'
+    service: '0xffffffff'
 }
 
 export const config = {
@@ -91,11 +91,10 @@ export const config = {
             events: [media_change]
             args: {
                 icon: 󰐎
-                icon.color: $colors.dark
-                label.color: $colors.dark
-                background.color: $colors.transparent
-                background.border_color: $colors.green
-                background.shadow.distance: 3
+                icon.color: $colors.fg
+                label.color: $colors.fg
+                background.color: $colors.bg
+                background.border_color: $colors.fg
                 script: '{}/media.nu'
                 click_script: 'nowplaying-cli togglePlayPause'
             }
@@ -108,7 +107,6 @@ export const config = {
                 icon.drawing: off
                 label.drawing: off
                 background.image.scale: 0.035
-                y_offset: -1
                 background.color: $colors.transparent
                 background.border_width: 0
             }

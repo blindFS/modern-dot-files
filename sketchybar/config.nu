@@ -1,18 +1,17 @@
 #!/usr/bin/env nu
 
-export def arg_to_setting [plugin_dir: string] {
+export def arg_to_setting [plugin_dir: string] record -> list<string> {
     $in
-    | transpose
-    | each {|row|
-        let value = (
-            if ($row.column0 in ['script' 'click_script'])
-                # {$plugin_dir | path join $row.column1}
-                {$row.column1 | str replace '{}' $plugin_dir}
-            else {$row.column1})
-        $"($row.column0)=($value)"}
+    | transpose name value
+    | each { |pair|
+        $pair
+        | update 'value' { 
+            if ($pair.name | str ends-with 'script') {$pair.value
+                | str replace '{}' $plugin_dir} else $pair.value}
+        | $"($in.name)=($in.value)" }
 }
 
-def build_sketchybar_args [plugin_dir: string] {
+def build_sketchybar_args [plugin_dir: string] record -> list<string> {
     let name = $in | get -i name | default temp_name
     let pos = $in | get -i pos | default right
     let events = $in | get -i events | default []
@@ -55,7 +54,7 @@ def args_per_workspace [
     id: string
     ws_config: record
     plugin_dir: string
-] {
+] nothing -> list<string> {
   ['--add' 'item' $"space.($id)" 'left']
   | append ['--set' $"space.($id)" $"icon=($id)" $"click_script=aerospace workspace ($id)"]
   | append ($ws_config | arg_to_setting $plugin_dir)
@@ -64,18 +63,17 @@ def args_per_workspace [
 export def workspace_args [
     ws_config: record
     plugin_dir: string
-] {
+] nothing -> list<string> {
     aerospace list-workspaces --all
     | lines
-    | each {|id| (args_per_workspace $id $ws_config $plugin_dir)}
+    | each { args_per_workspace $in $ws_config $plugin_dir }
     | flatten
 }
 
 export def build_all_plugin_args [
     plugin_dir: string
-] {
+] record -> list<string> {
     $in
-    | each {|it| $it
-        | build_sketchybar_args $plugin_dir}
+    | each { $in | build_sketchybar_args $plugin_dir}
     | flatten
 }

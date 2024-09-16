@@ -9,49 +9,49 @@ const stats_plugins = [
     network_up
 ]
 
-export def get_cpu_load [] {
+export def get_cpu_load [] nothing -> string {
     sys cpu
     | get cpu_usage | math avg
     | into string --decimals 0
     | fill -a r -c '░' -w 2
 }
 
-export def get_mem_free_percentage [] {
+export def get_mem_free_percentage [] nothing -> string {
     sys mem
-    | do {|| ($in.available / $in.total) * 100
-        | into string --decimals 0}
+    | ($in.available / $in.total) * 100
+    | into string --decimals 0
 }
 
-export def get_disk_free_percentage [] {
+export def get_disk_free_percentage [] nothing -> string {
     sys disks
     | where mount == '/' | first
-    | do {|| ($in.free) / ($in.total) * 100
-        | into string --decimals 0}
+    | ($in.free) / ($in.total) * 100
+    | into string --decimals 0
 }
 
-export def get_temperature_info [] {
+export def get_temperature_info [] nothing -> record {
     let temp_info = sys temp
     let cpu_temp = $temp_info | find 'cpu' | get temp | math max
     let gpu_temp = $temp_info | find 'gpu' | get temp | math max
 
-    let deg = match ([$cpu_temp $gpu_temp] | math max) {
+    match ([$cpu_temp $gpu_temp] | math max) {
         $t if $t > 80 => {icon: "", color: $colors.orange}
         $t if $t > 60 => {icon: "", color: $colors.yellow}
         $t if $t > 40 => {icon: "", color: $colors.green}
         _ => {icon: "", color: $colors.blue}
     }
-    $deg
     | default ($cpu_temp | into string --decimals 0) 'cpu_temp'
     | default ($gpu_temp | into string --decimals 0) 'gpu_temp'
 }
 
-export def get_icon_by_app_name [name: string] {
+export def get_icon_by_app_name [] string -> string {
+    let name = $in | str downcase
     $app_icons
-    | get -i ($name | str downcase)
+    | get -i $name
     | default ''
 }
 
-export def network_info_update_args [] {
+export def network_info_update_args [] nothing -> record {
     const symbols = {
         up: 
         down: 
@@ -65,7 +65,7 @@ export def network_info_update_args [] {
     [$start_info $end_info]
     | rename up down
     | transpose key start end
-    | each {|r| 
+    | each { |r| 
         let bps = $r.end - $r.start
         [
             --set
@@ -80,27 +80,27 @@ export def network_info_update_args [] {
     | flatten
 }
 
-def modify_args_per_workspace [sid: string focused_sid: string] {
-    let windows = (aerospace list-windows --workspace $sid
+def modify_args_per_workspace [
+    sid: string
+    focused_sid: string
+] nothing -> list<string> {
+    let icons = (aerospace list-windows --workspace $sid
         | lines
-        | each {|it| $it
+        | par-each { $in
             | split row '|' | get 1
             | str trim | str downcase
-        })
-    let icons = $windows
-        | each {|name| get_icon_by_app_name $name}
-        | uniq | str join ' '
+            | get_icon_by_app_name
+        }
+        | uniq | str join ' ')
     let extra = (if $sid == $focused_sid
-        {{
-            highlight: on
-            border_color: $colors.green
-        }} else {{
-            highlight: off
-            border_color: $colors.fg
-        }})
+        {
+            { highlight: on border_color: $colors.green }
+        } else {
+            { highlight: off border_color: $colors.fg }
+        })
 
     ['--set' $"space.($sid)"]
-    | append (if (($windows | is-empty) and ($sid != $focused_sid)) {
+    | append (if (($icons | is-empty) and ($sid != $focused_sid)) {
         [
             background.drawing=off
             label=
@@ -122,7 +122,7 @@ def modify_args_per_workspace [sid: string focused_sid: string] {
 export def workspace_modification_args [
     name: string
     last_sid: string
-] {
+] nothing -> list<string> {
     # use listener's label to store last focused space id
     let focused_sid = (aerospace list-workspaces --focused)
     let ids_to_modify = (
@@ -133,13 +133,13 @@ export def workspace_modification_args [
         })
     $ids_to_modify
     | uniq
-    | each {|sid| modify_args_per_workspace $sid $focused_sid}
+    | each { modify_args_per_workspace $in $focused_sid }
     | flatten
     | append ["--set" $name $"label=($focused_sid)"]
 }
 
-export def toggle_stats_args [] {
+export def toggle_stats_args [] nothing -> list<string> {
     $stats_plugins
-    | each {|item| [--set $item drawing=toggle]}
+    | each { [--set $in drawing=toggle] }
     | flatten
 }

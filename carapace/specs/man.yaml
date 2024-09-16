@@ -1,0 +1,4 @@
+name: man
+description: manpage
+completion:
+  positionalany: ["$carapace.bridge.Zsh([man])"]

@@ -18,4 +18,4 @@ let args = [--set $env.NAME popup.drawing=toggle]
             ]
         } else []
     )
-sketchybar ...($args)
+sketchybar ...$args

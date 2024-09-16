@@ -10,7 +10,7 @@ use helper.nu get_icon_by_app_name
 
 match $env.SENDER {
     "front_app_switched" => {
-        sketchybar --set $env.NAME label=($env.INFO) icon=(get_icon_by_app_name $env.INFO)
+        sketchybar --set $env.NAME label=($env.INFO) icon=($env.INFO | get_icon_by_app_name)
     }
     "aerospace_mode_change" => {
         let color = ($mode_colors | get -i $env.MODE | default $mode_colors.main)

@@ -1,0 +1,3 @@
+[submodule "bat/syntaxes/sublime_text_nushell"]
+	path = bat/syntaxes/sublime_text_nushell
+	url = https://github.com/stevenxxiu/sublime_text_nushell
