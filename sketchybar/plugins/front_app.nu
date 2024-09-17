@@ -5,8 +5,10 @@
 # focused application in the $INFO variable:
 # https://felixkratz.github.io/SketchyBar/config/events#events-and-scripting
 
-use constants.nu mode_colors
-use helper.nu get_icon_by_app_name
+use constants.nu [
+    mode_colors
+    get_icon_by_app_name
+]
 
 match $env.SENDER {
     "front_app_switched" => {

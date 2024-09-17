@@ -1,4 +1,9 @@
 #!/usr/bin/env nu
-use helper.nu get_disk_free_percentage
 
-sketchybar --set $env.NAME label=(get_disk_free_percentage)%
+let free_percentage = (
+    sys disks
+    | where mount == '/' | first
+    | ($in.free) / ($in.total) * 100
+    | into string --decimals 0
+)
+sketchybar --set $env.NAME label=($free_percentage)%

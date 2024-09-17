@@ -55,7 +55,7 @@ $env.SHELL = (which nu).path.0
 
 # To load from a custom file you can use:
 # starship init nu | save -f ($nu.default-config-dir | path join 'starship.nu')
-zoxide init nushell | save -f ($nu.default-config-dir | path join 'zoxide.nu')
+# zoxide init nushell | save -f ($nu.default-config-dir | path join 'zoxide.nu')
 
 $env.FZF_DEFAULT_COMMAND = "fd --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9"
 $env.FZF_DEFAULT_OPTS = (
@@ -70,3 +70,4 @@ $env.FZF_DEFAULT_OPTS = (
 
 $env.CARAPACE_LENIENT = 1
 $env.MANPAGER = "col -bx | bat -l man -p"
+$env.MANPAGECACHE = $nu.default-config-dir | path join 'mancache.txt'

@@ -142,7 +142,40 @@ def _list_external_commands [] {
     | uniq
 }
 
-export def _complete_by_fzf [cmd: string query: string] {
+# Load full list of available manpage names from carapace zsh bridge (more thorough than apropos)
+# and save to $env.MANPAGECACHE for further completion
+export def update_manpage_cache [
+    --force (-f) # force update if the file already exists
+    --silent (-s) # print no message if set
+] nothing -> string {
+    let cache_fp = $env | get -i 'MANPAGECACHE'
+    if ($cache_fp | is-empty) {
+        if not $silent {
+            print '$env.MANPAGECACHE should be set before using this command.'
+        }
+        return null
+    }
+    if not ($cache_fp | path dirname | path exists) {
+        mkdir ($cache_fp | path dirname)
+    }
+    if not ($cache_fp | path exists) or $force {
+        carapace --macro bridge.Zsh man ''
+        | from json | get values.value
+        | uniq | str join "\n"
+        | save -f $cache_fp
+    } else {
+        if not $silent {
+            print 'File already exists, force rewrite by passing --force (-f) flag.'
+        }
+    }
+    $cache_fp
+}
+
+# Do a fzf search of misc contents accroding to current command
+def _complete_by_fzf [
+    cmd: string # command whose arguments need to complete at present
+    query: string # preceding string to search for
+] nothing -> string {
     match $cmd {
         # Search for internal commands
         _ if ($cmd in ['**' 'view']) => {
@@ -158,10 +191,13 @@ export def _complete_by_fzf [cmd: string query: string] {
             | fzf ...(_build_fzf_args '' 'Externals' $external_tldr_cmd)
         }
         'man' => {
-            carapace --macro bridge.Zsh man $query
-            | from json | get values.value
-            | uniq | str join "\n"
-            | fzf ...(_build_fzf_args '' 'Manpage' $manpage_preview_cmd)
+            let cache_fp = update_manpage_cache --silent
+            if ($cache_fp | is-empty) {
+                ''
+            } else {
+                open $cache_fp
+                | fzf ...(_build_fzf_args $query 'Manpage' $manpage_preview_cmd)
+            }
         }
         '' => {
             let dirname = ($query + (char nul)) | path dirname
@@ -409,6 +445,9 @@ export def carapace_by_fzf [
             }
             '__zoxide_z' => {
                 _complete_by_fzf 'cd' $query
+            }
+            'man' => {
+                _complete_by_fzf 'man' $query
             }
             '__zoxide_zi' => {
                 $'(zoxide query --interactive ...($spans | skip 1) | str trim -r -c "\n")'

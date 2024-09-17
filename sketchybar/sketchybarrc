@@ -5,9 +5,8 @@
 # For a (much) more advanced configuration example see my dotfiles:
 # https://github.com/FelixKratz/dotfiles
 
-let plugin_dir = $"($env.CONFIG_DIR)/plugins"
-use ./plugins/constants.nu config
 use config.nu *
+let plugin_dir = $"($env.CONFIG_DIR)/plugins"
 
 ##### Aerospace integration #####
 (sketchybar

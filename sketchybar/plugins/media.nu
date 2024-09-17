@@ -10,7 +10,7 @@ let last_song = sketchybar --query media
 let label = $"($media_info
     | get -i title | default '') - ($media_info
     | get -i artist | default '')"
-let tmp_cover_image_fp = $env.FILE_PWD | path join cover.jpg
+let tmp_cover_image_fp = $env.FILE_PWD | path join cover.png
 let icon_and_offset = match [$media_info.state ($last_song != $label)] {
     ['playing' true] => ['' $hidden_offset]
     ['playing' false] => ['' $shown_offset]

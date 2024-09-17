@@ -1,6 +1,5 @@
 #!/usr/bin/env nu
 
-
 let args = [--set $env.NAME popup.drawing=toggle]
     | append (
         if (sketchybar --query $env.NAME | from json | get popup.drawing) == 'off' {
