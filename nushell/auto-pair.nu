@@ -1,7 +1,7 @@
 const auto_pair_key_maps = {
-  `'`: { left: `'` right: `'`}
-  `"`: { left: `"` right: `"`}
-  '`': { left: '`' right: '`'}
+  `'`: { left: `'` right: `'` }
+  `"`: { left: `"` right: `"` }
+  '`': { left: '`' right: '`' }
   (char lbrace): {left: (char lbrace) right: (char rbrace)}
   (char lparen): {left: (char lparen) right: (char rparen)}
   (char lbracket): {left: (char lbracket) right: (char rbracket)}

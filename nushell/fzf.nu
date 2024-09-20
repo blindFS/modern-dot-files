@@ -432,7 +432,7 @@ export def carapace_by_fzf [
 ] {
     let spans = _trim_spans $raw_spans
     let query = $spans | last
-    let res = (
+    let res = try {(
         match $spans.0 {
             _ if "$" in $query => {
                 _env_by_fzf $query
@@ -454,8 +454,9 @@ export def carapace_by_fzf [
             }
             _ => {
                 _carapace_by_fzf $spans.0 $spans
+            }
         }
-    })
+    )} catch { '' }
     match $res {
         null => null # continue with built-in completer, may cause another trigger of this completer
         '' => [$query] # nothing changes
@@ -482,12 +483,12 @@ export def complete_line_by_fzf [] {
         | get -i 0 | default ''
         | str replace --all (char nul) ''
     let query = $parsed.query
-    let fzf_res = (
+    let fzf_res = try {
         if ('$' in $query) {
             _env_by_fzf $query
         } else {
             _complete_by_fzf $cmd_head $query
-        })
+        }} catch { $query }
     let completed_before_pos = $parsed.prefix + $parsed.cmd + $fzf_res
         | str replace --all (char nul) "\n"
     commandline edit --replace ($completed_before_pos + $suffix)

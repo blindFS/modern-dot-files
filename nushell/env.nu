@@ -59,7 +59,7 @@ $env.SHELL = (which nu).path.0
 
 $env.FZF_DEFAULT_COMMAND = "fd --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9"
 $env.FZF_DEFAULT_OPTS = (
-    "--layout reverse --header-first --tmux center,80%,60% " +
+    "--exit-0 --layout reverse --header-first --tmux center,80%,60% " +
     "--pointer ▶ --marker ⇒ --preview-window right,65% " +
     "--bind 'bs:backward-delete-char/eof,tab:accept-or-print-query,ctrl-t:toggle+down,ctrl-s:change-multi' " +
     $"--prompt '(prompt_decorator '#111726' '#9ece6a' '▓▒░ ' false)' " +
