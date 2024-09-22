@@ -2,6 +2,8 @@ const fzf_carapace_extra_args = [--read0 --ansi --no-tmux --height=50%]
 const fzf_window_first_column_max_length = 25
 const fd_default_args =  [--type=d --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9]
 const fd_executable_args = [--exclude .git --exclude .cache --hidden --max-depth 5 --type x --color always '']
+const tree_sitter_cmd_parser = 'nu-cmdline-parser'
+# const tree_sitter_cmd_parser = null
 
 const manpage_preview_cmd = 'man {} | col -bx | bat -l man -p --color=always --line-range :200'
 const dir_preview_cmd = "eza --tree -L 3 --color=always {} | head -200"
@@ -64,6 +66,18 @@ def get_variable_by_name [
     $content
 }
 
+def _substring_to_idx [
+  index: int
+] {
+  if $index < 0 {''} else {$in | str substring ..$index}
+}
+
+def _substring_from_idx [
+  index: int
+] {
+  if $index < 0 {$in} else {$in | str substring $index..}
+}
+
 def _quote_if_not_empty [] {
     if ($in | str trim | is-empty) {''} else {$"`($in)`"}
 }
@@ -85,7 +99,7 @@ def _build_fzf_prompt [
     let prompt_config = $fzf_prompt_info
     | get -i $key
     | default {}
-    | default $fzf_prompt_default_setting.fg fg 
+    | default $fzf_prompt_default_setting.fg fg
     | default $fzf_prompt_default_setting.bg bg
     | default $fzf_prompt_default_setting.symbol symbol
 
@@ -430,6 +444,7 @@ def _trim_spans [
 export def carapace_by_fzf [
     raw_spans: list<string> # list of commandline arguments to trigger `carapace <command> nushell ...($spans)`
 ] {
+    # return ($raw_spans | each {'========' + $in + '========'})
     let spans = _trim_spans $raw_spans
     let query = $spans | last
     let res = try {(
@@ -465,30 +480,69 @@ export def carapace_by_fzf [
     }
 }
 
-# Manually triggered completion inline replacement of te commandline string
+# Manually triggered completion inline replacement of the commandline string
 # override default behaviors for some commands like kill ssh zoxide which is defined in _complete_by_fzf
 export def complete_line_by_fzf [] {
     let cmd_raw = commandline
     let cursor_pos = commandline get-cursor
-    let initial_length = $cmd_raw | str length
-    let suffix = $cmd_raw | str substring $cursor_pos..
-    let cmd_before_pos = $cmd_raw | str substring ..($cursor_pos - 1)
-    let parsed = $cmd_before_pos
+    let suffix = $cmd_raw | str substring -g $cursor_pos..
+    let cmd_before_pos = $cmd_raw | str substring -g ..($cursor_pos - 1)
+    let cursor_pos = $cmd_before_pos | str length # in byte not in grapheme
+    let parsed = (if ($tree_sitter_cmd_parser | is-not-empty) {
+        # get current command for completion, output in format:
+        # command start offset\n
+        # command end offset\n
+        # command string
+        let start_offset = $cmd_raw
+            | ^$tree_sitter_cmd_parser $cursor_pos
+            | lines
+            | get -i 0
+            | default 0
+            | into int
+        let cmd_with_query = $cmd_raw
+            | str substring $start_offset..($cursor_pos - 1)
+            | str trim --left
+        let first_space = $cmd_with_query | str index-of ' '
+        let first_enter =  $cmd_with_query | str index-of "\n"
+        let first_split = match [$first_space $first_enter] {
+            [-1, _] => $first_enter
+            [_, -1] => $first_space
+            _ => { [$first_space $first_enter] | math min }
+        }
+        let last_space = $cmd_with_query | str index-of -e ' '
+        let last_enter =  $cmd_with_query | str index-of -e "\n"
+        let last_split = match [$last_space $last_enter] {
+            [-1, _] => $last_enter
+            [_, -1] => $last_space
+            _ => { [$last_space $last_enter] | math max }
+        }
+        {
+            prefix: ($cmd_raw | _substring_to_idx ($start_offset - 1))
+            query: ($cmd_with_query | _substring_from_idx ($last_split + 1))
+            cmd: ($cmd_with_query | _substring_to_idx $last_split)
+            cmd_head: ($cmd_with_query | _substring_to_idx ($first_split - 1))
+        }
+    } else {
+        let parsed_raw = $cmd_before_pos
         | str replace --all "\n" (char nul) # workarounds for bugs of parse command
         | parse --regex '^(?<prefix>(.*[(|{;])*)(?<cmd>[ \x00]*([^ ]+\s+)*)(?<query>[^\x00 |({;]*)$' #\x00 for nul character
         | get -i 0
-    let cmd_head = $parsed.cmd
-        | str trim
-        | split row ' '
-        | get -i 0 | default ''
-        | str replace --all (char nul) ''
+
+        $parsed_raw
+        | default ($parsed_raw.cmd
+            | str trim
+            | split row ' '
+            | get -i 0 | default ''
+            | str replace --all (char nul) '') 'cmd_head'
+    })
     let query = $parsed.query
     let fzf_res = try {
         if ('$' in $query) {
             _env_by_fzf $query
         } else {
-            _complete_by_fzf $cmd_head $query
-        }} catch { $query }
+            _complete_by_fzf $parsed.cmd_head $query
+        }
+    } catch { $query }
     let completed_before_pos = $parsed.prefix + $parsed.cmd + $fzf_res
         | str replace --all (char nul) "\n"
     commandline edit --replace ($completed_before_pos + $suffix)

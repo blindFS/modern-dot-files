@@ -50,12 +50,17 @@ $env.PATH = ($env.PATH
     | append '/usr/local/bin'
     | append ($env.HOME | path join ".elan" "bin")
     | append ($env.HOME | path join ".local" "bin")
+    | append ($env.HOME | path join ".cargo" "bin")
     | uniq)
 $env.SHELL = (which nu).path.0
 
 # To load from a custom file you can use:
 # starship init nu | save -f ($nu.default-config-dir | path join 'starship.nu')
 # zoxide init nushell | save -f ($nu.default-config-dir | path join 'zoxide.nu')
+if $nu.current-exe != (which nu).0.path {
+    $env.PROMPT_INDICATOR_VI_INSERT = {|| prompt_decorator "#111726" "#0DCF6F" " 󰏫" }
+    $env.PROMPT_INDICATOR_VI_NORMAL = {|| prompt_decorator "#111726" "#E0AF68" " " }
+}
 
 $env.FZF_DEFAULT_COMMAND = "fd --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9"
 $env.FZF_DEFAULT_OPTS = (

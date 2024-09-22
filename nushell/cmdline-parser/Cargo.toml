@@ -1,0 +1,8 @@
+[package]
+name = "nu-cmdline-parser"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+tree-sitter-nu = { path = "../tree-sitter-nu" }
+tree-sitter = "~0.23.0"

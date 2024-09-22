@@ -1,3 +1,5 @@
 mpc: zsh
 netstat: zsh
 aerospace: zsh
+lldb: zsh
+open: zsh
