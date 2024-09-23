@@ -1,12 +1,34 @@
-use tree_sitter::{Language, Parser, TreeCursor, Point};
-use std::io;
-use std::env;
+use clap::Parser as ArgParser;
+use tree_sitter::{Language, Parser, Point, TreeCursor};
+
+/// Find the nushell AST node of given type at position, code is read from stdin
+#[derive(ArgParser, Debug)]
+#[command(version, about, long_about = None)]
+struct Args {
+    /// node type to find
+    #[arg(short, long, default_value_t = String::from("command"))]
+    kind: String,
+    /// offset from the start of the code
+    #[arg(short, long)]
+    offset: usize,
+    /// if set, auto insert a place taking character to the offset of src code
+    #[arg(short, long, default_value_t = false)]
+    insert: bool,
+    /// which character to insert if auto-insert is set to true
+    #[arg(short, long, default_value_t = '_')]
+    char: char,
+    /// if set, instead of search for node with the given type,
+    /// search for the node at the other side of the parent node
+    #[arg(short, long, default_value_t = false)]
+    matchit: bool,
+}
 
 fn main() {
+    let args = Args::parse();
     // read nu script code from pipeline input
     let mut input = String::new();
     let mut line_length: Vec<usize> = Vec::new();
-    for line in io::stdin().lines() {
+    for line in std::io::stdin().lines() {
         match line {
             Ok(line) => {
                 if !input.is_empty() {
@@ -21,44 +43,51 @@ fn main() {
             Err(error) => println!("Error reading line: {}", error),
         }
     }
-    // read command line argument "offset" (integer)
-    let args: Vec<String> = env::args().collect(); // Get command-line arguments
-    if args.len() < 2 {
-        println!("Usage: {} <offset>", args[0]); // Print usage if no argument is provided
-        return;
+    let offset = std::cmp::min(args.offset, input.len());
+    if args.insert {
+        // auto insert a place taking char
+        input.insert(offset, args.char);
     }
-    let offset: usize = match args[1].parse::<usize>() {
-        Ok(pos) => std::cmp::min(pos, input.len() - 1),
-        Err(_) => input.len() - 1, // defaults to tail of input string
-    };
-    // insert '_' to indicate the cursor
-    input.insert(offset, '_');
 
-    // convert offset to (row, column) format
-    let pos = offset_to_tuple(offset, &line_length);
+    // convert offset to point
+    let pos = offset_to_point(offset, &line_length);
 
     let nu_lang = Language::from(tree_sitter_nu::LANGUAGE);
     let mut parser = Parser::new();
-    parser.set_language(&nu_lang).expect("Error loading Nu parser");
+    parser
+        .set_language(&nu_lang)
+        .expect("Error loading Nu parser");
     let parse_tree = parser.parse(&input, None).unwrap();
 
-    print_tree(&parse_tree);
-    println!("====================");
+    // print_tree(&parse_tree);
+    // println!("====================");
     let mut tree_cursor = parse_tree.walk();
-    if let Some((start_pos, end_pos)) = walk_tree(&mut tree_cursor, &pos) {
-        let start_offset = point_to_offset(start_pos, &line_length);
-        let end_offset = point_to_offset(end_pos, &line_length);
-        println!("{start_offset}");
-        println!("{end_offset}");
-        println!("{}", &input[start_offset..end_offset]);
+    tree_node_at_position_by_kind(&mut tree_cursor, pos, Some(&args.kind));
+    // find the opposite node
+    // if not the first node then must be the last one
+    if args.matchit && tree_cursor.goto_parent() {
+        tree_cursor.goto_first_child();
+        let start = tree_cursor.node().start_position();
+        let end = tree_cursor.node().end_position();
+        if pos > start && pos <= end {
+            tree_cursor.goto_parent();
+            tree_cursor.goto_last_child();
+        }
     }
+    let start_pos = tree_cursor.node().start_position();
+    let end_pos = tree_cursor.node().end_position();
+    let start_offset = point_to_offset(start_pos, &line_length);
+    let end_offset = point_to_offset(end_pos, &line_length);
+    println!("{start_offset}");
+    println!("{end_offset}");
+    // println!("{}", &input[start_offset..end_offset]);
 }
 
-fn offset_to_tuple(offset: usize, line_length: &Vec<usize>) -> (usize, usize) {
-    let mut pos: (usize, usize) = (0, offset);
+fn offset_to_point(offset: usize, line_length: &Vec<usize>) -> Point {
+    let mut pos = Point::new(0, offset + 1);
     for l in line_length.clone() {
-        if pos.1 >= l {
-            pos = (pos.0 + 1, pos.1 - l);
+        if pos.column > l + 1 {
+            pos = Point::new(pos.row + 1, pos.column - l);
         } else {
             break;
         }
@@ -87,14 +116,6 @@ fn print_cursor(cursor: &mut TreeCursor, depth: usize) {
     }
 }
 
-fn is_position_before_point(pos: &(usize, usize), pt: Point) -> bool {
-    pos.0 < pt.row || (pos.0 == pt.row && pos.1 < pt.column)
-}
-
-fn is_position_in_span(pos: &(usize, usize), start: Point, end: Point) -> bool {
-    is_position_before_point(pos, end) && !is_position_before_point(pos, start)
-}
-
 fn point_to_offset(pt: Point, line_length: &Vec<usize>) -> usize {
     let mut res = pt.column;
     for idx in 0..pt.row {
@@ -103,25 +124,13 @@ fn point_to_offset(pt: Point, line_length: &Vec<usize>) -> usize {
     res
 }
 
-fn walk_tree(
-    cursor: &mut TreeCursor,
-    pos: &(usize, usize),
-) -> Option<(Point, Point)> {
-    if cursor.goto_first_child() {
-        loop {
-            walk_tree(cursor, pos);
-            let node = cursor.node();
-            let start_pos = node.start_position();
-            let end_pos = node.end_position();
-            let kind = node.kind().trim();
-            if kind == "command" && is_position_in_span(pos, start_pos, end_pos) {
-                return Some((start_pos, end_pos));
-            }
-            if !cursor.goto_next_sibling() {
-                break;
-            }
-        }
-        cursor.goto_parent();
+fn tree_node_at_position_by_kind(cursor: &mut TreeCursor, pos: Point, target_kind: Option<&str>) {
+    // find the inner most node that contains pos
+    while cursor.goto_first_child_for_point(pos).is_some() {} // do nothing
+    // if target_kind is not specified, no further ops
+    if target_kind.is_none() {
+        return;
     }
-    return None;
+    // reverse back to the parent of the given kind
+    while cursor.node().kind().trim() != target_kind.unwrap() && cursor.goto_parent() {}
 }

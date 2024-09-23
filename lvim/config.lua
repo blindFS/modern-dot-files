@@ -5,9 +5,46 @@
 -- Discord: https://discord.com/invite/Xb9B4Ny
 
 lvim.plugins = {
-  {"mrjones2014/nvim-ts-rainbow",
+  {
+    "nvim-treesitter/nvim-treesitter",
+    dependencies = {
+      -- NOTE: additional parser
+      { "nushell/tree-sitter-nu", build = ":TSUpdate nu" },
+    },
+    build = ":TSUpdate",
+  },
+  {
+    "mrjones2014/nvim-ts-rainbow",
     config = function()
-      require'nvim-treesitter.configs'.setup{
+      require 'nvim-treesitter.configs'.setup {
+        playground = {
+          disable = {},
+          enable = true,
+          keybindings = {
+            focus_language = "f",
+            goto_node = "<cr>",
+            show_help = "?",
+            toggle_anonymous_nodes = "a",
+            toggle_hl_groups = "i",
+            toggle_injected_languages = "t",
+            toggle_language_display = "I",
+            toggle_query_editor = "o",
+            unfocus_language = "F",
+            update = "R"
+          },
+          persist_queries = false,
+          updatetime = 25
+        },
+        incremental_selection = {
+          disable = {},
+          enable = true,
+          keymaps = {
+            init_selection = "+",
+            node_decremental = "-",
+            node_incremental = "+",
+            scope_incremental = "g+"
+          }
+        },
         rainbow = {
           -- Setting colors
           colors = {
@@ -29,7 +66,7 @@ lvim.plugins = {
       require("nvim-surround").setup({
       })
     end
-  }
+  },
 }
 lvim.transparent_window = true
 lvim.builtin.treesitter.rainbow.enable = true

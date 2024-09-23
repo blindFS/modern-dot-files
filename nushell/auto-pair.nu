@@ -41,6 +41,8 @@ const keys_to_bind = [
   (char rbrace),
 ]
 
+use lib.nu substring_to_idx
+
 def is_pair_matched [
   char_list: list<string>
   char: string
@@ -87,21 +89,15 @@ def analyse_commandline [] {
   }
 }
 
-def substring_to_idx [
-  parent: string
-  index: int
-] {
-  if $index < 0 {''} else {$parent | str substring ..$index}
-}
-
 def backspace_delete_by_replace [
   cmd_raw: string
   pos: int
   left_offset: int
   right_offset: int
 ] {
-  let new_cmd = (substring_to_idx $cmd_raw
-    ($pos - $left_offset - 1)) + ($cmd_raw | str substring ($pos + $right_offset)..)
+  let new_cmd = ($cmd_raw
+    | substring_to_idx ($pos - $left_offset - 1)) + ($cmd_raw
+      | str substring ($pos + $right_offset)..)
   commandline edit --replace $new_cmd
   commandline set-cursor ($pos - $left_offset)
 }

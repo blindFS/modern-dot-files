@@ -290,18 +290,18 @@ $env.config = {
                 ]
             }
         }
-        {
-            name: ide_completion_menu
-            modifier: control
-            keycode: char_n
-            mode: [vi_insert emacs]
-            event: {
-                until: [
-                    { send: menu name: ide_completion_menu }
-                    { send: menunext }
-                ]
-            }
-        }
+        # {
+        #     name: ide_completion_menu
+        #     modifier: control
+        #     keycode: char_n
+        #     mode: [vi_insert emacs]
+        #     event: {
+        #         until: [
+        #             { send: menu name: ide_completion_menu }
+        #             { send: menunext }
+        #         ]
+        #     }
+        # }
         {
             name: history_menu
             modifier: control
@@ -794,6 +794,8 @@ use starship.nu
 use scripts/extractor.nu extract
 use auto-pair.nu *
 set auto_pair_keybindings
+use matchit.nu *
+set matchit_keybinding
 source zoxide.nu
 source themes/tokyo-night.nu
 

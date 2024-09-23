@@ -39,6 +39,11 @@ const fzf_prompt_info = {
     Externals: {bg: '#7aa2f7' symbol:  }
 }
 
+use lib.nu [
+    substring_from_idx
+    substring_to_idx
+]
+
 def get_variable_by_name [
     name: string # $foo.bar style
 ] {
@@ -64,18 +69,6 @@ def get_variable_by_name [
         }
     } catch { {} }
     $content
-}
-
-def _substring_to_idx [
-  index: int
-] {
-  if $index < 0 {''} else {$in | str substring ..$index}
-}
-
-def _substring_from_idx [
-  index: int
-] {
-  if $index < 0 {$in} else {$in | str substring $index..}
 }
 
 def _quote_if_not_empty [] {
@@ -492,9 +485,8 @@ export def complete_line_by_fzf [] {
         # get current command for completion, output in format:
         # command start offset\n
         # command end offset\n
-        # command string
         let start_offset = $cmd_raw
-            | ^$tree_sitter_cmd_parser $cursor_pos
+            | ^$tree_sitter_cmd_parser --insert --offset $cursor_pos
             | lines
             | get -i 0
             | default 0
@@ -517,10 +509,10 @@ export def complete_line_by_fzf [] {
             _ => { [$last_space $last_enter] | math max }
         }
         {
-            prefix: ($cmd_raw | _substring_to_idx ($start_offset - 1))
-            query: ($cmd_with_query | _substring_from_idx ($last_split + 1))
-            cmd: ($cmd_with_query | _substring_to_idx $last_split)
-            cmd_head: ($cmd_with_query | _substring_to_idx ($first_split - 1))
+            prefix: ($cmd_raw | substring_to_idx ($start_offset - 1))
+            query: ($cmd_with_query | substring_from_idx ($last_split + 1))
+            cmd: ($cmd_with_query | substring_to_idx $last_split)
+            cmd_head: ($cmd_with_query | substring_to_idx ($first_split - 1))
         }
     } else {
         let parsed_raw = $cmd_before_pos
@@ -546,5 +538,5 @@ export def complete_line_by_fzf [] {
     let completed_before_pos = $parsed.prefix + $parsed.cmd + $fzf_res
         | str replace --all (char nul) "\n"
     commandline edit --replace ($completed_before_pos + $suffix)
-    commandline set-cursor ($completed_before_pos | str length)
+    commandline set-cursor ($completed_before_pos | str length -g)
 }
