@@ -486,7 +486,7 @@ export def complete_line_by_fzf [] {
         # command start offset\n
         # command end offset\n
         let start_offset = $cmd_raw
-            | ^$tree_sitter_cmd_parser --insert --offset $cursor_pos
+            | ^$tree_sitter_cmd_parser --kind command --insert --offset $cursor_pos
             | lines
             | get -i 0
             | default 0

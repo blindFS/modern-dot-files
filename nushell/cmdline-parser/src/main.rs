@@ -1,13 +1,13 @@
 use clap::Parser as ArgParser;
-use tree_sitter::{Language, Parser, Point, TreeCursor};
+use tree_sitter::{Language, Parser, Query, QueryCursor, TreeCursor};
 
 /// Find the nushell AST node of given type at position, code is read from stdin
 #[derive(ArgParser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
     /// node type to find
-    #[arg(short, long, default_value_t = String::from("command"))]
-    kind: String,
+    #[arg(short, long)]
+    kind: Option<String>,
     /// offset from the start of the code
     #[arg(short, long)]
     offset: usize,
@@ -15,7 +15,7 @@ struct Args {
     #[arg(short, long, default_value_t = false)]
     insert: bool,
     /// which character to insert if auto-insert is set to true
-    #[arg(short, long, default_value_t = '_')]
+    #[arg(short, long, default_value_t = 'a')]
     char: char,
     /// if set, instead of search for node with the given type,
     /// search for the node at the other side of the parent node
@@ -27,20 +27,12 @@ fn main() {
     let args = Args::parse();
     // read nu script code from pipeline input
     let mut input = String::new();
-    let mut line_length: Vec<usize> = Vec::new();
-    for line in std::io::stdin().lines() {
-        match line {
-            Ok(line) => {
-                if !input.is_empty() {
-                    if let Some(last_length) = line_length.last_mut() {
-                        *last_length += 1; // '\n' takes space
-                    }
-                    input.push('\n'); // Add a newline if the string is not empty
-                }
-                input.push_str(&line); // Append the current line to the string
-                line_length.push(line.len());
-            }
-            Err(error) => println!("Error reading line: {}", error),
+    // Read lines until EOF is encountered
+    loop {
+        let bytes_read = std::io::stdin().read_line(&mut input).unwrap();
+        // Break the loop if EOF is reached (bytes_read is 0)
+        if bytes_read == 0 {
+            break;
         }
     }
     let offset = std::cmp::min(args.offset, input.len());
@@ -49,8 +41,16 @@ fn main() {
         input.insert(offset, args.char);
     }
 
-    // convert offset to point
-    let pos = offset_to_point(offset, &line_length);
+    let matching_kinds = std::collections::HashMap::from([
+        ("(", ")"),
+        (")", "("),
+        ("[", "]"),
+        ("]", "["),
+        ("{", "}"),
+        ("}", "{"),
+        ("'", "'"),
+        ("\"", "\\\""),
+    ]);
 
     let nu_lang = Language::from(tree_sitter_nu::LANGUAGE);
     let mut parser = Parser::new();
@@ -59,40 +59,74 @@ fn main() {
         .expect("Error loading Nu parser");
     let parse_tree = parser.parse(&input, None).unwrap();
 
-    // print_tree(&parse_tree);
-    // println!("====================");
+    if cfg!(feature = "debug") {
+        print_tree(&parse_tree);
+        println!("====================");
+    }
+
     let mut tree_cursor = parse_tree.walk();
-    tree_node_at_position_by_kind(&mut tree_cursor, pos, Some(&args.kind));
+    tree_node_at_position_by_kind(&mut tree_cursor, offset + 1, args.kind.as_deref());
     // find the opposite node
     // if not the first node then must be the last one
-    if args.matchit && tree_cursor.goto_parent() {
-        tree_cursor.goto_first_child();
-        let start = tree_cursor.node().start_position();
-        let end = tree_cursor.node().end_position();
-        if pos > start && pos <= end {
-            tree_cursor.goto_parent();
-            tree_cursor.goto_last_child();
+    if args.matchit {
+        let this_kind = tree_cursor.node().kind().trim();
+        let target_kind = matching_kinds.get(this_kind);
+        // big span like val_string
+        if tree_cursor.node().byte_range().len() > 1 {
+            print_the_further_end(offset, &tree_cursor);
+            return;
+        } else if tree_cursor.goto_parent() {
+            // search within the parent node
+            let node = tree_cursor.node();
+            match target_kind {
+                Some(t_kind) => {
+                    let query_s_expr = format!("(\"{}\" @m)", *t_kind);
+                    let query =
+                        Query::new(&nu_lang, query_s_expr.as_str()).expect("Error loading query");
+                    let mut query_cursor = QueryCursor::new();
+                    query_cursor.set_byte_range(node.byte_range());
+                    let query_matches = query_cursor.matches(&query, node, input.as_bytes());
+                    for qm in query_matches {
+                        for cn in qm.captures {
+                            if cfg!(feature = "debug") {
+                                println!("=={:#?}==", cn.node);
+                            }
+                            let start_offset = cn.node.start_byte();
+                            if node.id() == cn.node.parent().unwrap().id() && start_offset != offset
+                            {
+                                println!("{}", start_offset);
+                                return;
+                            }
+                        }
+                    }
+                }
+                // at some random position, return the left/right end of parent node.
+                None => {
+                    print_the_further_end(offset, &tree_cursor);
+                    return;
+                }
+            }
         }
     }
-    let start_pos = tree_cursor.node().start_position();
-    let end_pos = tree_cursor.node().end_position();
-    let start_offset = point_to_offset(start_pos, &line_length);
-    let end_offset = point_to_offset(end_pos, &line_length);
+    let start_offset = tree_cursor.node().start_byte();
+    let end_offset = tree_cursor.node().end_byte();
     println!("{start_offset}");
     println!("{end_offset}");
     // println!("{}", &input[start_offset..end_offset]);
 }
 
-fn offset_to_point(offset: usize, line_length: &Vec<usize>) -> Point {
-    let mut pos = Point::new(0, offset + 1);
-    for l in line_length.clone() {
-        if pos.column > l + 1 {
-            pos = Point::new(pos.row + 1, pos.column - l);
+fn print_the_further_end(offset: usize, cursor: &TreeCursor) {
+    let start = cursor.node().start_byte();
+    let end = cursor.node().end_byte() - 1;
+    // get the end that is far from offset
+    println!(
+        "{}",
+        if offset.abs_diff(start) < offset.abs_diff(end) {
+            end
         } else {
-            break;
+            start
         }
-    }
-    pos
+    );
 }
 
 pub fn print_tree(tree: &tree_sitter::Tree) {
@@ -116,17 +150,17 @@ fn print_cursor(cursor: &mut TreeCursor, depth: usize) {
     }
 }
 
-fn point_to_offset(pt: Point, line_length: &Vec<usize>) -> usize {
-    let mut res = pt.column;
-    for idx in 0..pt.row {
-        res += line_length.get(idx).unwrap();
+fn tree_node_at_position_by_kind(
+    cursor: &mut TreeCursor,
+    offset: usize,
+    target_kind: Option<&str>,
+) {
+    // find the inner most node that contains pos, do nothing in the block
+    while cursor.goto_first_child_for_byte(offset).is_some() {
+        if cfg!(feature = "debug") {
+            println!("{:#?}", cursor.node());
+        }
     }
-    res
-}
-
-fn tree_node_at_position_by_kind(cursor: &mut TreeCursor, pos: Point, target_kind: Option<&str>) {
-    // find the inner most node that contains pos
-    while cursor.goto_first_child_for_point(pos).is_some() {} // do nothing
     // if target_kind is not specified, no further ops
     if target_kind.is_none() {
         return;

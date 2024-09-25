@@ -15,10 +15,8 @@ export def matchit_exec [] {
     let cursor_pos = commandline get-cursor
     let cmd_raw = commandline
     let offset = $cmd_raw | substring_to_idx -g ($cursor_pos - 1) | str length # grapheme to byte
-    let char = ($cmd_raw | str substring -g $cursor_pos..$cursor_pos)
-    print $char
     let matched_offset = $cmd_raw
-      | ^nu-cmdline-parser --kind $char --matchit --offset $offset
+      | ^nu-cmdline-parser --matchit --offset $offset
       | lines
       | get -i 0
       | default 0

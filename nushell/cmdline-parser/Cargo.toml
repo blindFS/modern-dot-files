@@ -7,3 +7,6 @@ edition = "2021"
 tree-sitter-nu = { path = "../tree-sitter-nu" }
 tree-sitter = "~0.23.0"
 clap = { version = "4.5.18", features = ["derive"] }
+
+[features]
+debug = []
