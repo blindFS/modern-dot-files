@@ -3,6 +3,7 @@ const fzf_window_first_column_max_length = 25
 const fd_default_args =  [--type=d --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9]
 const fd_executable_args = [--exclude .git --exclude .cache --hidden --max-depth 5 --type x --color always '']
 const tree_sitter_cmd_parser = 'nu-cmdline-parser'
+const carapace_preview_description = true
 # const tree_sitter_cmd_parser = null
 
 const manpage_preview_cmd = 'man {} | col -bx | bat -l man -p --color=always --line-range :200'
@@ -308,6 +309,25 @@ def _carapace_by_fzf [command: string spans: list<string>] {
     match ($carapace_completion | length) {
         0 => null
         1 => $carapace_completion.0.value
+        _ if $carapace_preview_description => (
+            $carapace_completion
+            | par-each {
+                let value_style = ansi --escape ($in | get -i style | default {fg: yellow})
+                $"($value_style)($in.value)(ansi reset)"
+            }
+            | str join (char nul)
+            | (fzf ...(_build_fzf_args $query 'Carapace')
+                ...($fzf_carapace_extra_args)
+                --preview ($"const raw = ($carapace_completion | to json); "
+                    + `$"(ansi purple_reverse)Description:(ansi reset) " + `
+                    + `($raw | where value == ({} | ansi strip)
+                        | get -i 0.description | default '')`
+                        )
+                --preview-window top,10%
+                ...(_carapace_git_diff_preview $spans))
+            | _fzf_post_process
+            | default $query
+        )
         _ => ($carapace_completion
             | par-each {
                 let value_style = ansi --escape ($in | get -i style | default {fg: yellow})

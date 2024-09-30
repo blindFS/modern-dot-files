@@ -799,7 +799,7 @@ set matchit_keybinding
 source zoxide.nu
 source themes/tokyo-night.nu
 
-alias vim  = lvim
+alias vim  = nvim
 alias boc  = brew outdated --cask --greedy
 alias ll   = ls -al
 alias c    = zi
