@@ -2,7 +2,7 @@
 export def substring_to_idx [
     index: int # end index (included)
     --grapheme (-g) # use grapheme idx instead of byte offset
-] string -> string {
+]: string -> string {
     let input = $in
     match $grapheme {
         _ if $index < 0 => ''
@@ -15,7 +15,7 @@ export def substring_to_idx [
 export def substring_from_idx [
     index: int # start index (included)
     --grapheme (-g) # use grapheme idx instead of byte offset
-] string -> string {
+]: string -> string {
     let input = $in
     match $grapheme {
         _ if $index < 0 => $input

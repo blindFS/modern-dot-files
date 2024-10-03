@@ -1,18 +1,5 @@
 return {
-  {
-    "echasnovski/mini.surround",
-    opts = {
-      mappings = {
-        add = "gsa",
-        delete = "gsd",
-        find = "gsf",
-        find_left = "gsF",
-        highlight = "gsh",
-        replace = "gsr",
-        update_n_lines = "gsn",
-      },
-    },
-  },
+  -- eyecandy
   {
     "folke/tokyonight.nvim",
     opts = {
@@ -24,11 +11,33 @@ return {
     },
   },
   {
-    "nushell/tree-sitter-nu",
-    build = ":TSUpdate nu",
+    "HiPhish/rainbow-delimiters.nvim",
+    event = "VeryLazy",
   },
   {
-    "HiPhish/rainbow-delimiters.nvim",
+    "nvim-lualine/lualine.nvim",
+    opts = {
+      options = {
+        component_separators = { left = "", right = "" },
+        section_separators = { left = "", right = "" },
+      },
+    },
+  },
+  -- keymaps
+  {
+    "echasnovski/mini.surround",
+    event = "VeryLazy",
+    opts = {
+      mappings = {
+        add = "'a",
+        delete = "'d",
+        find = "'f",
+        find_left = "'F",
+        highlight = "'h",
+        replace = "'c",
+        update_n_lines = "'n",
+      },
+    },
   },
   {
     "nvim-treesitter/nvim-treesitter",
@@ -44,5 +53,34 @@ return {
         },
       },
     },
+  },
+  {
+    "nvim-telescope/telescope.nvim",
+    opts = function()
+      local actions = require("telescope.actions")
+      return {
+        defaults = {
+          mappings = {
+            i = {
+              ["<esc>"] = actions.close,
+            },
+          },
+        },
+      }
+    end,
+  },
+  -- nushell setup
+  {
+    "nushell/tree-sitter-nu",
+    build = ":TSUpdate nu",
+  },
+  {
+    "neovim/nvim-lspconfig",
+    opts = function()
+      require("lspconfig").nushell.setup({
+        cmd = { "nu", "--lsp" },
+        filetypes = { "nu" },
+      })
+    end,
   },
 }

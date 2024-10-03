@@ -15,12 +15,11 @@ const default_preview_cmd = "if ({} | path type) == 'dir'" + $" {($dir_preview_c
 const help_preview_cmd = "try {help {}} catch {'custom command or alias'}"
 const external_tldr_cmd = "try {tldr -C {}} catch {'No doc yet'}"
 const hybrid_help_cmd = ("let content = ({} | parse --regex '(?<cmd>.*[^ ])\\s*\\t\t(?<type>[^ ]*)').0
-    if ($content.type | ansi strip) == 'EXTERNAL' {"
-        + ($external_tldr_cmd | str replace '{}' '($content.cmd | ansi strip)')
-        + "} else {"
-        + ($help_preview_cmd | str replace '{}' '($content.cmd | ansi strip)')
-        + "}"
-    )
+    if ($content.type | ansi strip) == 'EXTERNAL' {" +
+    ($external_tldr_cmd | str replace '{}' '($content.cmd | ansi strip)') +
+    "} else {" +
+    ($help_preview_cmd | str replace '{}' '($content.cmd | ansi strip)') + "}"
+)
 
 const fzf_prompt_default_setting = {
     fg: '#000000'
@@ -28,16 +27,16 @@ const fzf_prompt_default_setting = {
     symbol: ''
 }
 const fzf_prompt_info = {
-    Carapace: { bg: '#1d8f8f' symbol: 󰳗 }
-    Variable: { symbol: 󱄑 }
-    Directory: { symbol:  }
-    File: { symbol: 󰈔 }
-    Remote: { symbol: 󰛳 }
-    Process: { symbol:  }
-    Command: { symbol:  }
-    Manpage: {bg: '#f7768e' symbol: 󰙃}
-    Internals: {bg: '#0dcf6f' symbol:  }
-    Externals: {bg: '#7aa2f7' symbol:  }
+    Carapace: { bg: '#1d8f8f' symbol: '󰳗' }
+    Variable: { symbol: '󱄑' }
+    Directory: { symbol: '' }
+    File: { symbol: '󰈔' }
+    Remote: { symbol: '󰛳' }
+    Process: { symbol: '' }
+    Command: { symbol: '' }
+    Manpage: {bg: '#f7768e' symbol: '󰙃'}
+    Internals: {bg: '#0dcf6f' symbol: '' }
+    Externals: {bg: '#7aa2f7' symbol: '' }
 }
 
 use lib.nu [
@@ -155,7 +154,7 @@ def _list_external_commands [] {
 export def update_manpage_cache [
     --force (-f) # force update if the file already exists
     --silent (-s) # print no message if set
-] nothing -> string {
+]: nothing -> string {
     let cache_fp = $env | get -i 'MANPAGECACHE'
     if ($cache_fp | is-empty) {
         if not $silent {
@@ -183,7 +182,7 @@ export def update_manpage_cache [
 def _complete_by_fzf [
     cmd: string # command whose arguments need to complete at present
     query: string # preceding string to search for
-] nothing -> string {
+]: nothing -> string {
     match $cmd {
         # Search for internal commands
         _ if ($cmd in ['**' 'view']) => {
@@ -318,11 +317,11 @@ def _carapace_by_fzf [command: string spans: list<string>] {
             | str join (char nul)
             | (fzf ...(_build_fzf_args $query 'Carapace')
                 ...($fzf_carapace_extra_args)
-                --preview ($"const raw = ($carapace_completion | to json); "
-                    + `$"(ansi purple_reverse)Description:(ansi reset) " + `
-                    + `($raw | where value == ({} | ansi strip)
-                        | get -i 0.description | default '')`
-                        )
+                --preview (
+                    $"const raw = ($carapace_completion | to json); " +
+                    `$"(ansi purple_reverse)Description:(ansi reset) " + ` +
+                    `($raw | where value == ({} | ansi strip) | get -i 0.description | default '')`
+                )
                 --preview-window top,10%
                 ...(_carapace_git_diff_preview $spans))
             | _fzf_post_process
@@ -384,21 +383,27 @@ def _env_by_fzf [
                 }
             }
             | str join "\n"
-            | (fzf ...(_build_fzf_args ($segs | last)
-                'Variable'
-                ($"const raw = ($content | to json); "
-                + `(match ($raw | describe | str substring ..4) {
-                'list<' => {$raw | get -i ({} | into int)},
-                _ => {$raw | table -i false -t basic | find {}
-                    | each {let segs = $in | split row '|'
-                        {$'name': ($segs | get 1)
-                        $'value': ($segs | get (($segs | length) - 2))}}
-                    | table -i false}})
-                | str replace --regex '((│(\s*\w+\s*))*│)\n├' $"(ansi green)$1(ansi reset)\n├"
-                | str replace --regex --all '([╭├][┬┼─]+[┤╮])' $'(ansi green)$1(ansi reset)'`
-                ))
+            | (
+                fzf ...(
+                    _build_fzf_args ($segs | last)
+                    'Variable'
+                    (
+                        $"const raw = ($content | to json); " +
+                        `(match ($raw | describe | str substring ..4) {
+                        'list<' => {$raw | get -i ({} | into int)},
+                        _ => {$raw | table -i false -t basic | find {}
+                            | each {let segs = $in | split row '|'
+                                {$'name': ($segs | get 1)
+                                $'value': ($segs | get (($segs | length) - 2))}}
+                            | table -i false}})
+                        | str replace --regex '((│(\s*\w+\s*))*│)\n├' $"(ansi green)$1(ansi reset)\n├"
+                        | str replace --regex --all '([╭├][┬┼─]+[┤╮])' $'(ansi green)$1(ansi reset)'`
+                    )
+                )
                 --tmux center,90%,50%
-                --preview-window right,70%))
+                --preview-window right,70%
+            )
+        )
         if ($res | is-empty) {$query} else {$prefix + $seg_prefix + $res}
     }
 }
