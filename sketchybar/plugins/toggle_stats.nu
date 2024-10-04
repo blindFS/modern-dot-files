@@ -9,7 +9,7 @@ const stats_plugins = [
     network_up
 ]
 
-export def toggle_stats_args [] nothing -> list<string> {
+export def toggle_stats_args []: nothing -> list<string> {
     $stats_plugins
     | each { [--set $in drawing=toggle] }
     | flatten

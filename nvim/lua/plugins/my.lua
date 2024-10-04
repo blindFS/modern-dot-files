@@ -78,7 +78,13 @@ return {
     "neovim/nvim-lspconfig",
     opts = function()
       require("lspconfig").nushell.setup({
-        cmd = { "nu", "--lsp" },
+        cmd = {
+          "/Users/farseerhe/Workspace/nushell/target/debug/nu",
+          "-I",
+          vim.fn.getcwd(),
+          "--no-config-file",
+          "--lsp",
+        },
         filetypes = { "nu" },
       })
     end,

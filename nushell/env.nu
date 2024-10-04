@@ -76,3 +76,4 @@ $env.FZF_DEFAULT_OPTS = (
 $env.CARAPACE_LENIENT = 1
 $env.MANPAGER = "col -bx | bat -l man -p"
 $env.MANPAGECACHE = $nu.default-config-dir | path join 'mancache.txt'
+$env.RUST_BACKTRACE = 1

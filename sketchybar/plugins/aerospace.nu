@@ -11,7 +11,7 @@ const animate_frames = 30
 def modify_args_per_workspace [
     sid: string
     focused_sid: string
-] nothing -> list<string> {
+]: nothing -> list<string> {
     let icons = (aerospace list-windows --workspace $sid
         | lines
         | each { $in
@@ -51,7 +51,7 @@ def modify_args_per_workspace [
 def workspace_modification_args [
     name: string
     last_sid: string
-] nothing -> list<string> {
+]: nothing -> list<string> {
     # use listener's label to store last focused space id
     let focused_sid = (aerospace list-workspaces --focused)
     let ids_to_modify = (
