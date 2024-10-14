@@ -50,7 +50,7 @@ export const app_icons = {
 }
 
 export def get_icon_by_app_name []: string -> string {
-    let name = $in | str downcase
+    let name = $in | str trim | str downcase
     $app_icons
     | get -i $name
     | default ''

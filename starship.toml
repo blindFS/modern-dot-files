@@ -1,10 +1,11 @@
 format = """
 $cmd_duration\
+$directory\
+\n\
 $character\
 """
 
 right_format = """
-$directory\
 $env_var\
 $git_branch\
 $git_status\
@@ -19,7 +20,7 @@ symbol = " "
 
 [directory]
 style = "fg:#111726 bg:#769ff0"
-format = "[](fg:#769ff0)[ $path ]($style)[](fg:#769ff0)"
+format = "[░▒▓](fg:#769ff0)[ $path ]($style)[](fg:#769ff0)"
 truncation_length = 3
 truncation_symbol = " 󰇘/"
 home_symbol = ""
@@ -34,7 +35,7 @@ home_symbol = ""
 success_symbol = "[](fg:#000000 bg:#a3aed2)"
 error_symbol = "[󰊠](fg:#FF4B14 bg:#a3aed2)"
 vimcmd_symbol = "[](fg:#000000 bg:#a3aed2)"
-format = '[░▒▓](fg:#a3aed2)[ $symbol ](bg:#a3aed2)'
+format = '[▓](fg:#a3aed2)[ $symbol ](bg:#a3aed2)'
 
 [cmd_duration]
 min_time = 20000

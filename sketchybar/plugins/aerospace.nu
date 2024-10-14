@@ -1,7 +1,6 @@
 #!/usr/bin/env nu
 
 use constants.nu [
-    app_icons
     colors
     get_icon_by_app_name
 ]
@@ -12,13 +11,9 @@ def modify_args_per_workspace [
     sid: string
     focused_sid: string
 ]: nothing -> list<string> {
-    let icons = (aerospace list-windows --workspace $sid
-        | lines
-        | each { $in
-            | split row '|' | get 1
-            | str trim | str downcase
-            | get_icon_by_app_name
-        }
+    let icons = (aerospace list-windows --workspace $sid --json
+        | from json | get app-name
+        | each { $in | get_icon_by_app_name }
         | uniq | sort
         | str join ' ')
     let extra = (if $sid == $focused_sid

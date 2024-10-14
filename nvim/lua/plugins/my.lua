@@ -79,14 +79,31 @@ return {
     opts = function()
       require("lspconfig").nushell.setup({
         cmd = {
-          "/Users/farseerhe/Workspace/nushell/target/debug/nu",
+          "/Users/farseerhe/Workspace/nushell/target/release/nu",
+          -- "/Users/farseerhe/Workspace/nushell/target/debug/nu",
+          -- "nu",
           "-I",
           vim.fn.getcwd(),
           "--no-config-file",
           "--lsp",
         },
         filetypes = { "nu" },
+        offset_encoding = "utf-16",
+        capabilities = {
+          offset_encoding = { "utf-16" },
+        },
       })
+    end,
+  },
+  -- llm
+  {
+    "monkoose/neocodeium",
+    event = "VeryLazy",
+    config = function()
+      local neocodeium = require("neocodeium")
+      neocodeium.setup()
+      vim.keymap.set("i", "<C-e>", neocodeium.accept)
+      vim.keymap.set("i", "<C-t>", neocodeium.chat)
     end,
   },
 }
