@@ -25,9 +25,9 @@ config.font_size = 15.0
 config.set_environment_variables = {
 	XDG_CONFIG_HOME = os.getenv("HOME") .. "/.config",
 }
--- config.default_prog = {
--- 	"/usr/local/bin/tmux",
--- }
+config.default_prog = {
+	"/usr/local/bin/tmux",
+}
 
 -- local mux = wezterm.mux
 -- wezterm.on("gui-startup", function()

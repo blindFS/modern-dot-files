@@ -19,7 +19,6 @@ export-env { $env.STARSHIP_SHELL = "nu"; load-env {
                 --cmd-duration $env.CMD_DURATION_MS
                 $"--status=($env.LAST_EXIT_CODE)"
                 --terminal-width (term size).columns
-            | str trim --char "\n"
         )
     }
 

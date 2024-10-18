@@ -164,7 +164,8 @@ export const config = {
                 icon.drawing: off
                 label.drawing: off
                 background.image.drawing: on
-                background.image.scale: 0.035
+                background.image: media.artwork
+                background.image.scale: 0.7
                 background.color: $colors.transparent
                 background.border_width: 0
             }
