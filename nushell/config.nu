@@ -177,18 +177,17 @@ $env.config = {
             type: { layout: ide }
             style: {}
             source: { |buffer, position|
-                {
-                    value: (history
-                    | get command
-                    | uniq
-                    | each {|item| $item | nu-highlight}
-                    | str join (char nul)
-                    | (fzf --read0 --ansi -q $buffer
-                        --no-tmux --height 40%
-                        --prompt $"(prompt_decorator
-                            $private_vars.prompt_symbol_color
-                            'light_blue' '▓▒░ History ' false)")
-                    | ansi strip)
+                { # only history of current directory
+                    value: (atuin history list --cwd --cmd-only --print0
+                        | split row (char nul) | uniq
+                        | par-each {|| $in | nu-highlight}
+                        | str join (char nul)
+                        | (fzf --read0 --ansi -q $buffer
+                            --no-tmux --height 40%
+                            --prompt $"(prompt_decorator
+                                $private_vars.prompt_symbol_color
+                                'light_blue' '▓▒░ History ' false)")
+                        | ansi strip)
                 }
             }
         }
@@ -361,7 +360,7 @@ $env.config = {
             modifier: none
             keycode: escape
             mode: [emacs, vi_normal, vi_insert]
-            event: { send: esc }    # NOTE: does not appear to work
+            event: { send: esc }
         }
         {
             name: cancel_command
@@ -797,6 +796,7 @@ set auto_pair_keybindings
 use matchit.nu *
 set matchit_keybinding
 source zoxide.nu
+source atuin.nu
 source themes/tokyo-night.nu
 
 alias vim  = nvim

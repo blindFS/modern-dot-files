@@ -15,6 +15,13 @@ return {
     event = "VeryLazy",
   },
   {
+    "norcalli/nvim-colorizer.lua",
+    event = "VeryLazy",
+    config = function()
+      require("colorizer").setup()
+    end,
+  },
+  {
     "nvim-lualine/lualine.nvim",
     opts = {
       options = {

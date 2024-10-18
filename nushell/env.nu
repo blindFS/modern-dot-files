@@ -57,6 +57,8 @@ $env.SHELL = (which nu).path.0
 # To load from a custom file you can use:
 # starship init nu | save -f ($nu.default-config-dir | path join 'starship.nu')
 # zoxide init nushell | save -f ($nu.default-config-dir | path join 'zoxide.nu')
+# atuin init nushell | save -f ($nu.default-config-dir | path join 'atuin.nu')
+
 if $nu.current-exe != (which nu).0.path {
     $env.PROMPT_INDICATOR_VI_INSERT = {|| prompt_decorator "#111726" "#0DCF6F" " 󰏫" }
     $env.PROMPT_INDICATOR_VI_NORMAL = {|| prompt_decorator "#111726" "#E0AF68" " " }
