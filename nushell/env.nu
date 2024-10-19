@@ -51,6 +51,7 @@ $env.PATH = ($env.PATH
     | append ($env.HOME | path join ".elan" "bin")
     | append ($env.HOME | path join ".local" "bin")
     | append ($env.HOME | path join ".cargo" "bin")
+    | append ('/nix/var/nix/profiles/default/bin')
     | uniq)
 $env.SHELL = (which nu).path.0
 
