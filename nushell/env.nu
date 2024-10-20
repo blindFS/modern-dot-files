@@ -32,8 +32,6 @@ $env.NU_PLUGIN_DIRS = [
     ($nu.default-config-dir | path join 'plugins') # add <nushell-config-dir>/plugins
 ]
 
-$env.LS_COLORS = (vivid generate tokyonight-night | str trim)
-
 # To add entries to PATH (on Windows you might use Path), you can use the following pattern:
 # $env.PATH = ($env.PATH | split row (char esep) | prepend '/some/path')
 # An alternate way to add entries to $env.PATH is to use the custom command `path add`
@@ -51,16 +49,17 @@ $env.PATH = ($env.PATH
     | append ($env.HOME | path join ".elan" "bin")
     | append ($env.HOME | path join ".local" "bin")
     | append ($env.HOME | path join ".cargo" "bin")
-    | append ('/nix/var/nix/profiles/default/bin')
+    | append ('/run/current-system/sw/bin')
     | uniq)
 $env.SHELL = (which nu).path.0
+$env.LS_COLORS = (vivid generate tokyonight-night | str trim)
 
 # To load from a custom file you can use:
 # starship init nu | save -f ($nu.default-config-dir | path join 'starship.nu')
 # zoxide init nushell | save -f ($nu.default-config-dir | path join 'zoxide.nu')
 # atuin init nushell | save -f ($nu.default-config-dir | path join 'atuin.nu')
 
-if $nu.current-exe != (which nu).0.path {
+if $nu.current-exe != $env.SHELL {
     $env.PROMPT_INDICATOR_VI_INSERT = {|| prompt_decorator "#111726" "#0DCF6F" " 󰏫" }
     $env.PROMPT_INDICATOR_VI_NORMAL = {|| prompt_decorator "#111726" "#E0AF68" " " }
 }
