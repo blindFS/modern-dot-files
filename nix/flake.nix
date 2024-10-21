@@ -8,6 +8,10 @@
 
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
     # Optional: Declarative tap management
+    homebrew-bundle = {
+      url = "github:homebrew/homebrew-bundle";
+      flake = false;
+    };
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
       flake = false;
@@ -24,35 +28,47 @@
       url = "github:laishulu/homebrew-cask-fonts";
       flake = false;
     };
+    aerospace-tap = {
+      url = "github:nikitabobko/homebrew-tap";
+      flake = false;
+    };
   };
 
   outputs = inputs@{ self,
     nix-darwin,
     nixpkgs,
     nix-homebrew,
+    homebrew-bundle,
     homebrew-core,
     homebrew-cask,
     homebrew-services,
     cask-fonts,
+    aerospace-tap,
     }:
     let
-      configuration = { pkgs, ... }: {
+      configuration = { pkgs, config, ... }: {
         # List packages installed in system profile. To search by name, run:
         # $ nix-env -qaP | grep wget
         environment.variables = {
           XDG_CONFIG_HOME = "/Users/farseerhe/.config";
         };
+        # TODO: Add binary path to /etc/paths, manually handled now.
+        # environment.systemPath = [
+          # "/run/current-system/sw/bin/"
+        # ];
         environment.systemPackages =
           [
             pkgs.atuin
             pkgs.bat
             pkgs.carapace
             pkgs.delta
+            pkgs.emacs30
             pkgs.eza
             pkgs.fd
             pkgs.ffmpeg
             pkgs.fzf
             pkgs.gotop
+            pkgs.ispell
             pkgs.jankyborders
             pkgs.jc
             pkgs.lazygit
@@ -61,59 +77,41 @@
             pkgs.ripgrep
             pkgs.sketchybar
             pkgs.starship
+            pkgs.texliveMedium
             pkgs.thefuck
             pkgs.tig
             pkgs.tldr
+            pkgs.tmux
             pkgs.vivid
             pkgs.yazi
             pkgs.zoxide
           ];
 
         homebrew = {
-          taps = [
-            {
-              name = "nikitabobko/tap";
-              clone_target = "https://github.com/nikitabobko/homebrew-tap.git";
-              force_auto_update = true;
-            }
-            {
-              name = "felixkratz/formulae";
-              clone_target = "https://github.com/felixkratz/homebrew-formulae.git";
-              force_auto_update = true;
-            }
-          ];
+          enable = true;
+          taps = builtins.attrNames config.nix-homebrew.taps;
+          onActivation.cleanup = "zap";
+          onActivation.autoUpdate = false;
+          onActivation.upgrade = true;
           brews = [
-            "rust"
-            "nushell"
-            "tmux"
-            "ipython"
-            {
-              name = "felixkratz/formulae/borders";
-              restart_service = false;
-            }
-            {
-              name = "felixkratz/formulae/sketchybar";
-              restart_service = false;
-            }
             {
               name = "mpd";
               restart_service = false;
             }
+            "nushell"
+            "rust"
+            "node"
+            "ipython"
           ];
           casks = [
-            "aerospace"
-            "anki"
-            "audacity"
+            "nikitabobko/tap/aerospace"
             "balenaetcher"
             "dropbox"
-            "emacs"
             "iina"
             "karabiner-elements"
             "kicad"
             "laishulu/cask-fonts/font-sarasa-nerd"
-            "mactex-no-gui"
             "popclip"
-            "stolendata-mpv"
             {
               name = "raycast";
               greedy = true;
@@ -124,10 +122,6 @@
               greedy = true;
             }
           ];
-          onActivation.cleanup = "zap";
-          onActivation.autoUpdate = true;
-          onActivation.upgrade = true;
-          enable = true;
         };
 
         fonts.packages = [
@@ -168,14 +162,17 @@
               enable = true;
               enableRosetta = false;
               user = "farseerhe";
-              autoMigrate = false;
+              autoMigrate = true;
               taps = {
+                "homebrew/bundle" = homebrew-bundle;
                 "homebrew/homebrew-core" = homebrew-core;
                 "homebrew/homebrew-cask" = homebrew-cask;
                 "homebrew/services" = homebrew-services;
                 "laishulu/cask-fonts" = cask-fonts;
+                "nikitabobko/tap" = aerospace-tap;
               };
               mutableTaps = true;
+              # mutableTaps = false;
             };
           }
         ];

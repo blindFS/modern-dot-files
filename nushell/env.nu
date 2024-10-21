@@ -49,7 +49,6 @@ $env.PATH = ($env.PATH
     | append ($env.HOME | path join ".elan" "bin")
     | append ($env.HOME | path join ".local" "bin")
     | append ($env.HOME | path join ".cargo" "bin")
-    | append ('/run/current-system/sw/bin')
     | uniq)
 $env.SHELL = (which nu).path.0
 $env.LS_COLORS = (vivid generate tokyonight-night | str trim)

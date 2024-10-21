@@ -1,11 +1,7 @@
-## Dependencies
+## Nix-darwin
 
-| Package                                                                 | Memo                                                                         |
-|-------------------------------------------------------------------------|------------------------------------------------------------------------------|
-| [sketchybar](https://github.com/FelixKratz/SketchyBar)                  | `brew tap FelixKratz/formulae && brew install sketchybar`                    |
-| [aerospace](https://nikitabobko.github.io/AeroSpace/guide#installation) | `brew install --cask nikitabobko/tap/aerospace`                              |
-| [border](https://github.com/FelixKratz/JankyBorders)                    | `brew tap FelixKratz/formulae && brew install borders`                       |
-| [carapace](https://carapace-sh.github.io/carapace-bin/setup.html)       | `brew tap rsteube/homebrew-tap && brew install rsteube/tap/carapace`         |
-| [zoxide](https://github.com/ajeetdsouza/zoxide)                         | `brew install zoxide`                                                        |
-| others                                                                  | `brew install ripgrep bat eza fzf tmux nushell jc font-sarasa-nerd starship` |
-| more                                                                    | iSMC, `brew install nowplaying-cli git-delta`                                |
+1. install nix, nix-darwin
+2. `nix --experimental-features 'nix-command flakes' run nix-darwin -- switch --flake {FLAKEPATH}`
+3. cd to FLAKEPATH, `nix flake update`
+4. `darwin-rebuild switch --flake {FLAKEPATH} --show-trace`
+
