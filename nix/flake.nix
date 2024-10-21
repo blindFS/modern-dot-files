@@ -1,5 +1,10 @@
 {
   description = "BlindFS Darwin system flake";
+  nixConfig = {
+    trusted-substituters = [
+      "https://mirrors.ustc.edu.cn/nix-channels/store"
+    ];
+  };
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -10,18 +15,6 @@
     # Optional: Declarative tap management
     homebrew-bundle = {
       url = "github:homebrew/homebrew-bundle";
-      flake = false;
-    };
-    homebrew-core = {
-      url = "github:homebrew/homebrew-core";
-      flake = false;
-    };
-    homebrew-cask = {
-      url = "github:homebrew/homebrew-cask";
-      flake = false;
-    };
-    homebrew-services = {
-      url = "github:homebrew/homebrew-services";
       flake = false;
     };
     cask-fonts = {
@@ -39,9 +32,6 @@
     nixpkgs,
     nix-homebrew,
     homebrew-bundle,
-    homebrew-core,
-    homebrew-cask,
-    homebrew-services,
     cask-fonts,
     aerospace-tap,
     }:
@@ -54,7 +44,7 @@
         };
         # TODO: Add binary path to /etc/paths, manually handled now.
         # environment.systemPath = [
-          # "/run/current-system/sw/bin/"
+        # "/run/current-system/sw/bin/"
         # ];
         environment.systemPackages =
           [
@@ -68,6 +58,7 @@
             pkgs.ffmpeg
             pkgs.fzf
             pkgs.gotop
+            pkgs.graphviz
             pkgs.ispell
             pkgs.jankyborders
             pkgs.jc
@@ -84,12 +75,13 @@
             pkgs.tmux
             pkgs.vivid
             pkgs.yazi
+            pkgs.yt-dlp
             pkgs.zoxide
           ];
 
         homebrew = {
           enable = true;
-          taps = builtins.attrNames config.nix-homebrew.taps;
+          # taps = builtins.attrNames config.nix-homebrew.taps;
           onActivation.cleanup = "zap";
           onActivation.autoUpdate = false;
           onActivation.upgrade = true;
@@ -104,13 +96,14 @@
             "ipython"
           ];
           casks = [
-            "nikitabobko/tap/aerospace"
             "balenaetcher"
+            "blender"
             "dropbox"
             "iina"
             "karabiner-elements"
             "kicad"
             "laishulu/cask-fonts/font-sarasa-nerd"
+            "nikitabobko/tap/aerospace"
             "popclip"
             {
               name = "raycast";
@@ -139,6 +132,17 @@
         programs.zsh.enable = true;  # default shell on catalina
         # programs.fish.enable = true;
 
+        # https://mynixos.com/nix-darwin/options/system.defaults
+        system.defaults = {
+          dock.autohide = true;
+          dock.orientation = "left";
+          finder.AppleShowAllFiles = true;
+          finder.QuitMenuItem = true;
+          NSGlobalDomain.AppleInterfaceStyle = "Dark";
+          NSGlobalDomain._HIHideMenuBar = true;
+          NSGlobalDomain.NSAutomaticWindowAnimationsEnabled = false;
+        };
+
         # Set Git commit hash for darwin-version.
         system.configurationRevision = self.rev or self.dirtyRev or null;
 
@@ -164,15 +168,12 @@
               user = "farseerhe";
               autoMigrate = true;
               taps = {
-                "homebrew/bundle" = homebrew-bundle;
-                "homebrew/homebrew-core" = homebrew-core;
-                "homebrew/homebrew-cask" = homebrew-cask;
-                "homebrew/services" = homebrew-services;
                 "laishulu/cask-fonts" = cask-fonts;
                 "nikitabobko/tap" = aerospace-tap;
+                "homebrew/bundle" = homebrew-bundle;
               };
-              mutableTaps = true;
-              # mutableTaps = false;
+              # mutableTaps = true;
+              mutableTaps = false;
             };
           }
         ];
