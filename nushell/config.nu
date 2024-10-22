@@ -178,7 +178,7 @@ $env.config = {
             style: {}
             source: { |buffer, position|
                 { # only history of current directory
-                    value: (atuin history list --cwd --cmd-only --print0
+                    value: (atuin history list --reverse false --cwd --cmd-only --print0
                         | split row (char nul) | uniq
                         | par-each {|| $in | nu-highlight}
                         | str join (char nul)
