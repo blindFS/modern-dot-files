@@ -41,7 +41,7 @@ format = '[▓](fg:#a3aed2)[ $symbol ](bg:#a3aed2)'
 
 [cmd_duration]
 min_time = 20000
-format = "️[](fg:#111726)[ $duration ](fg:#E0AF68 bg:#111726)"
+format = "️[  $duration ](fg:#E0AF68 bg:#111726)"
 
 [env_var.proxy]
 symbol = "🌐"

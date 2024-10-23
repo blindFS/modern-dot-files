@@ -14,6 +14,12 @@ def prompt_decorator [
 $env.PROMPT_INDICATOR = {|| "> " }
 $env.PROMPT_INDICATOR_VI_INSERT = {|| prompt_decorator "#111726" "#0DCF6F" "󰏫" }
 $env.PROMPT_INDICATOR_VI_NORMAL = {|| prompt_decorator "#111726" "#E0AF68" "" }
+
+if $nu.current-exe != $env.SHELL {
+    $env.PROMPT_INDICATOR_VI_INSERT = {|| prompt_decorator "#111726" "#0DCF6F" " 󰏫" }
+    $env.PROMPT_INDICATOR_VI_NORMAL = {|| prompt_decorator "#111726" "#E0AF68" " " }
+}
+
 # $env.PROMPT_MULTILINE_INDICATOR = {|| "-> " }
 
 # If you want previously entered commands to have a different prompt from the usual one,

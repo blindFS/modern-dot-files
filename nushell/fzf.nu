@@ -505,8 +505,7 @@ export def carapace_by_fzf [
   match $res {
     null => null # continue with built-in completer, may cause another trigger of this completer
     '' => [$query] # nothing changes
-    _ => [({description: 'From customized external completer'}
-      | default $res 'value')]
+    _ => [({description: 'From customized external completer'} | default $res 'value')]
   }
 }
 

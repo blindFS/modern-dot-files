@@ -4,3 +4,4 @@ aerospace: zsh
 lldb: zsh
 open: zsh
 atuin: zsh
+nix-env: zsh

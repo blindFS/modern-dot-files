@@ -10,7 +10,7 @@ let label = $"($media_info
     | get -i title | default '') - ($media_info
     | get -i artist | default '')"
     | if ($in | str length) > $label_max_length {
-        ($in | str substring ..$label_max_length) + '...'
+        ($in | str substring -g ..$label_max_length) + '...'
     } else $in
 let icon_and_offset = match $media_info.state {
     'playing' => ['' $shown_offset]

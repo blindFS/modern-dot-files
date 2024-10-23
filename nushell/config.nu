@@ -797,6 +797,7 @@ use matchit.nu *
 set matchit_keybinding
 source zoxide.nu
 source atuin.nu
+source nix.nu
 source themes/tokyo-night.nu
 
 alias vim  = nvim

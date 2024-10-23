@@ -58,11 +58,6 @@ $env.LS_COLORS = (vivid generate tokyonight-night | str trim)
 # zoxide init nushell | save -f ($nu.default-config-dir | path join 'zoxide.nu')
 # atuin init nushell | save -f ($nu.default-config-dir | path join 'atuin.nu')
 
-if $nu.current-exe != $env.SHELL {
-    $env.PROMPT_INDICATOR_VI_INSERT = {|| prompt_decorator "#111726" "#0DCF6F" " 󰏫" }
-    $env.PROMPT_INDICATOR_VI_NORMAL = {|| prompt_decorator "#111726" "#E0AF68" " " }
-}
-
 $env.FZF_DEFAULT_COMMAND = "fd --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9"
 $env.FZF_DEFAULT_OPTS = (
     "--exit-0 --layout reverse --header-first --tmux center,80%,60% " +
