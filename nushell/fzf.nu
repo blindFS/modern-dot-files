@@ -1,6 +1,6 @@
 const fzf_carapace_extra_args = [--read0 --ansi --no-tmux --height=50%]
 const fzf_window_first_column_max_length = 25
-const fd_default_args =  [--type=d --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9]
+const fd_default_args =  [--hidden --exclude .git --exclude .cache --max-depth 9]
 const fd_executable_args = [--exclude .git --exclude .cache --hidden --max-depth 5 --type x --color always '']
 const tree_sitter_cmd_parser = 'nu-cmdline-parser'
 const carapace_preview_description = true
@@ -233,8 +233,8 @@ def _complete_by_fzf [
         | str trim
       }
     }
-    _ if ($cmd in ['z' '__zoxide_z' 'cd' 'zoxide' 'ls' 'eza']) => {
-      fd ...$fd_default_args
+    _ if ($cmd in ['z' '__zoxide_z' 'cd' 'zoxide']) => {
+      fd --type=d --strip-cwd-prefix ...$fd_default_args
       | fzf ...(_build_fzf_args $query 'Directory' $dir_preview_cmd)
       | _quote_if_not_empty
     }
@@ -273,7 +273,18 @@ def _complete_by_fzf [
       | fzf ...(_build_fzf_args $query 'File' ($file_preview_cmd + " -l zsh"))
     }
     _ => {
-      fzf --multi ...(_build_fzf_args $query 'File' $default_preview_cmd)
+      let path_info = $query | path parse
+      let base_dir = if ($path_info.parent | is-empty) {
+        '.'
+      } else $path_info.parent
+      if (not ($base_dir | path exists)) {
+        return null
+      }
+      fd ...$fd_default_args . ($base_dir | path expand)
+      | fzf --multi ...(_build_fzf_args
+        ($path_info.stem | str substring ..-3)
+        'File'
+        $default_preview_cmd)
       | split row "\n"
       | each {$in | _quote_if_not_empty}
       | str join ' '
@@ -482,8 +493,8 @@ export def carapace_by_fzf [
       _ if "$" in $query => {
         _env_by_fzf $query
       }
-      _ if $query in ['**' '*^'] => {
-        _complete_by_fzf $spans.0 ''
+      _ if ($query | str substring (-2)..) in ['**' '*^'] => {
+        _complete_by_fzf $spans.0 $query
       }
       _ if $spans.0 == 'which' or ($spans | length) == 1 => {
         _complete_by_fzf '' $query

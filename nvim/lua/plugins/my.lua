@@ -84,7 +84,19 @@ return {
   {
     "neovim/nvim-lspconfig",
     opts = function()
-      require("lspconfig").nushell.setup({
+      local lspconfig = require("lspconfig")
+      lspconfig.nixd.setup({
+        cmd = { "nixd" },
+        filetypes = { "nix" },
+        settings = {
+          nixd = {
+            formatting = {
+              command = { "nixfmt" },
+            },
+          },
+        },
+      })
+      lspconfig.nushell.setup({
         cmd = {
           "/Users/farseerhe/Workspace/nushell/target/release/nu",
           -- "/Users/farseerhe/Workspace/nushell/target/debug/nu",
