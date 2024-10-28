@@ -512,7 +512,7 @@ export def carapace_by_fzf [
         _carapace_by_fzf $spans.0 $spans
       }
     }
-  } catch { '' }
+  } catch { null }
   match $res {
     null => null # continue with built-in completer, may cause another trigger of this completer
     '' => [$query] # nothing changes

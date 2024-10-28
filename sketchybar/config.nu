@@ -153,7 +153,6 @@ export const config = {
                 background.color: $colors.bg
                 background.border_color: $colors.fg
                 script: '{}/media.nu'
-                click_script: 'nowplaying-cli togglePlayPause'
             }
         }
         {

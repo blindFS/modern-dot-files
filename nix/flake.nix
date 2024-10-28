@@ -71,7 +71,7 @@
             pkgs.jankyborders
             pkgs.jc
             pkgs.lazygit
-            pkgs.ncmpcpp
+            # pkgs.ncmpcpp
             pkgs.neovim
             pkgs.nixd
             pkgs.nixfmt-rfc-style
@@ -93,13 +93,13 @@
             enable = true;
             # taps = builtins.attrNames config.nix-homebrew.taps;
             onActivation.cleanup = "zap";
-            onActivation.autoUpdate = false;
+            onActivation.autoUpdate = true;
             onActivation.upgrade = true;
             brews = [
-              {
-                name = "mpd";
-                restart_service = false;
-              }
+              # {
+              #   name = "mpd";
+              #   restart_service = false;
+              # }
               "nushell"
               "rust"
               "node"
@@ -107,6 +107,7 @@
             ];
             casks = [
               "balenaetcher"
+              "bilibili"
               "blender"
               "dropbox"
               "iina"
