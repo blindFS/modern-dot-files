@@ -4,3 +4,6 @@
 [submodule "doom"]
 	path = doom
 	url = git@github.com:blindFS/doom-private.git
+[submodule "topiary"]
+	path = topiary
+	url = git@github.com:blindFS/topiary-nushell.git

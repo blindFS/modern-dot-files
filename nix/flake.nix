@@ -83,6 +83,7 @@
             pkgs.tig
             pkgs.tldr
             pkgs.tmux
+            pkgs.tree-sitter
             pkgs.vivid
             pkgs.yazi
             pkgs.yt-dlp
