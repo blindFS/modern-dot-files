@@ -9,7 +9,8 @@ use config.nu *
 let plugin_dir = $"($env.CONFIG_DIR)/plugins"
 
 ##### Aerospace integration #####
-(sketchybar
+(
+  sketchybar
   --bar position=top height=25 blur_radius=20 color=0x00000000
   --add event aerospace_mode_change
   --add event aerospace_workspace_change

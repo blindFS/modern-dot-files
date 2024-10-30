@@ -6,21 +6,19 @@
 # https://felixkratz.github.io/SketchyBar/config/events#events-and-scripting
 
 use constants.nu [
-    mode_colors
-    get_icon_by_app_name
+  mode_colors
+  get_icon_by_app_name
 ]
-
 match $env.SENDER {
-    "front_app_switched" => {
-        sketchybar --set $env.NAME label=($env.INFO) icon=($env.INFO | get_icon_by_app_name)
+  "front_app_switched" => {
+    sketchybar --set $env.NAME label=($env.INFO) icon=($env.INFO | get_icon_by_app_name)
+  }
+  "aerospace_mode_change" => {
+    let color = ($mode_colors | get -i $env.MODE | default $mode_colors.main)
+    sketchybar --animate linear 30 --set $env.NAME background.color=($color)
+    # change borders color if it is running
+    if (ps | where name == 'borders' | is-not-empty) {
+      borders active_color=($color)
     }
-    "aerospace_mode_change" => {
-        let color = ($mode_colors | get -i $env.MODE | default $mode_colors.main)
-
-        sketchybar --animate linear 30 --set $env.NAME background.color=($color)
-        # change borders color if it is running
-        if (ps | where name == 'borders' | is-not-empty) {
-            borders active_color=($color)
-        }
-    }
+  }
 }
