@@ -60,6 +60,10 @@ return {
         },
       },
     },
+    dependencies = {
+      -- NOTE: additional parser
+      { "nushell/tree-sitter-nu", build = ":TSUpdate nu" },
+    },
   },
   {
     "nvim-telescope/telescope.nvim",
@@ -78,10 +82,6 @@ return {
   },
   -- nushell setup
   {
-    "nushell/tree-sitter-nu",
-    build = ":TSUpdate nu",
-  },
-  {
     "neovim/nvim-lspconfig",
     opts = function()
       local lspconfig = require("lspconfig")
@@ -99,10 +99,9 @@ return {
       lspconfig.nushell.setup({
         cmd = {
           "/Users/farseerhe/Workspace/nushell/target/release/nu",
-          -- "/Users/farseerhe/Workspace/nushell/target/debug/nu",
           -- "nu",
-          "-I",
-          vim.fn.getcwd(),
+          "--include-path",
+          vim.fn.expand("%:p:h"),
           "--no-config-file",
           "--lsp",
         },

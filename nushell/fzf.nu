@@ -282,7 +282,8 @@ def _complete_by_fzf [
       | fzf ...(_build_fzf_args $query 'File' ($file_preview_cmd + " -l zsh"))
     }
     _ => {
-      let path_info = $query | path parse
+      # keep ~/foo/ all in parent, make stem empty
+      let path_info = ($query + (char nul)) | path parse
       let base_dir = if ($path_info.parent | is-empty) {
         '.'
       } else $path_info.parent
@@ -292,7 +293,11 @@ def _complete_by_fzf [
       fd ...$fd_default_args . ($base_dir | path expand)
       | fzf --multi ...(
         _build_fzf_args
-        ($path_info.stem | str substring ..-3)
+        (
+          $path_info.stem
+          | str trim -r -c (char nul)
+          | str trim -r -c "*"
+        )
         'File'
         $default_preview_cmd
       )

@@ -1,10 +1,10 @@
 {
   description = "BlindFS Darwin system flake";
-  nixConfig = {
-    trusted-substituters = [
-      "https://mirrors.ustc.edu.cn/nix-channels/store"
-    ];
-  };
+  # nixConfig = {
+  #   trusted-substituters = [
+  #     "https://mirrors.ustc.edu.cn/nix-channels/store"
+  #   ];
+  # };
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -22,7 +22,7 @@
     #   flake = false;
     # };
     cask-fonts = {
-      url = "github:laishulu/homebrew-cask-fonts";
+      url = "github:laishulu/homebrew-homebrew";
       flake = false;
     };
     aerospace-tap = {
@@ -56,7 +56,6 @@
           # "/run/current-system/sw/bin/"
           # ];
           environment.systemPackages = [
-            pkgs.atuin
             pkgs.bat
             pkgs.carapace
             pkgs.delta
@@ -101,6 +100,7 @@
               #   name = "mpd";
               #   restart_service = false;
               # }
+              "atuin"
               "nushell"
               "rust"
               "node"
