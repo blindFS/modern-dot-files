@@ -780,6 +780,7 @@ source zoxide.nu
 source atuin.nu
 source nix.nu
 source themes/tokyo-night.nu
+source auth/llm.nu
 # alias
 alias vim = nvim
 alias boc = brew outdated --cask --greedy

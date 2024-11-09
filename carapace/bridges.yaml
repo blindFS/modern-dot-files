@@ -1,7 +1,8 @@
+aerospace: zsh
+atuin: zsh
+lldb: zsh
 mpc: zsh
 netstat: zsh
-aerospace: zsh
-lldb: zsh
-open: zsh
-atuin: zsh
 nix-env: zsh
+open: zsh
+openssl: zsh
