@@ -15,7 +15,7 @@ let info = (
 | default ($gpu_temp | into string --decimals 0) 'gpu_temp'
 (
   sketchybar
-  --set temp_cpu label=$"CPU ($info.cpu_temp) ℃"
+  --set temp_cpu $"label=CPU ($info.cpu_temp) ℃"
   icon=($info.icon) icon.color=($info.color) background.border_color=($info.color)
-  --set temp_gpu label=$"GPU ($info.gpu_temp) ℃"
+  --set temp_gpu $"label=GPU ($info.gpu_temp) ℃"
 )

@@ -56,6 +56,7 @@
           # "/run/current-system/sw/bin/"
           # ];
           environment.systemPackages = [
+            pkgs.aria2
             pkgs.bat
             pkgs.carapace
             pkgs.delta

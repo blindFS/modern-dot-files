@@ -2,9 +2,9 @@ const fzf_carapace_extra_args = [--read0 --ansi --no-tmux --height=50%]
 const fzf_window_first_column_max_length = 25
 const fd_default_args = [--hidden --exclude .git --exclude .cache --max-depth 9]
 const fd_executable_args = [--exclude .git --exclude .cache --hidden --max-depth 5 --type x --color always '']
-const tree_sitter_cmd_parser = 'nu-cmdline-parser'
 const carapace_preview_description = true
-# const tree_sitter_cmd_parser = null
+const tree_sitter_cmd_parser = null
+# const tree_sitter_cmd_parser = 'nu-cmdline-parser'
 const manpage_preview_cmd = 'man {} | col -bx | bat -l man -p --color=always --line-range :200'
 const dir_preview_cmd = "eza --tree -L 3 --color=always {} | head -200"
 const file_preview_cmd = "bat -n --color=always --line-range :200 {}"
@@ -41,6 +41,7 @@ const fzf_prompt_info = {
 use lib.nu [
   substring_from_idx
   substring_to_idx
+  find_ast_node
 ]
 def get_variable_by_name [
   name: string # $foo.bar style
@@ -124,6 +125,7 @@ def _padding_to_length [input_string: string length?: int] {
   let length = $length | default $fzf_window_first_column_max_length
   $input_string | fill -a l -w $length
 }
+
 def _two_column_item [
   item1: string
   item2: string
@@ -290,7 +292,7 @@ def _complete_by_fzf [
       if (not ($base_dir | path exists)) {
         return null
       }
-      fd ...$fd_default_args . ($base_dir | path expand)
+      nu -c ([fd ...$fd_default_args . $base_dir] | str join " ")
       | fzf --multi ...(
         _build_fzf_args
         (
@@ -561,55 +563,44 @@ export def complete_line_by_fzf [] {
   let suffix = $cmd_raw | str substring -g $cursor_pos..
   let cmd_before_pos = $cmd_raw | str substring -g ..($cursor_pos - 1)
   let cursor_pos = $cmd_before_pos | str length # in byte not in grapheme
-  let parsed = (
-    if ($tree_sitter_cmd_parser | is-not-empty) {
-      # get current command for completion, output in format:
-      # command start offset\n
-      # command end offset\n
-      let start_offset = $cmd_raw
-      | ^$tree_sitter_cmd_parser --kind command --insert --offset $cursor_pos
-      | lines
-      | get -i 0
-      | default 0
-      | into int
-      let cmd_with_query = $cmd_raw
-      | str substring $start_offset..($cursor_pos - 1)
-      | str trim --left
-      let first_space = $cmd_with_query | str index-of ' '
-      let first_enter = $cmd_with_query | str index-of "\n"
-      let first_split = match [$first_space $first_enter] {
-        [ -1, _ ] => $first_enter
-        [ _ , -1 ] => $first_space
-        _ => {[$first_space $first_enter] | math min}
-      }
-      let last_space = $cmd_with_query | str index-of -e ' '
-      let last_enter = $cmd_with_query | str index-of -e "\n"
-      let last_split = match [$last_space $last_enter] {
-        [ -1, _ ] => $last_enter
-        [ _ , -1 ] => $last_space
-        _ => {[$last_space $last_enter] | math max}
-      }
-      {
-        prefix: ($cmd_raw | substring_to_idx ($start_offset - 1))
-        query: ($cmd_with_query | substring_from_idx ($last_split + 1))
-        cmd: ($cmd_with_query | substring_to_idx $last_split)
-        cmd_head: ($cmd_with_query | substring_to_idx ($first_split - 1))
-      }
-    } else {
-      let parsed_raw = $cmd_before_pos
-      | str replace --all "\n" (char nul) # workarounds for bugs of parse command
-      | parse --regex '^(?<prefix>(.*[(|{;])*)(?<cmd>[ \x00]*([^ ]+\s+)*)(?<query>[^\x00 |({;]*)$' #\x00 for nul character
-      | get -i 0
-      $parsed_raw
-      | default (
-        $parsed_raw.cmd
-        | str trim
-        | split row ' '
-        | get -i 0 | default ''
-        | str replace --all (char nul) ''
-      ) 'cmd_head'
-    }
-  )
+  let start_offset = if ($tree_sitter_cmd_parser | is-not-empty) {
+    # get current command for completion, output in format:
+    # command start offset\n
+    # command end offset\n
+    $cmd_raw
+    | ^$tree_sitter_cmd_parser --kind command --insert --offset $cursor_pos
+    | lines
+    | get -i 0
+    | default 0
+    | into int
+  } else {
+    $cmd_raw + 'a' # extra marking character
+    | find_ast_node $cursor_pos 'Call'
+    | get start
+  }
+  let cmd_with_query = $cmd_raw
+  | str substring $start_offset..($cursor_pos - 1)
+  | str trim --left
+  let first_space = $cmd_with_query | str index-of ' '
+  let first_enter = $cmd_with_query | str index-of "\n"
+  let first_split = match [$first_space $first_enter] {
+    [ -1, _ ] => $first_enter
+    [ _ , -1 ] => $first_space
+    _ => {[$first_space $first_enter] | math min}
+  }
+  let last_space = $cmd_with_query | str index-of -e ' '
+  let last_enter = $cmd_with_query | str index-of -e "\n"
+  let last_split = match [$last_space $last_enter] {
+    [ -1, _ ] => $last_enter
+    [ _ , -1 ] => $last_space
+    _ => {[$last_space $last_enter] | math max}
+  }
+  let parsed = {
+    prefix: ($cmd_raw | substring_to_idx ($start_offset - 1))
+    query: ($cmd_with_query | substring_from_idx ($last_split + 1))
+    cmd: ($cmd_with_query | substring_to_idx $last_split)
+    cmd_head: ($cmd_with_query | substring_to_idx ($first_split - 1))
+  }
   let query = $parsed.query
   let fzf_res = try {
     if ('$' in $query) {
