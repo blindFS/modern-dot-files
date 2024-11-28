@@ -58,35 +58,50 @@ def _in_span [
 def _span_calibrate [
   offset: int
 ]: record -> record {
-  mut span = $in
-  $span.start -= $offset
-  $span.end -= $offset
-  return $span
+  {
+    start: ($in.start - $offset)
+    end: ($in.end - $offset)
+  }
 }
 
 # find the inner-most ast node that contains the given position
 # with the correct node type
 export def find_ast_node [
   position: int # the position to find
-  type: string # the node type to search for
+  type: string # regexp of node type to search for
 ]: string -> record<start: int, end: int> {
-  let pipelines = ast -j -m $in
+  let input_raw = $in
+  let pipelines = ast -j -m $input_raw
   | get block
   | from json
   | get pipelines.elements
   let offset = $pipelines | get 0.expr.span.start.0
-  let matching_nodes = $pipelines
+  let matching_spans = $pipelines
   | cherry-pick {|x|
     let span = if ($x.span | describe | str starts-with "table") {
       $x.span.0
     } else $x.span
-    if (($position + $offset | _in_span $span) and
-      ($x.expr | columns | first) =~ $type) {
-      $span
-      | _span_calibrate $offset
+    let node_type = $x.expr | columns | first
+    if not ($position + $offset | _in_span $span) {
+      return null
+    }
+    let ans = if $node_type =~ $type {
+      $span | _span_calibrate $offset
+    } else null
+    match $node_type {
+      'Subexpression' | 'Closure' => {
+        let start_offset = ($span.start + 1 - $offset)
+        # recurse into subexpressions and closures
+        ($input_raw | str substring
+          $start_offset..($span.end - 2 - $offset))
+        | find_ast_node ($position - $start_offset) $type
+        | _span_calibrate (0 - $start_offset)
+        | default $ans
+      }
+      _ => $ans
     }
   }
-  $matching_nodes
+  $matching_spans
   | sort-by {$in.end - $in.start}
   | get -i 0
 }

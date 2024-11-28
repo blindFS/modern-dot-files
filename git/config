@@ -14,21 +14,21 @@
   line-numbers-plus-style  = bold green
 [user]
 # Please adapt and uncomment the following lines:
-	name = blindFS
-	email = blindfs19@gmail.com
+  name = blindFS
+  email = blindfs19@gmail.com
 [alias]
-	pb = pull --rebase
-	st = status
-	co = commit -m
-	cmsg = commit --amend -m
-	all = add --all .
-	au = add -u
-	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
-	url =! bash -c 'git config --get remote.origin.url'
+  pb = pull --rebase
+  st = status
+  co = commit -m
+  cmsg = commit --amend -m
+  all = add --all .
+  au = add -u
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
+  url =! bash -c 'git config --get remote.origin.url'
 [diff]
-	tool = vimdiff
+  tool = vimdiff
 [difftool]
-	prompt = true
+  prompt = true
   colorMoved = default
 [credential]
-	helper = cache
+  helper = cache

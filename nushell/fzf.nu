@@ -574,7 +574,7 @@ export def complete_line_by_fzf [] {
     | default 0
     | into int
   } else {
-    $cmd_raw + 'a' # extra marking character
+    $cmd_before_pos + 'a' + $suffix # extra marking character
     | find_ast_node $cursor_pos 'Call'
     | get start
   }
