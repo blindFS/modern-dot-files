@@ -215,7 +215,7 @@ export const config = {
     {
       name: disk
       args: {
-        icon: ''
+        icon: ''
         update_freq: 120
         script: '{}/disk.nu'
         click_script: 'open -a "Disk Utility"'
@@ -226,7 +226,7 @@ export const config = {
     {
       name: cpu
       args: {
-        icon: ''
+        icon: ''
         update_freq: 10
         script: '{}/cpu.nu'
         click_script: 'open -a "Activity Monitor"'
@@ -237,7 +237,7 @@ export const config = {
     {
       name: memory
       args: {
-        icon: '﬙'
+        icon: ''
         update_freq: 10
         script: '{}/mem.nu'
         click_script: 'open -a "Activity Monitor"'
@@ -271,13 +271,6 @@ export const config = {
           }
         }
         {
-          name: temp_fan2
-          args: {
-            label: "unk"
-            icon: '󱑳'
-          }
-        }
-        {
           name: temp_power
           args: {
             label: "unk"
@@ -305,7 +298,7 @@ export const config = {
         label.font.size: 7
         label.y_offset: -4
         update_freq: 3
-        padding_left: -73
+        padding_left: -72
         padding_right: 23
         script: '{}/network.nu'
         icon.color: $colors.purple

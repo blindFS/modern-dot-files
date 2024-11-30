@@ -65,6 +65,7 @@
             pkgs.fd
             pkgs.ffmpeg
             pkgs.fzf
+            pkgs.gh
             pkgs.gotop
             pkgs.graphviz
             pkgs.ispell
@@ -92,7 +93,6 @@
 
           homebrew = {
             enable = true;
-            # taps = builtins.attrNames config.nix-homebrew.taps;
             onActivation.cleanup = "zap";
             onActivation.autoUpdate = true;
             onActivation.upgrade = true;
@@ -115,10 +115,11 @@
               "iina"
               "karabiner-elements"
               "kicad"
+              "stats"
+              "steam"
               "laishulu/cask-fonts/font-sarasa-nerd"
               "nikitabobko/tap/aerospace"
               "popclip"
-              "sfm"
               {
                 name = "raycast";
                 greedy = true;
@@ -156,6 +157,7 @@
             dock.orientation = "left";
             finder.AppleShowAllFiles = true;
             finder.QuitMenuItem = true;
+            NSGlobalDomain.KeyRepeat = 1;
             NSGlobalDomain.AppleInterfaceStyle = "Dark";
             NSGlobalDomain._HIHideMenuBar = true;
             NSGlobalDomain.NSAutomaticWindowAnimationsEnabled = false;
@@ -169,13 +171,13 @@
           system.stateVersion = 5;
 
           # The platform the configuration will be used on.
-          nixpkgs.hostPlatform = "x86_64-darwin";
+          nixpkgs.hostPlatform = "aarch64-darwin";
         };
     in
     {
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#simple
-      darwinConfigurations."Farseers-MacBook-Pro" = nix-darwin.lib.darwinSystem {
+      darwinConfigurations."Hes-Mac-mini" = nix-darwin.lib.darwinSystem {
         modules = [
           configuration
           nix-homebrew.darwinModules.nix-homebrew
@@ -199,6 +201,6 @@
       };
 
       # Expose the package set, including overlays, for convenience.
-      darwinPackages = self.darwinConfigurations."Farseers-MacBook-Pro".pkgs;
+      darwinPackages = self.darwinConfigurations."Hes-Mac-mini".pkgs;
     };
 }

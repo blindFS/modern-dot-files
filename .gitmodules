@@ -7,3 +7,6 @@
 [submodule "topiary"]
 	path = topiary
 	url = git@github.com:blindFS/topiary-nushell.git
+[submodule "nvim"]
+	path = nvim
+	url = ./nvim

@@ -1,8 +1,23 @@
 #!/usr/bin/env nu
 use constants.nu colors
-let temp_info = sys temp
-let cpu_temp = $temp_info | find 'cpu' | get temp | math max
-let gpu_temp = $temp_info | find 'gpu' | get temp | math max
+let tool_path = ($env.FILE_PWD) | path join popups iSMC
+
+def extract_by_key [
+  key: string
+] {
+  $in
+  | where key =~ $key
+  | par-each {|kv| $kv.value}
+  | where quantity != 40
+  | get -i quantity
+  | default [40]
+  | math max
+}
+
+let temp_info = ^$tool_path temp -o json
+| from json | transpose key value
+let cpu_temp = $temp_info | extract_by_key '^CPU'
+let gpu_temp = $temp_info | extract_by_key '^GPU'
 let info = (
   match ([$cpu_temp $gpu_temp] | math max) {
     $t if $t > 80 => { icon: "" color: $colors.orange }
@@ -11,8 +26,16 @@ let info = (
     _ => { icon: "" color: $colors.blue }
   }
 )
-| default ($cpu_temp | into string --decimals 0) 'cpu_temp'
-| default ($gpu_temp | into string --decimals 0) 'gpu_temp'
+| default (
+  $cpu_temp
+  | into string --decimals 0
+  | fill -a r -c '░' -w 2
+) 'cpu_temp'
+| default (
+  $gpu_temp
+  | into string --decimals 0
+  | fill -a r -c '░' -w 2
+) 'gpu_temp'
 (
   sketchybar
   --set temp_cpu $"label=CPU ($info.cpu_temp) ℃"

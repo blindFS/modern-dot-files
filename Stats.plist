@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Battery_state</key>
+	<false/>
+	<key>CPU_barChart_position</key>
+	<integer>1</integer>
+	<key>CPU_label_position</key>
+	<integer>0</integer>
+	<key>CPU_lineChart_position</key>
+	<integer>3</integer>
+	<key>CPU_mini_position</key>
+	<integer>4</integer>
+	<key>CPU_oneView</key>
+	<true/>
+	<key>CPU_pieChart_position</key>
+	<integer>2</integer>
+	<key>CPU_tachometer_position</key>
+	<integer>5</integer>
+	<key>CPU_updateInterval</key>
+	<integer>5</integer>
+	<key>CPU_updateTopInterval</key>
+	<integer>5</integer>
+	<key>CPU_widget</key>
+	<string>label,bar_chart</string>
+	<key>Disk_barChart_position</key>
+	<integer>3</integer>
+	<key>Disk_label_position</key>
+	<integer>1</integer>
+	<key>Disk_memory_position</key>
+	<integer>4</integer>
+	<key>Disk_mini_position</key>
+	<integer>2</integer>
+	<key>Disk_networkChart_position</key>
+	<integer>6</integer>
+	<key>Disk_pieChart_position</key>
+	<integer>0</integer>
+	<key>Disk_processes</key>
+	<integer>5</integer>
+	<key>Disk_removable</key>
+	<true/>
+	<key>Disk_speed_position</key>
+	<integer>5</integer>
+	<key>Disk_updateInterval</key>
+	<integer>30</integer>
+	<key>Disk_widget</key>
+	<string>pie_chart</string>
+	<key>GPU_barChart_position</key>
+	<integer>1</integer>
+	<key>GPU_gpu</key>
+	<string>Apple M4 Pro</string>
+	<key>GPU_label_position</key>
+	<integer>0</integer>
+	<key>GPU_lineChart_position</key>
+	<integer>2</integer>
+	<key>GPU_mini_position</key>
+	<integer>3</integer>
+	<key>GPU_oneView</key>
+	<true/>
+	<key>GPU_state</key>
+	<true/>
+	<key>GPU_tachometer_position</key>
+	<integer>4</integer>
+	<key>GPU_updateInterval</key>
+	<integer>5</integer>
+	<key>GPU_widget</key>
+	<string>label,bar_chart</string>
+	<key>NSNavPanelExpandedSizeForSaveMode</key>
+	<string>{800, 448}</string>
+	<key>NSNavPanelExpandedStateForSaveMode</key>
+	<true/>
+	<key>NSStatusItem Preferred Position Network_speed</key>
+	<real>430</real>
+	<key>NSStatusItem Preferred Position Sensors_sensors</key>
+	<real>357</real>
+	<key>NSStatusItem Restore Position CPU_bar_chart</key>
+	<integer>597</integer>
+	<key>NSStatusItem Restore Position CPU_label</key>
+	<integer>624</integer>
+	<key>NSStatusItem Restore Position CPU_mini</key>
+	<integer>522</integer>
+	<key>NSStatusItem Restore Position Disk_mini</key>
+	<integer>501</integer>
+	<key>NSStatusItem Restore Position GPU_bar_chart</key>
+	<integer>548</integer>
+	<key>NSStatusItem Restore Position GPU_label</key>
+	<integer>575</integer>
+	<key>NSStatusItem Restore Position GPU_mini</key>
+	<integer>522</integer>
+	<key>NSStatusItem Restore Position RAM_bar_chart</key>
+	<integer>646</integer>
+	<key>NSStatusItem Restore Position RAM_label</key>
+	<integer>673</integer>
+	<key>NSStatusItem Restore Position RAM_mini</key>
+	<integer>475</integer>
+	<key>NSToolbar Configuration eu.exelban.Stats.Settings.Toolbar</key>
+	<dict>
+		<key>TB Display Mode</key>
+		<integer>1</integer>
+		<key>TB Icon Size Mode</key>
+		<integer>1</integer>
+		<key>TB Is Shown</key>
+		<true/>
+		<key>TB Size Mode</key>
+		<integer>1</integer>
+	</dict>
+	<key>NSWindow Frame NSNavPanelAutosaveName</key>
+	<string>560 402 800 448 0 0 1920 1080 </string>
+	<key>RAM_barChart_position</key>
+	<integer>4</integer>
+	<key>RAM_label_position</key>
+	<integer>1</integer>
+	<key>RAM_lineChart_position</key>
+	<integer>5</integer>
+	<key>RAM_memory_position</key>
+	<integer>6</integer>
+	<key>RAM_mini_position</key>
+	<integer>2</integer>
+	<key>RAM_pieChart_position</key>
+	<integer>0</integer>
+	<key>RAM_tachometer_position</key>
+	<integer>3</integer>
+	<key>RAM_text_position</key>
+	<integer>7</integer>
+	<key>RAM_widget</key>
+	<string>pie_chart</string>
+	<key>Sensors_barChart_position</key>
+	<integer>2</integer>
+	<key>Sensors_label_position</key>
+	<integer>1</integer>
+	<key>Sensors_mini_position</key>
+	<integer>3</integer>
+	<key>Sensors_sensor</key>
+	<string>Average System Total</string>
+	<key>Sensors_sensors_monospacedFont</key>
+	<true/>
+	<key>Sensors_sensors_size</key>
+	<true/>
+	<key>Sensors_stack_position</key>
+	<integer>0</integer>
+	<key>Sensors_state</key>
+	<true/>
+	<key>Sensors_widget</key>
+	<string>sensors</string>
+	<key>sensor_Average CPU</key>
+	<true/>
+	<key>sensor_Average GPU</key>
+	<true/>
+	<key>sensor_F0Ac</key>
+	<true/>
+	<key>sensor_PSTR</key>
+	<true/>
+	<key>setupProcess</key>
+	<true/>
+	<key>telemetry</key>
+	<false/>
+	<key>telemetry_id</key>
+	<string>EF4FA449-978E-476D-B4AC-07BAE3C84B99</string>
+	<key>temperature_units</key>
+	<string>system</string>
+	<key>updater_check_ts</key>
+	<integer>1732943620</integer>
+	<key>version</key>
+	<string>2.11.18</string>
+</dict>
+</plist>
