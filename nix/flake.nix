@@ -161,6 +161,7 @@
             NSGlobalDomain.AppleInterfaceStyle = "Dark";
             NSGlobalDomain._HIHideMenuBar = true;
             NSGlobalDomain.NSAutomaticWindowAnimationsEnabled = false;
+            NSGlobalDomain."com.apple.keyboard.fnState" = true;
           };
 
           # Set Git commit hash for darwin-version.

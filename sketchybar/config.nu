@@ -144,7 +144,7 @@ export const config = {
     }
     {
       name: media
-      pos: center
+      pos: left
       events: [media_change]
       args: {
         icon: '󰐎'
@@ -157,7 +157,7 @@ export const config = {
     }
     {
       name: media_cover
-      pos: center
+      pos: left
       events: [media_change]
       args: {
         icon.drawing: off
@@ -215,7 +215,7 @@ export const config = {
     {
       name: disk
       args: {
-        icon: ''
+        icon: '󰋊'
         update_freq: 120
         script: '{}/disk.nu'
         click_script: 'open -a "Disk Utility"'

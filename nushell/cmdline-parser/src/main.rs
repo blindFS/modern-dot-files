@@ -1,4 +1,5 @@
 use clap::Parser as ArgParser;
+use streaming_iterator::StreamingIterator;
 use tree_sitter::{Language, Parser, Query, QueryCursor, TreeCursor};
 
 /// Find the nushell AST node of given type at position, code is read from stdin
@@ -85,8 +86,8 @@ fn main() {
                         Query::new(&nu_lang, query_s_expr.as_str()).expect("Error loading query");
                     let mut query_cursor = QueryCursor::new();
                     query_cursor.set_byte_range(node.byte_range());
-                    let query_matches = query_cursor.matches(&query, node, input.as_bytes());
-                    for qm in query_matches {
+                    let mut query_matches = query_cursor.matches(&query, node, input.as_bytes());
+                    while let Some(qm) = query_matches.next() {
                         for cn in qm.captures {
                             if cfg!(feature = "debug") {
                                 println!("=={:#?}==", cn.node);
