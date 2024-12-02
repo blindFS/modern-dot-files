@@ -1,6 +1,6 @@
-{ ... }:
+{ pkgs, ... }:
 let
-  trigger = event: variables: "/run/current-system/sw/bin/sketchybar --trigger ${event} ${variables}";
+  trigger = event: variables: "${pkgs.sketchybar}/bin/sketchybar --trigger ${event} ${variables}";
   aeroswitch = mode: [
     "mode ${mode}"
     ("exec-and-forget" + trigger "aerospace_mode_change" "MODE=${mode}")

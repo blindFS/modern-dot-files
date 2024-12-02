@@ -33,8 +33,9 @@
       cask-fonts,
     }:
     let
-      aero-settings = import ./aerospace.nix;
-      borders-settings = import ./borders.nix;
+      pkgs = import nixpkgs { system = "aarch64-darwin"; };
+      aero-settings = import ./aerospace.nix { pkgs = pkgs; };
+      borders-settings = import ./borders.nix { pkgs = pkgs; };
       homebrew-settings = import ./homebrew.nix;
       sys-settings = import ./system.nix;
       configuration =
@@ -50,38 +51,38 @@
             "/opt/homebrew/bin"
             "/run/current-system/sw/bin"
           ];
-          environment.systemPackages = [
-            pkgs.aria2
-            pkgs.bat
-            pkgs.carapace
-            pkgs.delta
-            pkgs.emacs30
-            pkgs.eza
-            pkgs.fd
-            pkgs.ffmpeg
-            pkgs.fzf
-            pkgs.gh
-            pkgs.gotop
-            pkgs.graphviz
-            pkgs.ispell
-            pkgs.jankyborders
-            pkgs.jc
-            pkgs.lazygit
-            pkgs.neovim
-            pkgs.nixd
-            pkgs.nixfmt-rfc-style
-            pkgs.ripgrep
-            pkgs.starship
-            pkgs.texliveMedium
-            pkgs.thefuck
-            pkgs.tig
-            pkgs.tldr
-            pkgs.tmux
-            pkgs.tree-sitter
-            pkgs.vivid
-            pkgs.yazi
-            pkgs.yt-dlp
-            pkgs.zoxide
+          environment.systemPackages = with pkgs; [
+            aria2
+            bat
+            carapace
+            delta
+            emacs30
+            eza
+            fd
+            ffmpeg
+            fzf
+            gh
+            gotop
+            graphviz
+            ispell
+            jankyborders
+            jc
+            lazygit
+            neovim
+            nixd
+            nixfmt-rfc-style
+            ripgrep
+            starship
+            texliveMedium
+            thefuck
+            tig
+            tldr
+            tmux
+            tree-sitter
+            vivid
+            yazi
+            yt-dlp
+            zoxide
           ];
 
           # services
