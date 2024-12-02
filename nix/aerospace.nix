@@ -5,6 +5,18 @@ let
     "mode ${mode}"
     ("exec-and-forget" + trigger "aerospace_mode_change" "MODE=${mode}")
   ];
+  move-and-focus = space: [
+    "move-node-to-workspace ${space}"
+    "workspace ${space}"
+  ];
+  move-to-monitor = which: [
+    "move-node-to-monitor ${which}"
+    "focus-monitor ${which}"
+  ];
+  tiling-to = position: [
+    "layout tiling"
+    "move ${position}"
+  ];
 in
 {
   default-root-container-layout = "tiles";
@@ -46,11 +58,11 @@ in
     "3" = "workspace 3";
     "4" = "workspace 4";
     "5" = "workspace 5";
-    shift-1 = "move-node-to-workspace 1";
-    shift-2 = "move-node-to-workspace 2";
-    shift-3 = "move-node-to-workspace 3";
-    shift-4 = "move-node-to-workspace 4";
-    shift-5 = "move-node-to-workspace 5";
+    shift-1 = (move-and-focus "1");
+    shift-2 = (move-and-focus "2");
+    shift-3 = (move-and-focus "3");
+    shift-4 = (move-and-focus "4");
+    shift-5 = (move-and-focus "5");
     # window
     h = "focus --ignore-floating left";
     j = "focus --ignore-floating down";
@@ -60,36 +72,18 @@ in
       "layout floating"
       "fullscreen on"
     ];
-    shift-h = [
-      "layout tiling"
-      "move left"
-    ];
-    shift-j = [
-      "layout tiling"
-      "move down"
-    ];
-    shift-k = [
-      "layout tiling"
-      "move up"
-    ];
-    shift-l = [
-      "layout tiling"
-      "move right"
-    ];
+    shift-h = (tiling-to "left");
+    shift-j = (tiling-to "down");
+    shift-k = (tiling-to "up");
+    shift-l = (tiling-to "right");
     minus = "join-with left";
     equal = "join-with right";
     space = "layout tiles horizontal vertical";
     # multi monitors
     leftSquareBracket = "focus-monitor prev";
     rightSquareBracket = "focus-monitor next";
-    shift-leftSquareBracket = [
-      "move-node-to-monitor prev"
-      "focus-monitor prev"
-    ];
-    shift-rightSquareBracket = [
-      "move-node-to-monitor next"
-      "focus-monitor next"
-    ];
+    shift-leftSquareBracket = (move-to-monitor "prev");
+    shift-rightSquareBracket = (move-to-monitor "next");
   };
   mode.resize.binding = {
     enter = (aeroswitch "main");

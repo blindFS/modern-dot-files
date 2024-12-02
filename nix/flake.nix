@@ -1,10 +1,5 @@
 {
   description = "BlindFS Darwin system flake";
-  # nixConfig = {
-  #   trusted-substituters = [
-  #     "https://mirrors.ustc.edu.cn/nix-channels/store"
-  #   ];
-  # };
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -17,25 +12,20 @@
       url = "github:homebrew/homebrew-bundle";
       flake = false;
     };
-    cask-fonts = {
-      url = "github:laishulu/homebrew-homebrew";
-      flake = false;
-    };
   };
 
   outputs =
-    inputs@{
+    {
       self,
       nix-darwin,
       nixpkgs,
       nix-homebrew,
       homebrew-bundle,
-      cask-fonts,
     }:
     let
       pkgs = import nixpkgs { system = "aarch64-darwin"; };
-      aero-settings = import ./aerospace.nix { pkgs = pkgs; };
-      borders-settings = import ./borders.nix { pkgs = pkgs; };
+      aero-settings = import ./aerospace.nix { inherit pkgs; };
+      borders-settings = import ./borders.nix { inherit pkgs; };
       homebrew-settings = import ./homebrew.nix;
       sys-settings = import ./system.nix;
       configuration =
@@ -85,6 +75,11 @@
             zoxide
           ];
 
+          # fonts
+          fonts.packages = [
+            pkgs.nerd-fonts.iosevka
+          ];
+
           # services
           services.aerospace = {
             enable = true;
@@ -96,17 +91,9 @@
           # homebrew
           homebrew = homebrew-settings;
 
-          fonts.packages = [
-            # (pkgs.nerdfonts.override { fonts = [ "FiraCode" ]; })
-          ];
-
           # Auto upgrade nix package and the daemon service.
           services.nix-daemon.enable = true;
           nix.package = pkgs.nix;
-          nix.settings.substituters = [
-            "https://mirrors.ustc.edu.cn/nix-channels/store"
-            "https://cache.nixos.org/"
-          ];
 
           # Necessary for using flakes on this system.
           nix.settings.experimental-features = "nix-command flakes";
@@ -143,7 +130,6 @@
               user = "farseerhe";
               autoMigrate = true;
               taps = {
-                "laishulu/cask-fonts" = cask-fonts;
                 "homebrew/bundle" = homebrew-bundle;
               };
               # mutableTaps = true;

@@ -87,8 +87,8 @@ export const config = {
     updates: when_shown
     padding_left: 2
     padding_right: 2
-    icon.font: "Sarasa Term SC Nerd:Bold:17.0"
-    label.font: "Sarasa Term SC Nerd:Bold:12.0"
+    icon.font: "Iosevka Nerd Font Mono:Bold:17.0"
+    label.font: "Iosevka Nerd Font Mono:Bold:12.0"
     icon.color: $colors.white
     label.color: $colors.fg
     icon.padding_left: 8
