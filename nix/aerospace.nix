@@ -10,7 +10,7 @@ in
   default-root-container-layout = "tiles";
   default-root-container-orientation = "auto";
   exec-on-workspace-change = [
-    "/bin/bash"
+    "/bin/sh"
     "-c"
     (trigger "aerospace_workspace_change" "FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE")
   ];

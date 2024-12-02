@@ -5,8 +5,14 @@ let
   inactive_color = "0xdd494d64";
 in
 {
-  command = "${pkgs.jankyborders}/bin/borders width=${width} hidpi=on active_color=${active_color} inactive_color=${inactive_color}";
   serviceConfig = {
+    ProgramArguments = [
+      "${pkgs.jankyborders}/bin/borders"
+      "hidpi=on"
+      "width=${width}"
+      "active_color=${active_color}"
+      "inactive_color=${inactive_color}"
+    ];
     KeepAlive = false;
     RunAtLoad = true;
   };
