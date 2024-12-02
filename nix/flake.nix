@@ -33,7 +33,10 @@
       cask-fonts,
     }:
     let
-      aerosettings = import ./aerospace.nix;
+      aero-settings = import ./aerospace.nix;
+      borders-settings = import ./borders.nix;
+      homebrew-settings = import ./homebrew.nix;
+      sys-settings = import ./system.nix;
       configuration =
         { pkgs, ... }:
         {
@@ -81,56 +84,16 @@
             pkgs.zoxide
           ];
 
+          # services
           services.aerospace = {
             enable = true;
-            settings = aerosettings;
+            settings = aero-settings;
           };
           services.sketchybar.enable = true;
+          launchd.user.agents.borders = borders-settings;
 
-          # launchd
-          launchd.user.agents.borders = {
-            command = "${pkgs.jankyborders}/bin/borders hidpi=on";
-            serviceConfig = {
-              KeepAlive = false;
-              RunAtLoad = true;
-            };
-          };
-
-          homebrew = {
-            enable = true;
-            onActivation.cleanup = "zap";
-            onActivation.autoUpdate = true;
-            onActivation.upgrade = true;
-            brews = [
-              "atuin"
-              "nushell"
-              "rust"
-              "node"
-              "ipython"
-            ];
-            casks = [
-              "balenaetcher"
-              "bilibili"
-              "blender"
-              "dropbox"
-              "iina"
-              "karabiner-elements"
-              "kicad"
-              "laishulu/cask-fonts/font-sarasa-nerd"
-              "macs-fan-control"
-              "popclip"
-              "steam"
-              {
-                name = "raycast";
-                greedy = true;
-              }
-              "visual-studio-code"
-              {
-                name = "wezterm";
-                greedy = true;
-              }
-            ];
-          };
+          # homebrew
+          homebrew = homebrew-settings;
 
           fonts.packages = [
             # (pkgs.nerdfonts.override { fonts = [ "FiraCode" ]; })
@@ -152,34 +115,7 @@
           # programs.fish.enable = true;
 
           # https://mynixos.com/nix-darwin/options/system.defaults
-          system.defaults = {
-            dock = {
-              autohide = true;
-              orientation = "left";
-              persistent-others = [
-                "~/Documents"
-                "~/Downloads"
-              ];
-            };
-            finder = {
-              AppleShowAllExtensions = true;
-              AppleShowAllFiles = true;
-              QuitMenuItem = true;
-              ShowPathbar = true;
-              ShowStatusBar = true;
-            };
-            NSGlobalDomain = {
-              "com.apple.keyboard.fnState" = true;
-              AppleInterfaceStyle = "Dark";
-              KeyRepeat = 1;
-              NSAutomaticWindowAnimationsEnabled = false;
-              _HIHideMenuBar = true;
-            };
-            WindowManager = {
-              AppWindowGroupingBehavior = false;
-              EnableStandardClickToShowDesktop = false;
-            };
-          };
+          system.defaults = sys-settings;
 
           # Set Git commit hash for darwin-version.
           system.configurationRevision = self.rev or self.dirtyRev or null;
