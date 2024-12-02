@@ -17,16 +17,8 @@
       url = "github:homebrew/homebrew-bundle";
       flake = false;
     };
-    # homebrew-services = {
-    #   url = "github:homebrew/homebrew-services";
-    #   flake = false;
-    # };
     cask-fonts = {
       url = "github:laishulu/homebrew-homebrew";
-      flake = false;
-    };
-    aerospace-tap = {
-      url = "github:nikitabobko/homebrew-tap";
       flake = false;
     };
   };
@@ -38,11 +30,10 @@
       nixpkgs,
       nix-homebrew,
       homebrew-bundle,
-      # homebrew-services,
       cask-fonts,
-      aerospace-tap,
     }:
     let
+      aerosettings = import ./aerospace.nix;
       configuration =
         { pkgs, ... }:
         {
@@ -52,9 +43,10 @@
             XDG_CONFIG_HOME = "/Users/farseerhe/.config";
           };
           # TODO: Add binary path to /etc/paths, manually handled now.
-          # environment.systemPath = [
-          # "/run/current-system/sw/bin/"
-          # ];
+          environment.systemPath = [
+            "/opt/homebrew/bin"
+            "/run/current-system/sw/bin"
+          ];
           environment.systemPackages = [
             pkgs.aria2
             pkgs.bat
@@ -72,12 +64,10 @@
             pkgs.jankyborders
             pkgs.jc
             pkgs.lazygit
-            # pkgs.ncmpcpp
             pkgs.neovim
             pkgs.nixd
             pkgs.nixfmt-rfc-style
             pkgs.ripgrep
-            pkgs.sketchybar
             pkgs.starship
             pkgs.texliveMedium
             pkgs.thefuck
@@ -91,16 +81,27 @@
             pkgs.zoxide
           ];
 
+          services.aerospace = {
+            enable = true;
+            settings = aerosettings;
+          };
+          services.sketchybar.enable = true;
+
+          # launchd
+          launchd.user.agents.borders = {
+            command = "${pkgs.jankyborders}/bin/borders hidpi=on";
+            serviceConfig = {
+              KeepAlive = false;
+              RunAtLoad = true;
+            };
+          };
+
           homebrew = {
             enable = true;
             onActivation.cleanup = "zap";
             onActivation.autoUpdate = true;
             onActivation.upgrade = true;
             brews = [
-              # {
-              #   name = "mpd";
-              #   restart_service = false;
-              # }
               "atuin"
               "nushell"
               "rust"
@@ -115,11 +116,10 @@
               "iina"
               "karabiner-elements"
               "kicad"
-              "stats"
-              "steam"
               "laishulu/cask-fonts/font-sarasa-nerd"
-              "nikitabobko/tap/aerospace"
+              "macs-fan-control"
               "popclip"
+              "steam"
               {
                 name = "raycast";
                 greedy = true;
@@ -153,15 +153,32 @@
 
           # https://mynixos.com/nix-darwin/options/system.defaults
           system.defaults = {
-            dock.autohide = true;
-            dock.orientation = "left";
-            finder.AppleShowAllFiles = true;
-            finder.QuitMenuItem = true;
-            NSGlobalDomain.KeyRepeat = 1;
-            NSGlobalDomain.AppleInterfaceStyle = "Dark";
-            NSGlobalDomain._HIHideMenuBar = true;
-            NSGlobalDomain.NSAutomaticWindowAnimationsEnabled = false;
-            NSGlobalDomain."com.apple.keyboard.fnState" = true;
+            dock = {
+              autohide = true;
+              orientation = "left";
+              persistent-others = [
+                "~/Documents"
+                "~/Downloads"
+              ];
+            };
+            finder = {
+              AppleShowAllExtensions = true;
+              AppleShowAllFiles = true;
+              QuitMenuItem = true;
+              ShowPathbar = true;
+              ShowStatusBar = true;
+            };
+            NSGlobalDomain = {
+              "com.apple.keyboard.fnState" = true;
+              AppleInterfaceStyle = "Dark";
+              KeyRepeat = 1;
+              NSAutomaticWindowAnimationsEnabled = false;
+              _HIHideMenuBar = true;
+            };
+            WindowManager = {
+              AppWindowGroupingBehavior = false;
+              EnableStandardClickToShowDesktop = false;
+            };
           };
 
           # Set Git commit hash for darwin-version.
@@ -190,8 +207,6 @@
               autoMigrate = true;
               taps = {
                 "laishulu/cask-fonts" = cask-fonts;
-                "nikitabobko/tap" = aerospace-tap;
-                # "homebrew/services" = homebrew-services;
                 "homebrew/bundle" = homebrew-bundle;
               };
               # mutableTaps = true;
