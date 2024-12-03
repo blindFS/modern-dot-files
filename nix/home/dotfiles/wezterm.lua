@@ -26,7 +26,9 @@ config.set_environment_variables = {
 	XDG_CONFIG_HOME = os.getenv("HOME") .. "/.config",
 }
 config.default_prog = {
-	"tmux",
+	"bash",
+	"-c",
+	"tmux attach -t dev || tmux new -s dev",
 }
 
 -- local mux = wezterm.mux

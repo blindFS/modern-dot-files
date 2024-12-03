@@ -1,7 +1,0 @@
-gui:
-  nerdFontsVersion: "3"
-
-git:
-  paging:
-    colorArg: always
-    pager: delta --paging=never --diff-so-fancy --syntax-theme=tokyonight_night
