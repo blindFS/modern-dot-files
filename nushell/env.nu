@@ -54,7 +54,14 @@ $env.LS_COLORS = (vivid generate tokyonight-night | str trim)
 # atuin init nushell | save -f ($nu.default-config-dir | path join 'atuin.nu')
 $env.FZF_DEFAULT_COMMAND = "fd --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9"
 $env.FZF_DEFAULT_OPTS = (
-  "--exit-0 --layout reverse --header-first --tmux center,80%,60% " + "--pointer ▶ --marker ⇒ --preview-window right,65% " + "--bind 'bs:backward-delete-char/eof,tab:accept-or-print-query,ctrl-t:toggle+down,ctrl-s:change-multi' " + $"--prompt '(prompt_decorator '#111726' '#9ece6a' '▓▒░ ' false)' " + "--color=fg:#9aaaaa,hl:#f7768e " + "--color=fg+:#c0caf5,bg+:#1a1b26,hl+:#f7768e " + "--color=info:#7aa2f7,prompt:#e0af68,pointer:#f7768e " + "--color=marker:#a9b1d6,spinner:#9ece6a,header:#a9b1d6"
+  "--exit-0 --layout reverse --header-first --tmux center,80%,60% "
+  + "--pointer ▶ --marker ⇒ --preview-window right,65% "
+  + "--bind 'bs:backward-delete-char/eof,tab:accept-or-print-query,ctrl-t:toggle+down,ctrl-s:change-multi' "
+  + $"--prompt '(prompt_decorator '#111726' '#9ece6a' '▓▒░ ' false)' "
+  + "--color=fg:#9aaaaa,hl:#f7768e "
+  + "--color=fg+:#c0caf5,bg+:#1a1b26,hl+:#f7768e "
+  + "--color=info:#7aa2f7,prompt:#e0af68,pointer:#f7768e "
+  + "--color=marker:#a9b1d6,spinner:#9ece6a,header:#a9b1d6"
 )
 $env.CARAPACE_LENIENT = 1
 $env.MANPAGER = "col -bx | bat -l man -p"

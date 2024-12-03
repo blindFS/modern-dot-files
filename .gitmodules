@@ -1,12 +1,3 @@
-[submodule "bat/syntaxes/sublime_text_nushell"]
-	path = bat/syntaxes/sublime_text_nushell
-	url = https://github.com/stevenxxiu/sublime_text_nushell
 [submodule "doom"]
 	path = doom
 	url = git@github.com:blindFS/doom-private.git
-[submodule "topiary"]
-	path = topiary
-	url = git@github.com:blindFS/topiary-nushell.git
-[submodule "nvim"]
-	path = nvim
-	url = ./nvim

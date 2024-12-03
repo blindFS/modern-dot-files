@@ -4,8 +4,6 @@
   onActivation.autoUpdate = true;
   onActivation.upgrade = true;
   brews = [
-    "atuin"
-    "nushell"
     "rust"
     "node"
     "ipython"
@@ -23,14 +21,8 @@
     "macs-fan-control"
     "popclip"
     "steam"
-    {
-      name = "raycast";
-      greedy = true;
-    }
+    "raycast"
     "visual-studio-code"
-    {
-      name = "wezterm";
-      greedy = true;
-    }
+    "wezterm"
   ];
 }

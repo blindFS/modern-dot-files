@@ -12,6 +12,8 @@ use fzf.nu [
   complete_line_by_fzf
   update_manpage_cache
 ]
+use sesh.nu sesh_connect
+
 const private_vars = {
   menu_text_color: "#aaeaea"
   prompt_symbol_color: "#111726"
@@ -300,6 +302,16 @@ $env.config = {
       keycode: char_h
       mode: [emacs vi_insert vi_normal]
       event: { send: menu name: my_history_menu }
+    }
+    {
+      name: sesh
+      modifier: control
+      keycode: char_s
+      mode: [emacs vi_insert vi_normal]
+      event: {
+        send: executehostcommand
+        cmd: sesh_connect
+      }
     }
     {
       name: vicmd_history_menu
