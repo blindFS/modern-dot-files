@@ -1,7 +1,8 @@
 {
   lib,
-  pkgs,
+  inputs,
   username,
+  arch,
   colorscheme,
   monofont,
   ...
@@ -10,13 +11,26 @@ let
   zshrc = builtins.readFile ./dotfiles/zshrc;
   wezterm = builtins.readFile ./dotfiles/wezterm.lua;
   style-format =
-    input:
+    input-str:
+    {
+      dash ? false,
+    }:
     builtins.replaceStrings
       [ "colorscheme_place_holder" "monofont_place_holder" ]
-      [ colorscheme monofont ]
-      input;
+      [
+        (if dash then (builtins.replaceStrings [ "_" ] [ "-" ] colorscheme) else colorscheme)
+        monofont
+      ]
+      input-str;
 in
 {
+  imports = [
+    ./tmux.nix
+    ./bat.nix
+    ./git.nix
+    ./starship.nix
+  ];
+
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = username;
@@ -40,19 +54,10 @@ in
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  programs.tmux = import ./tmux.nix { inherit pkgs username; };
-  programs.starship = import ./starship.nix { inherit lib colorscheme; };
-  programs.bat = import ./bat.nix { inherit pkgs colorscheme; };
-  programs.git = import ./git.nix { inherit colorscheme; };
-
-  home.file = {
-    ".zshrc".text =
-      builtins.replaceStrings
-        [ "colorscheme_place_holder" ]
-        [ (builtins.replaceStrings [ "_" ] [ "-" ] colorscheme) ]
-        zshrc;
-    ".config/wezterm/wezterm.lua".text = style-format wezterm;
-    ".config/lazygit/config.yml".text = style-format ''
+  home.file.".zshrc".text = style-format zshrc { dash = true; };
+  xdg.configFile = {
+    "wezterm/wezterm.lua".text = style-format wezterm { };
+    "lazygit/config.yml".text = style-format ''
       gui:
         nerdFontsVersion: "3"
 
@@ -60,6 +65,6 @@ in
         paging:
           colorArg: always
           pager: delta --paging=never --diff-so-fancy --syntax-theme=colorscheme_place_holder
-    '';
+    '' { };
   };
 }

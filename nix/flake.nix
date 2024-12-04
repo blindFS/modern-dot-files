@@ -3,17 +3,25 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    # nix-darwin
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-
-    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+    # home manager
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    # Optional: Declarative tap management
-    homebrew-bundle = {
-      url = "github:homebrew/homebrew-bundle";
-      flake = false;
-    };
+    # bat syntaxes/themes
+    sublime-nushell.url = "github:stevenxxiu/sublime_text_nushell";
+    sublime-nushell.flake = false;
+    sublime-tokyonight.url = "github:folke/tokyonight.nvim";
+    sublime-tokyonight.flake = false;
+    # tmux plugins
+    tmux-sessionx.url = "github:omerxx/tmux-sessionx";
+    tmux-catppuccin.url = "github:catppuccin/tmux";
+    tmux-catppuccin.flake = false;
+    # homebrew
+    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+    homebrew-bundle.url = "github:homebrew/homebrew-bundle";
+    homebrew-bundle.flake = false;
   };
 
   outputs =
@@ -24,16 +32,24 @@
       nix-homebrew,
       home-manager,
       homebrew-bundle,
-    }:
+      sublime-nushell,
+      sublime-tokyonight,
+      tmux-sessionx,
+      tmux-catppuccin,
+    }@inputs:
     let
       username = "farseerhe";
+      arch = "aarch64-darwin";
     in
     {
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#simple
       darwinConfigurations."Hes-Mac-mini" = nix-darwin.lib.darwinSystem {
+        specialArgs = {
+          inherit inputs arch;
+        };
         modules = [
-          (import ./packages/config.nix { inherit self nixpkgs; })
+          ./osModules
           nix-homebrew.darwinModules.nix-homebrew
           {
             nix-homebrew = {
@@ -51,9 +67,9 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              users."${username}" = import ./home/home.nix;
+              users."${username}" = ./hmModules;
               extraSpecialArgs = {
-                username = username;
+                inherit inputs username arch;
                 colorscheme = "tokyonight_night";
                 monofont = "Iosevka Nerd Font Mono";
               };
