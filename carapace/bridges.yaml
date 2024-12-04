@@ -3,6 +3,7 @@ atuin: zsh
 lldb: zsh
 mpc: zsh
 netstat: zsh
+nh: zsh
 nix-env: zsh
 open: zsh
 openssl: zsh

@@ -37,6 +37,7 @@
     }@inputs:
     let
       username = "farseerhe";
+      hostname = "Hes-Mac-mini";
       arch = "aarch64-darwin";
       colorscheme = "tokyonight_night";
       monofont = "Iosevka Nerd Font Mono";
@@ -44,11 +45,12 @@
     {
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#simple
-      darwinConfigurations."Hes-Mac-mini" = nix-darwin.lib.darwinSystem {
+      darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
         specialArgs = {
           inherit
             inputs
             username
+            hostname
             arch
             colorscheme
             ;
@@ -88,6 +90,6 @@
       };
 
       # Expose the package set, including overlays, for convenience.
-      darwinPackages = self.darwinConfigurations."Hes-Mac-mini".pkgs;
+      darwinPackages = self.darwinConfigurations.${hostname}.pkgs;
     };
 }

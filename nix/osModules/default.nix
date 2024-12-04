@@ -1,6 +1,7 @@
 {
   inputs,
   username,
+  hostname,
   arch,
   colorscheme,
   ...
@@ -51,6 +52,7 @@ in
       jc
       lazygit
       neovim
+      nh
       nixd
       nixfmt-rfc-style
       nushell
@@ -72,6 +74,12 @@ in
     ];
 
     nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+    nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
+    nix.settings.experimental-features = "nix-command flakes pipe-operators";
+    nix.settings.trusted-users = [
+      "root"
+      username
+    ];
 
     # fonts
     fonts.packages = [
@@ -91,14 +99,12 @@ in
     services.nix-daemon.enable = true;
     nix.package = pkgs.nix;
 
-    # Necessary for using flakes on this system.
-    nix.settings.experimental-features = "nix-command flakes";
-
     # Create /etc/zshrc that loads the nix-darwin environment.
     programs.zsh.enable = true; # default shell on catalina
     # programs.fish.enable = true;
 
     # https://mynixos.com/nix-darwin/options/system.defaults
+    networking.hostName = hostname;
     system.defaults = import ./system.nix;
 
     # Set Git commit hash for darwin-version.

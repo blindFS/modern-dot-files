@@ -30,9 +30,10 @@ let
     else
       { };
 in
-builtins.listToAttrs (
-  builtins.map (key: {
-    name = key;
-    value = convert-color default-set.${key};
-  }) (builtins.attrNames default-set)
-)
+default-set
+|> builtins.attrNames
+|> builtins.map (key: {
+  name = key;
+  value = convert-color default-set.${key};
+})
+|> builtins.listToAttrs
