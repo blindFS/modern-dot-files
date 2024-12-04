@@ -2,23 +2,24 @@
   lib,
   inputs,
   username,
-  arch,
   colorscheme,
   monofont,
+  config,
   ...
 }:
 let
   zshrc = builtins.readFile ./dotfiles/zshrc;
   wezterm = builtins.readFile ./dotfiles/wezterm.lua;
+  colorscheme-dash = builtins.replaceStrings [ "_" ] [ "-" ] colorscheme;
   style-format =
     input-str:
     {
       dash ? false,
     }:
     builtins.replaceStrings
-      [ "colorscheme_place_holder" "monofont_place_holder" ]
+      [ "@@colorscheme@@" "@@monofont@@" ]
       [
-        (if dash then (builtins.replaceStrings [ "_" ] [ "-" ] colorscheme) else colorscheme)
+        (if dash then colorscheme-dash else colorscheme)
         monofont
       ]
       input-str;
@@ -29,7 +30,16 @@ in
     ./bat.nix
     ./git.nix
     ./starship.nix
+    ./nushell.nix
+    ./sketchybar.nix
+    inputs.sops-nix.homeManagerModules.sops
   ];
+
+  # decrypt secrets
+  sops.defaultSopsFile = ./secrets/secrets.yaml;
+  sops.defaultSopsFormat = "yaml";
+  sops.age.keyFile = "/Users/${username}/.ssh/nix.key";
+  sops.secrets."llm/gemini_api_key" = { };
 
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
@@ -56,15 +66,25 @@ in
 
   home.file.".zshrc".text = style-format zshrc { dash = true; };
   xdg.configFile = {
+    "nushell/auth/llm.nu".text =
+      # nu
+      ''
+        $env.GOOGLE_API_KEY = (open ${config.sops.secrets."llm/gemini_api_key".path})
+        $env.GEMINI_API_KEY = $env.GOOGLE_API_KEY
+      '';
     "wezterm/wezterm.lua".text = style-format wezterm { };
-    "lazygit/config.yml".text = style-format ''
-      gui:
-        nerdFontsVersion: "3"
+    "lazygit/config.yml".text =
+      style-format
+        # yaml
+        ''
+          gui:
+            nerdFontsVersion: "3"
 
-      git:
-        paging:
-          colorArg: always
-          pager: delta --paging=never --diff-so-fancy --syntax-theme=colorscheme_place_holder
-    '' { };
+          git:
+            paging:
+              colorArg: always
+              pager: delta --paging=never --diff-so-fancy --syntax-theme=${colorscheme}
+        ''
+        { };
   };
 }

@@ -13,11 +13,8 @@ use fzf.nu [
   update_manpage_cache
 ]
 use sesh.nu sesh_connect
+source themes/tokyonight_night.nu
 
-const private_vars = {
-  menu_text_color: "#aaeaea"
-  prompt_symbol_color: "#111726"
-}
 # The default config record. This is where much of your global configuration is setup.
 $env.config = {
   show_banner: false # true or false to enable or disable the welcome banner at startup
@@ -51,8 +48,8 @@ $env.config = {
   #     table: '%m/%d/%y %I:%M:%S%p'          # generally shows up in tabular outputs such as ls. commenting this out will change it to the default human readable datetime format
   # }
   explore: {
-    status_bar_background: { bg: "#1D1F21" fg: "#C4C9C6" }
-    command_bar_text: { fg: "#C4C9C6" }
+    status_bar_background: { bg: $extra_colors.explore_bg fg: $extra_colors.explore_fg }
+    command_bar_text: { fg: $extra_colors.explore_fg }
     highlight: { fg: "black" bg: "yellow" }
     status: {
       error: { fg: "white" bg: "red" }
@@ -171,7 +168,7 @@ $env.config = {
               --no-tmux --height 40%
               --prompt $"(
                 prompt_decorator
-                $private_vars.prompt_symbol_color
+                $extra_colors.prompt_symbol_color
                 'light_blue'
                 '▓▒░ History '
                 false
@@ -185,7 +182,7 @@ $env.config = {
     {
       name: completion_menu
       only_buffer_difference: false
-      marker: (prompt_decorator $private_vars.prompt_symbol_color "yellow" "")
+      marker: (prompt_decorator $extra_colors.prompt_symbol_color "yellow" "")
       type: {
         layout: columnar
         columns: 4
@@ -193,7 +190,7 @@ $env.config = {
         col_padding: 2
       }
       style: {
-        text: $private_vars.menu_text_color
+        text: $extra_colors.menu_text_color
         selected_text: { attr: r }
         description_text: yellow
         match_text: { attr: u }
@@ -203,7 +200,7 @@ $env.config = {
     {
       name: ide_completion_menu
       only_buffer_difference: false
-      marker: (prompt_decorator $private_vars.prompt_symbol_color "yellow" "")
+      marker: (prompt_decorator $extra_colors.prompt_symbol_color "yellow" "")
       type: {
         layout: ide
         min_completion_width: 0
@@ -225,7 +222,7 @@ $env.config = {
         correct_cursor_pos: false
       }
       style: {
-        text: $private_vars.menu_text_color
+        text: $extra_colors.menu_text_color
         selected_text: { attr: r }
         description_text: yellow
         match_text: { attr: u }
@@ -235,13 +232,13 @@ $env.config = {
     {
       name: history_menu
       only_buffer_difference: false
-      marker: (prompt_decorator $private_vars.prompt_symbol_color "light_blue" "")
+      marker: (prompt_decorator $extra_colors.prompt_symbol_color "light_blue" "")
       type: {
         layout: list
         page_size: 30
       }
       style: {
-        text: $private_vars.menu_text_color
+        text: $extra_colors.menu_text_color
         selected_text: light_blue_reverse
         description_text: yellow
       }
@@ -249,7 +246,7 @@ $env.config = {
     {
       name: help_menu
       only_buffer_difference: true
-      marker: (prompt_decorator $private_vars.prompt_symbol_color "light_blue" "")
+      marker: (prompt_decorator $extra_colors.prompt_symbol_color "light_blue" "")
       type: {
         layout: description
         columns: 4
@@ -259,7 +256,7 @@ $env.config = {
         description_rows: 10
       }
       style: {
-        text: $private_vars.menu_text_color
+        text: $extra_colors.menu_text_color
         selected_text: light_blue_reverse
         description_text: yellow
       }
@@ -791,7 +788,6 @@ set matchit_keybinding
 source zoxide.nu
 source atuin.nu
 source nix.nu
-source themes/tokyo-night.nu
 source auth/llm.nu
 # alias
 alias vim = nvim

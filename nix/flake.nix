@@ -22,31 +22,36 @@
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
     homebrew-bundle.url = "github:homebrew/homebrew-bundle";
     homebrew-bundle.flake = false;
+    # secrets
+    sops-nix.url = "github:Mic92/sops-nix";
   };
 
   outputs =
     {
       self,
       nix-darwin,
-      nixpkgs,
       nix-homebrew,
       home-manager,
       homebrew-bundle,
-      sublime-nushell,
-      sublime-tokyonight,
-      tmux-sessionx,
-      tmux-catppuccin,
+      ...
     }@inputs:
     let
       username = "farseerhe";
       arch = "aarch64-darwin";
+      colorscheme = "tokyonight_night";
+      monofont = "Iosevka Nerd Font Mono";
     in
     {
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#simple
       darwinConfigurations."Hes-Mac-mini" = nix-darwin.lib.darwinSystem {
         specialArgs = {
-          inherit inputs arch;
+          inherit
+            inputs
+            username
+            arch
+            colorscheme
+            ;
         };
         modules = [
           ./osModules
@@ -55,7 +60,7 @@
             nix-homebrew = {
               enable = true;
               user = username;
-              enableRosetta = true;
+              enableRosetta = false;
               autoMigrate = true;
               taps."homebrew/bundle" = homebrew-bundle;
               # mutableTaps = true;
@@ -67,11 +72,15 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              users."${username}" = ./hmModules;
+              users."${username}" = ./hmModules/home.nix;
               extraSpecialArgs = {
-                inherit inputs username arch;
-                colorscheme = "tokyonight_night";
-                monofont = "Iosevka Nerd Font Mono";
+                inherit
+                  inputs
+                  username
+                  arch
+                  colorscheme
+                  monofont
+                  ;
               };
             };
           }

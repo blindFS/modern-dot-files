@@ -94,7 +94,6 @@ return {
       }
     end,
   },
-  -- nushell setup
   {
     "neovim/nvim-lspconfig",
     opts = function()
@@ -104,9 +103,13 @@ return {
         filetypes = { "nix" },
         settings = {
           nixd = {
+            nixpkgs = {
+              expr = "import <nixpkgs> { }",
+            },
             formatting = {
               command = { "nixfmt" },
             },
+            options = {},
           },
         },
       })

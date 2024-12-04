@@ -2,7 +2,7 @@
 
 with lib;
 let
-  cs = if (colorscheme == "tokyonight_night") then import ./colorscheme/tokyonight.nix else null;
+  cs = import ../colorscheme.nix { inherit colorscheme; };
   pw = {
     left = "";
     right = "";

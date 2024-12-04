@@ -125,3 +125,9 @@ export module activate {
 }
 # Activate the theme when sourced
 use activate
+export const extra_colors = {
+  menu_text_color: "#aaeaea"
+  prompt_symbol_color: "#111726"
+  explore_bg: "#1D1F21"
+  explore_fg: "#C4C9C6"
+}

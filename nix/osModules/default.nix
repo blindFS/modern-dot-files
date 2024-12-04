@@ -1,10 +1,17 @@
 {
   inputs,
+  username,
   arch,
+  colorscheme,
   ...
 }:
 let
   pkgs = import inputs.nixpkgs { system = arch; };
+  cs = import ../colorscheme.nix {
+    inherit colorscheme;
+    xargb = true;
+    alpha = "dd";
+  };
 in
 {
   imports = [
@@ -13,7 +20,7 @@ in
   ];
   config = {
     environment.variables = {
-      XDG_CONFIG_HOME = builtins.getEnv "HOME" + "/.config";
+      XDG_CONFIG_HOME = "/Users/${username}/.config";
     };
 
     # TODO: Add binary path to /etc/paths, manually handled now.
@@ -49,6 +56,7 @@ in
       nushell
       ripgrep
       sesh
+      sops
       starship
       texliveMedium
       thefuck
@@ -73,6 +81,8 @@ in
     # services
     services.sketchybar.enable = true;
     borders.KeepAlive = true;
+    borders.active_color = cs.blue;
+    borders.inactive_color = cs.dark_grey;
 
     # homebrew
     homebrew = import ./homebrew.nix;

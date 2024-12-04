@@ -81,4 +81,4 @@ alias boc='brew outdated --cask --greedy'
 export PATH="$HOME/bin:/usr/local/sbin:$PATH"
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
-export LS_COLORS=$(vivid generate colorscheme_place_holder)
+export LS_COLORS=$(vivid generate @@colorscheme@@)

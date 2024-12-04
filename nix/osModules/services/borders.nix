@@ -7,8 +7,8 @@
 {
   options = {
     borders.width = lib.mkOption { default = "6.0"; };
-    borders.active_color = lib.mkOption { default = "0xdd7aa2f7"; };
-    borders.inactive_color = lib.mkOption { default = "0xdd494d64"; };
+    borders.active_color = lib.mkOption { default = "0xddffffff"; };
+    borders.inactive_color = lib.mkOption { default = "0xdd000000"; };
     borders.KeepAlive = lib.mkOption { default = false; };
   };
 

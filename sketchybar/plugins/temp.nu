@@ -1,5 +1,5 @@
 #!/usr/bin/env nu
-use constants.nu colors
+use style.nu colors
 let tool_path = ($env.FILE_PWD) | path join popups iSMC
 
 def extract_by_key [

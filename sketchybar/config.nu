@@ -1,5 +1,8 @@
 #!/usr/bin/env nu
-use ./plugins/constants.nu colors
+use ./plugins/style.nu [
+  colors
+  monofont
+]
 
 export def arg_to_setting [plugin_dir: string]: record -> list<string> {
   $in
@@ -87,8 +90,8 @@ export const config = {
     updates: when_shown
     padding_left: 2
     padding_right: 2
-    icon.font: "Iosevka Nerd Font Mono:Bold:17.0"
-    label.font: "Iosevka Nerd Font Mono:Bold:12.0"
+    icon.font: $"($monofont):Bold:17.0"
+    label.font: $"($monofont):Bold:12.0"
     icon.color: $colors.white
     label.color: $colors.fg
     icon.padding_left: 8

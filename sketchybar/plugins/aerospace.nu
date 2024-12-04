@@ -1,9 +1,7 @@
 #!/usr/bin/env nu
 
-use constants.nu [
-  colors
-  get_icon_by_app_name
-]
+use constants.nu get_icon_by_app_name
+use style.nu colors
 
 const animate_frames = 30
 

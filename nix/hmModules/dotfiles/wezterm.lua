@@ -1,7 +1,7 @@
 local wezterm = require("wezterm")
 local config = {}
 
-config.color_scheme = "colorscheme_place_holder"
+config.color_scheme = "@@colorscheme@@"
 config.colors = {
 	background = "black",
 	brights = {
@@ -20,7 +20,7 @@ config.use_fancy_tab_bar = false
 config.window_background_opacity = 0.8
 -- config.macos_window_background_blur = 20
 config.window_decorations = "RESIZE"
-config.font = wezterm.font("monofont_place_holder", { weight = "Regular", stretch = "Expanded", style = "Normal" })
+config.font = wezterm.font("@@monofont@@", { weight = "Regular", stretch = "Expanded", style = "Normal" })
 config.font_size = 15.0
 config.set_environment_variables = {
 	XDG_CONFIG_HOME = os.getenv("HOME") .. "/.config",
