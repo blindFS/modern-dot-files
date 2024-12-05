@@ -73,13 +73,16 @@ in
       zoxide
     ];
 
+    # manage nix's own config in /etc/nix/nix.conf
     nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
-    nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
-    nix.settings.experimental-features = "nix-command flakes pipe-operators";
-    nix.settings.trusted-users = [
-      "root"
-      username
-    ];
+    nix.settings = {
+      substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
+      experimental-features = "nix-command flakes pipe-operators";
+      trusted-users = [
+        "root"
+        username
+      ];
+    };
 
     # fonts
     fonts.packages = [

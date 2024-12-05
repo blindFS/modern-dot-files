@@ -27,7 +27,7 @@ in
       $env.LS_COLORS = (vivid generate ${colorscheme-dash} | str trim)
       $env.FZF_DEFAULT_OPTS = (
         "--exit-0 --layout reverse --header-first --tmux center,80%,60% "
-        + "--pointer ▶ --marker ⇒ --preview-window right,65% "
+        + "--pointer ▶ --marker 󰍕 --preview-window right,65% "
         + "--bind 'bs:backward-delete-char/eof,tab:accept-or-print-query,ctrl-t:toggle+down,ctrl-s:change-multi' "
         + $"--prompt '(prompt_decorator '${cs.black}' '${cs.green}' '▓▒░ ' false)' "
         + "--color=fg:${cs.white},hl:${cs.red} "

@@ -13,6 +13,7 @@ export def sesh_connect []: {
   | str join ' '
   let session = sesh list --icons
   | (fzf --ansi --border-label ' sesh ' --prompt '󱐋 '
+    --tmux center,30%
     --header $'(ansi cyan)Keybindings(ansi reset): ($kbd_message)'
     --bind 'tab:down,btab:up'
     --bind 'ctrl-a:change-prompt(󱐋 )+reload(sesh list --icons)'

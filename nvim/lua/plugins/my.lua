@@ -106,7 +106,15 @@ return {
             formatting = {
               command = { "nixfmt" },
             },
-            options = {},
+            options = {
+              darwin = {
+                expr = string.format(
+                  '(builtins.getFlake "%s/nix").darwinConfigurations.%s.options',
+                  vim.env.HOME,
+                  vim.loop.os_gethostname()
+                ),
+              },
+            },
           },
         },
       })

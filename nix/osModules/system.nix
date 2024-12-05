@@ -11,11 +11,14 @@
     ShowStatusBar = true;
   };
   NSGlobalDomain = {
-    "com.apple.keyboard.fnState" = true;
     AppleInterfaceStyle = "Dark";
-    KeyRepeat = 1;
-    NSAutomaticWindowAnimationsEnabled = false;
     _HIHideMenuBar = true;
+    NSAutomaticWindowAnimationsEnabled = false;
+    # keyboard
+    KeyRepeat = 1;
+    "com.apple.keyboard.fnState" = true;
+    NSAutomaticSpellingCorrectionEnabled = false;
+    NSAutomaticCapitalizationEnabled = false;
   };
   WindowManager = {
     AppWindowGroupingBehavior = false;

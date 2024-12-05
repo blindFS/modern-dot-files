@@ -8,7 +8,10 @@ def nix-list-system []: nothing -> list<string> {
 }
 
 # upgrade system packages
-def nix-upgrade [flake_path: string]: nothing -> nothing {
+def nix-upgrade [
+  flake_path: string # path that confains a flake.nix
+  --interactive(-i) # select pacakges to upgrade interactively
+]: nothing -> nothing {
   let working_path = $flake_path | path expand
   if not ($working_path | path exists) {
     echo "path not exists: $working_path"
@@ -16,7 +19,18 @@ def nix-upgrade [flake_path: string]: nothing -> nothing {
   }
   let pwd = pwd
   cd $working_path
-  nix flake update
+  if $interactive {
+    let selections = nix flake metadata . --json
+    | from json
+    | get locks.nodes
+    | columns
+    | str join "\n"
+    | fzf --multi --tmux center,20%
+    | lines
+    nix flake update ...$selections
+  } else {
+    nix flake update
+  }
   cd $pwd
   darwin-rebuild switch --flake $working_path --show-trace
 }

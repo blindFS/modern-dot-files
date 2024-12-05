@@ -16,14 +16,18 @@
     sublime-tokyonight.flake = false;
     # tmux plugins
     tmux-sessionx.url = "github:omerxx/tmux-sessionx";
+    tmux-sessionx.inputs.nixpkgs.follows = "nixpkgs";
     tmux-catppuccin.url = "github:catppuccin/tmux";
     tmux-catppuccin.flake = false;
     # homebrew
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+    nix-homebrew.inputs.nixpkgs.follows = "nixpkgs";
+    nix-homebrew.inputs.nix-darwin.follows = "nix-darwin";
     homebrew-bundle.url = "github:homebrew/homebrew-bundle";
     homebrew-bundle.flake = false;
     # secrets
     sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -36,32 +40,27 @@
       ...
     }@inputs:
     let
-      username = "farseerhe";
-      hostname = "Hes-Mac-mini";
-      arch = "aarch64-darwin";
-      colorscheme = "tokyonight_night";
-      monofont = "Iosevka Nerd Font Mono";
+      args = {
+        inherit inputs;
+        username = "farseerhe";
+        hostname = "Hes-Mac-mini";
+        arch = "aarch64-darwin";
+        colorscheme = "tokyonight_night";
+        monofont = "Iosevka Nerd Font Mono";
+      };
     in
     {
       # Build darwin flake using:
       # $ darwin-rebuild build --flake .#simple
-      darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
-        specialArgs = {
-          inherit
-            inputs
-            username
-            hostname
-            arch
-            colorscheme
-            ;
-        };
+      darwinConfigurations.${args.hostname} = nix-darwin.lib.darwinSystem {
+        specialArgs = args;
         modules = [
           ./osModules
           nix-homebrew.darwinModules.nix-homebrew
           {
             nix-homebrew = {
               enable = true;
-              user = username;
+              user = args.username;
               enableRosetta = false;
               autoMigrate = true;
               taps."homebrew/bundle" = homebrew-bundle;
@@ -74,22 +73,14 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              users."${username}" = ./hmModules/home.nix;
-              extraSpecialArgs = {
-                inherit
-                  inputs
-                  username
-                  arch
-                  colorscheme
-                  monofont
-                  ;
-              };
+              users."${args.username}" = ./hmModules/home.nix;
+              extraSpecialArgs = args;
             };
           }
         ];
       };
 
       # Expose the package set, including overlays, for convenience.
-      darwinPackages = self.darwinConfigurations.${hostname}.pkgs;
+      darwinPackages = self.darwinConfigurations.${args.hostname}.pkgs;
     };
 }
