@@ -1,5 +1,5 @@
 # tmux session switcher
-export def sesh_connect []: {
+export def sesh_connect [] {
   let kbd_message = {
     all: ^a
     tmux: ^t

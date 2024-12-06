@@ -66,13 +66,20 @@ in
 
   home.file.".zshrc".text = style-format zshrc { dash = true; };
   xdg.configFile = {
+    "wezterm/wezterm.lua".text = style-format wezterm { };
+    "carapace/bridge/zsh/.zshrc".text =
+      # zsh
+      ''
+        fpath=(/run/current-system/sw/share/zsh/site-functions $fpath)
+        autoload -U compinit && compinit
+        eval "$(tree-sitter complete --shell zsh)"
+      '';
     "nushell/auth/llm.nu".text =
       # nu
       ''
         $env.GOOGLE_API_KEY = (open ${config.sops.secrets."llm/gemini_api_key".path})
         $env.GEMINI_API_KEY = $env.GOOGLE_API_KEY
       '';
-    "wezterm/wezterm.lua".text = style-format wezterm { };
     "lazygit/config.yml".text =
       style-format
         # yaml

@@ -53,6 +53,7 @@ $env.SHELL = (which nu).path.0
 # atuin init nushell | save -f ($nu.default-config-dir | path join 'atuin.nu')
 $env.FZF_DEFAULT_COMMAND = "fd --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9"
 $env.CARAPACE_LENIENT = 1
+$env.CARAPACE_BRIDGES = 'zsh'
 $env.MANPAGER = "col -bx | bat -l man -p"
 $env.MANPAGECACHE = ($nu.default-config-dir | path join 'mancache.txt')
 $env.RUST_BACKTRACE = 1

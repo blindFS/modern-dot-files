@@ -98,6 +98,11 @@ return {
     "neovim/nvim-lspconfig",
     opts = function()
       local lspconfig = require("lspconfig")
+      local flake_opt_cmd = string.format(
+        '(builtins.getFlake "%s/nix").darwinConfigurations.%s.options',
+        vim.env.HOME,
+        vim.loop.os_gethostname()
+      )
       lspconfig.nixd.setup({
         cmd = { "nixd" },
         filetypes = { "nix" },
@@ -107,12 +112,11 @@ return {
               command = { "nixfmt" },
             },
             options = {
-              darwin = {
-                expr = string.format(
-                  '(builtins.getFlake "%s/nix").darwinConfigurations.%s.options',
-                  vim.env.HOME,
-                  vim.loop.os_gethostname()
-                ),
+              nixos = {
+                expr = flake_opt_cmd,
+              },
+              home_manager = {
+                expr = flake_opt_cmd .. ".home-manager.users.type.getSubOptions []",
               },
             },
           },
