@@ -37,15 +37,14 @@ $env.NU_PLUGIN_DIRS = [
 # path add ($env.CARGO_HOME | path join "bin")
 # path add ($env.HOME | path join ".local" "bin")
 # $env.PATH = ($env.PATH | uniq)
-$env.PATH = (
-  $env.PATH
-  | split row (char esep)
-  | append '/usr/local/bin'
-  | append ($env.HOME | path join ".elan" "bin")
-  | append ($env.HOME | path join ".local" "bin")
-  | append ($env.HOME | path join ".cargo" "bin")
-  | uniq
-)
+$env.PATH = $env.PATH
+| split row (char esep)
+| append '/usr/local/bin'
+| append ($env.HOME | path join ".elan" "bin")
+| append ($env.HOME | path join ".local" "bin")
+| append ($env.HOME | path join ".cargo" "bin")
+| uniq
+
 $env.SHELL = (which nu).path.0
 # To load from a custom file you can use:
 # starship init nu | save -f ($nu.default-config-dir | path join 'starship.nu')

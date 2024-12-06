@@ -14,6 +14,7 @@ use fzf.nu [
 ]
 use sesh.nu sesh_connect
 source themes/tokyonight_night.nu
+source atuin.nu
 
 # The default config record. This is where much of your global configuration is setup.
 $env.config = {
@@ -155,29 +156,14 @@ $env.config = {
       marker: ''
       type: { layout: ide }
       style: {}
-      source: {|buffer, position|
-        {
-          # only history of current directory
-          value: (
-            atuin history list --reverse false --cwd --cmd-only --print0
-            | split row (char nul) | uniq
-            | par-each {$in | nu-highlight}
-            | str join (char nul)
-            | (
-              fzf --read0 --ansi -q $buffer
-              --no-tmux --height 40%
-              --prompt $"(
-                prompt_decorator
-                $extra_colors.prompt_symbol_color
-                'light_blue'
-                '▓▒░ History '
-                false
-              )"
-            )
-            | ansi strip
-          )
-        }
-      }
+      source: (
+        atuin_menus_func
+        (prompt_decorator
+          $extra_colors.prompt_symbol_color
+          'light_blue'
+          '▓▒░ Ctrl-d to del '
+          false
+      ))
     }
     {
       name: completion_menu
@@ -786,7 +772,6 @@ set auto_pair_keybindings
 use matchit.nu *
 set matchit_keybinding
 source zoxide.nu
-source atuin.nu
 source nix.nu
 source auth/llm.nu
 # alias

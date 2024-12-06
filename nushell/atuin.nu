@@ -39,3 +39,35 @@ $env.config = (
   )
 )
 $env.config = ($env.config | default [] keybindings)
+
+const atuin_refresh_cmd = r#'
+  atuin history list --reverse false --cwd --cmd-only --print0
+  | split row (char nul) | uniq
+  | par-each {$in | nu-highlight}
+  | str join (char nul)'#
+
+# list highlighted history within current directory
+def atuin_list_history [] {
+  nu -c $atuin_refresh_cmd
+}
+
+const atuin_delete_cmd = r##'atuin search --search-mode full-text --delete $"({} | ansi strip)"'##
+
+def atuin_menus_func [
+  prompt: string
+]: nothing -> closure {
+  {|buffer, position|
+    { # only history of current directory
+      value: (
+        atuin_list_history
+        | (
+          fzf --read0 --ansi -q $buffer
+          --bind $"ctrl-d:execute\(($atuin_delete_cmd)\)+reload\(($atuin_refresh_cmd)\)"
+          --no-tmux --height 40%
+          --prompt $prompt
+        )
+        | ansi strip
+      )
+    }
+  }
+}
