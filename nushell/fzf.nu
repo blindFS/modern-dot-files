@@ -614,3 +614,32 @@ export def complete_line_by_fzf [] {
   commandline edit --replace ($completed_before_pos + $suffix)
   commandline set-cursor ($completed_before_pos | str length -g)
 }
+
+const atuin_refresh_cmd = r#'
+  atuin history list --reverse false --cwd --cmd-only --print0
+  | split row (char nul) | uniq
+  | par-each {$in | nu-highlight}
+  | str join (char nul)'#
+
+const atuin_delete_cmd = r##'let cmd = "{}" | str trim -c `'` | str replace -a `'''` `'`;
+  atuin search --search-mode full-text --delete $cmd'##
+
+export def atuin_menus_func [
+  prompt: string
+]: nothing -> closure {
+  {|buffer, position|
+    { # only history of current directory
+      value: (
+        nu -c $atuin_refresh_cmd
+        | (
+          fzf --read0 --ansi -q $buffer
+          --bind $"ctrl-d:execute\(($atuin_delete_cmd)\)+reload\(($atuin_refresh_cmd)\)"
+          --no-tmux --height 40%
+          --prompt $prompt
+        )
+        | ansi strip
+      )
+    }
+  }
+}
+

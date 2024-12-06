@@ -11,10 +11,10 @@ use fzf.nu [
   carapace_by_fzf
   complete_line_by_fzf
   update_manpage_cache
+  atuin_menus_func
 ]
 use sesh.nu sesh_connect
 source themes/tokyonight_night.nu
-source atuin.nu
 
 # The default config record. This is where much of your global configuration is setup.
 $env.config = {
@@ -774,6 +774,7 @@ set matchit_keybinding
 source zoxide.nu
 source nix.nu
 source auth/llm.nu
+source atuin.nu
 # alias
 alias vim = nvim
 alias boc = brew outdated --cask --greedy
