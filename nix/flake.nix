@@ -40,11 +40,12 @@
       ...
     }@inputs:
     let
+      arch = "aarch64-darwin";
+      pkgs = import inputs.nixpkgs { system = arch; };
       args = {
-        inherit inputs;
+        inherit inputs pkgs arch;
         username = "farseerhe";
         hostname = "Hes-Mac-mini";
-        arch = "aarch64-darwin";
         colorscheme = "tokyonight_night";
         monofont = "Iosevka Nerd Font Mono";
       };
@@ -68,16 +69,15 @@
               mutableTaps = false; # functional homebrew
             };
           }
-          home-manager.darwinModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users."${args.username}" = ./hmModules/home.nix;
-              extraSpecialArgs = args;
-            };
-          }
         ];
+      };
+
+      homeConfigurations = {
+        "${args.username}" = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          extraSpecialArgs = args;
+          modules = [ ./hmModules/home.nix ];
+        };
       };
 
       # Expose the package set, including overlays, for convenience.

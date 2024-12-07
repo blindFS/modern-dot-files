@@ -1,5 +1,6 @@
 {
   inputs,
+  pkgs,
   username,
   hostname,
   arch,
@@ -7,7 +8,6 @@
   ...
 }:
 let
-  pkgs = import inputs.nixpkgs { system = arch; };
   cs = import ../colorscheme.nix {
     inherit colorscheme;
     xargb = true;
@@ -67,7 +67,6 @@ in
       tmux
       tree-sitter
       vivid
-      wezterm
       yazi
       yt-dlp
       zoxide
