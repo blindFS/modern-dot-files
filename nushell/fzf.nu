@@ -8,19 +8,12 @@ const tree_sitter_cmd_parser = null
 const manpage_preview_cmd = 'man {} | col -bx | bat -l man -p --color=always --line-range :200'
 const dir_preview_cmd = "eza --tree -L 3 --color=always {} | head -200"
 const file_preview_cmd = "bat -n --color=always --line-range :200 {}"
-const process_preview_cmd = 'ps | where pid == ({} | split row "\t" | get -i 0 | into int) | transpose Property Value | table -i false'
+const process_preview_cmd = 'ps | where pid == ({1} | into int) | transpose Property Value | table -i false'
 const remote_preview_cmd = "dig {} | jc --dig | from json | get -i answer.0 | table -i false"
 const default_preview_cmd = "if ({} | path type) == 'dir'" + $" {($dir_preview_cmd)} else {($file_preview_cmd)}"
-const help_preview_cmd = "try {help {}} catch {'custom command or alias'}"
-const external_tldr_cmd = "try {tldr -C {}} catch {'No doc yet'}"
-const hybrid_help_cmd = (
-  "let content = ({} | parse --regex '(?<cmd>.*[^ ])\\s*\\t\t(?<type>[^ ]*)').0
-  if ($content.type | ansi strip) == 'EXTERNAL' {" +
-  ($external_tldr_cmd | str replace '{}' '($content.cmd | ansi strip)') +
-  "} else {" +
-  ($help_preview_cmd | str replace '{}' '($content.cmd | ansi strip)') +
-  "}"
-)
+const help_preview_cmd = "try {help {1}} catch {'custom command or alias'}"
+const external_tldr_cmd = "try {tldr -C {1}} catch {'No doc yet'}"
+const hybrid_help_cmd = $"if {2} == 'EXTERNAL' {($external_tldr_cmd)} else ($help_preview_cmd)"
 const fzf_prompt_default_setting = {
   fg: '#000000'
   bg: '#c0caf5'
@@ -472,7 +465,7 @@ def _carapace_git_diff_preview [
       'stage'
     ] => [
       --preview
-      r#'let fp = ({} | split row "\t" | first | str trim); if ($fp | path exists) {git diff $fp | delta} else {git log --color}'#
+      r#'let fp = {1}; if ($fp | path exists) {git diff $fp | delta} else {git log --color}'#
       --height=100%
       --multi
       '--preview-window=right,65%'
@@ -621,8 +614,11 @@ const atuin_refresh_cmd = r#'
   | par-each {$in | nu-highlight}
   | str join (char nul)'#
 
-const atuin_delete_cmd = r##'let cmd = "{}" | str trim -c `'` | str replace -a `'''` `'`;
-  atuin search --search-mode full-text --delete $cmd'##
+const atuin_delete_cmd = r##'let cmd = r#'{}'#
+| str trim -c `'`
+| str trim -c `\`
+| str replace -a "'\\''" `'`;
+atuin search --search-mode full-text --delete $cmd'##
 
 export def atuin_menus_func [
   prompt: string
