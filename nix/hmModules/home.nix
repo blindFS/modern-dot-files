@@ -70,9 +70,10 @@ in
     "carapace/bridge/zsh/.zshrc".text =
       # zsh
       ''
-        fpath=(/run/current-system/sw/share/zsh/site-functions $fpath)
+        fpath=(/run/current-system/sw/share/zsh/site-functions \
+          $XDG_CONFIG_HOME/carapace/bridge/zsh/site-functions \
+          $fpath)
         autoload -U compinit && compinit
-        eval "$(tree-sitter complete --shell zsh)"
       '';
     "nushell/auth/llm.nu".text =
       # nu

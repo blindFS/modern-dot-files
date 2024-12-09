@@ -1,6 +1,6 @@
 use clap::Parser as ArgParser;
 use streaming_iterator::StreamingIterator;
-use tree_sitter::{Language, Parser, Query, QueryCursor, TreeCursor};
+use tree_sitter::{Parser, Query, QueryCursor, TreeCursor};
 
 /// Find the nushell AST node of given type at position, code is read from stdin
 #[derive(ArgParser, Debug)]
@@ -53,7 +53,7 @@ fn main() {
         ("\"", "\\\""),
     ]);
 
-    let nu_lang = Language::from(tree_sitter_nu::LANGUAGE);
+    let nu_lang = tree_sitter_nu::LANGUAGE.into();
     let mut parser = Parser::new();
     parser
         .set_language(&nu_lang)
@@ -61,12 +61,14 @@ fn main() {
     let parse_tree = parser.parse(&input, None).unwrap();
 
     if cfg!(feature = "debug") {
+        println!("{:#?}", input);
+        println!("====================");
         print_tree(&parse_tree);
         println!("====================");
     }
 
     let mut tree_cursor = parse_tree.walk();
-    tree_node_at_position_by_kind(&mut tree_cursor, offset + 1, args.kind.as_deref());
+    tree_node_at_position_by_kind(&mut tree_cursor, offset, args.kind.as_deref());
     // find the opposite node
     // if not the first node then must be the last one
     if args.matchit {

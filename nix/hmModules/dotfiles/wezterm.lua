@@ -1,6 +1,7 @@
 local wezterm = require("wezterm")
 local config = {}
 
+config.max_fps = 120
 config.color_scheme = "@@colorscheme@@"
 config.colors = {
 	background = "black",
