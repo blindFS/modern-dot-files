@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   inputs,
   username,
   colorscheme,
@@ -67,14 +68,17 @@ in
   home.file.".zshrc".text = style-format zshrc { dash = true; };
   xdg.configFile = {
     "wezterm/wezterm.lua".text = style-format wezterm { };
-    "carapace/bridge/zsh/.zshrc".text =
-      # zsh
-      ''
-        fpath=(/run/current-system/sw/share/zsh/site-functions \
-          $XDG_CONFIG_HOME/carapace/bridge/zsh/site-functions \
-          $fpath)
-        autoload -U compinit && compinit
-      '';
+    "carapace/bridge/zsh/.zshrc" = {
+      text =
+        # sh
+        ''
+          fpath=(/run/current-system/sw/share/zsh/site-functions \
+            $XDG_CONFIG_HOME/carapace/bridge/zsh/site-functions \
+            $fpath)
+          autoload -U compinit && compinit
+        '';
+      onChange = ''${pkgs.carapace}/bin/carapace --clear-cache'';
+    };
     "nushell/auth/llm.nu".text =
       # nu
       ''

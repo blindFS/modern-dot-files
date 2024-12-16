@@ -6,12 +6,12 @@
   brews = [
     "rust"
     "node"
-    "ipython"
   ];
   casks = [
     "balenaetcher"
     "bilibili"
     "blender"
+    "chatgpt"
     "diffusionbee"
     "discord"
     "dropbox"
@@ -20,9 +20,8 @@
     "kicad"
     "macs-fan-control"
     "popclip"
-    "steam"
     "raycast"
-    "visual-studio-code"
+    "steam"
     "wezterm"
   ];
 }

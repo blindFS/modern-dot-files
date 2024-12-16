@@ -56,6 +56,7 @@ in
       nixd
       nixfmt-rfc-style
       nushell
+      plistwatch
       ripgrep
       sesh
       sops

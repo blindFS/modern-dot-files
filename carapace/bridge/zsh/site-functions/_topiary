@@ -1,0 +1,278 @@
+#compdef topiary
+
+autoload -U is-at-least
+
+_topiary() {
+    typeset -A opt_args
+    typeset -a _arguments_options
+    local ret=1
+
+    if is-at-least 5.2; then
+        _arguments_options=(-s -S -C)
+    else
+        _arguments_options=(-s -C)
+    fi
+
+    local context curcontext="$curcontext" state line
+    _arguments "${_arguments_options[@]}" : \
+'-C+[Configuration file]:CONFIGURATION:_files' \
+'--configuration=[Configuration file]:CONFIGURATION:_files' \
+'-M[Enable merging for configuration files]' \
+'--merge-configuration[Enable merging for configuration files]' \
+'*-v[Logging verbosity (increased per occurrence)]' \
+'*--verbose[Logging verbosity (increased per occurrence)]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
+":: :_topiary_commands" \
+"*::: :->topiary-cli" \
+&& ret=0
+    case $state in
+    (topiary-cli)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:topiary-command-$line[1]:"
+        case $line[1] in
+            (format)
+_arguments "${_arguments_options[@]}" : \
+'-l+[Topiary language identifier (for formatting stdin)]:LANGUAGE:_default' \
+'--language=[Topiary language identifier (for formatting stdin)]:LANGUAGE:_default' \
+'-q+[Topiary query file override (when formatting stdin)]:QUERY:_files' \
+'--query=[Topiary query file override (when formatting stdin)]:QUERY:_files' \
+'-C+[Configuration file]:CONFIGURATION:_files' \
+'--configuration=[Configuration file]:CONFIGURATION:_files' \
+'-t[Consume as much as possible in the presence of parsing errors]' \
+'--tolerate-parsing-errors[Consume as much as possible in the presence of parsing errors]' \
+'-s[Do not check that formatting twice gives the same output]' \
+'--skip-idempotence[Do not check that formatting twice gives the same output]' \
+'-M[Enable merging for configuration files]' \
+'--merge-configuration[Enable merging for configuration files]' \
+'*-v[Logging verbosity (increased per occurrence)]' \
+'*--verbose[Logging verbosity (increased per occurrence)]' \
+'-h[Print help (see more with '\''--help'\'')]' \
+'--help[Print help (see more with '\''--help'\'')]' \
+'*::files -- Input files and directories (omit to read from stdin):_files' \
+&& ret=0
+;;
+(visualise)
+_arguments "${_arguments_options[@]}" : \
+'-f+[Visualisation format]:FORMAT:((dot\:"GraphViz DOT serialisation"
+json\:"JSON serialisation"))' \
+'--format=[Visualisation format]:FORMAT:((dot\:"GraphViz DOT serialisation"
+json\:"JSON serialisation"))' \
+'-l+[Topiary language identifier (for formatting stdin)]:LANGUAGE:_default' \
+'--language=[Topiary language identifier (for formatting stdin)]:LANGUAGE:_default' \
+'-q+[Topiary query file override (when formatting stdin)]:QUERY:_files' \
+'--query=[Topiary query file override (when formatting stdin)]:QUERY:_files' \
+'-C+[Configuration file]:CONFIGURATION:_files' \
+'--configuration=[Configuration file]:CONFIGURATION:_files' \
+'-M[Enable merging for configuration files]' \
+'--merge-configuration[Enable merging for configuration files]' \
+'*-v[Logging verbosity (increased per occurrence)]' \
+'*--verbose[Logging verbosity (increased per occurrence)]' \
+'-h[Print help (see more with '\''--help'\'')]' \
+'--help[Print help (see more with '\''--help'\'')]' \
+'::file -- Input file (omit to read from stdin):_files' \
+&& ret=0
+;;
+(config)
+_arguments "${_arguments_options[@]}" : \
+'-C+[Configuration file]:CONFIGURATION:_files' \
+'--configuration=[Configuration file]:CONFIGURATION:_files' \
+'-M[Enable merging for configuration files]' \
+'--merge-configuration[Enable merging for configuration files]' \
+'*-v[Logging verbosity (increased per occurrence)]' \
+'*--verbose[Logging verbosity (increased per occurrence)]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(prefetch)
+_arguments "${_arguments_options[@]}" : \
+'-C+[Configuration file]:CONFIGURATION:_files' \
+'--configuration=[Configuration file]:CONFIGURATION:_files' \
+'-M[Enable merging for configuration files]' \
+'--merge-configuration[Enable merging for configuration files]' \
+'*-v[Logging verbosity (increased per occurrence)]' \
+'*--verbose[Logging verbosity (increased per occurrence)]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+;;
+(coverage)
+_arguments "${_arguments_options[@]}" : \
+'-l+[Topiary language identifier (for formatting stdin)]:LANGUAGE:_default' \
+'--language=[Topiary language identifier (for formatting stdin)]:LANGUAGE:_default' \
+'-q+[Topiary query file override (when formatting stdin)]:QUERY:_files' \
+'--query=[Topiary query file override (when formatting stdin)]:QUERY:_files' \
+'-C+[Configuration file]:CONFIGURATION:_files' \
+'--configuration=[Configuration file]:CONFIGURATION:_files' \
+'-M[Enable merging for configuration files]' \
+'--merge-configuration[Enable merging for configuration files]' \
+'*-v[Logging verbosity (increased per occurrence)]' \
+'*--verbose[Logging verbosity (increased per occurrence)]' \
+'-h[Print help (see more with '\''--help'\'')]' \
+'--help[Print help (see more with '\''--help'\'')]' \
+'::file -- Input file (omit to read from stdin):_files' \
+&& ret=0
+;;
+(completion)
+_arguments "${_arguments_options[@]}" : \
+'-C+[Configuration file]:CONFIGURATION:_files' \
+'--configuration=[Configuration file]:CONFIGURATION:_files' \
+'-M[Enable merging for configuration files]' \
+'--merge-configuration[Enable merging for configuration files]' \
+'*-v[Logging verbosity (increased per occurrence)]' \
+'*--verbose[Logging verbosity (increased per occurrence)]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'::shell -- Shell (omit to detect from the environment):(bash elvish fish powershell zsh)' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_topiary__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:topiary-help-command-$line[1]:"
+        case $line[1] in
+            (format)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(visualise)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(config)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(prefetch)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(coverage)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(completion)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+}
+
+(( $+functions[_topiary_commands] )) ||
+_topiary_commands() {
+    local commands; commands=(
+'format:Format inputs' \
+'visualise:Visualise the input'\''s Tree-sitter parse tree' \
+'config:Print the current configuration' \
+'prefetch:Prefetch all languages in the configuration' \
+'coverage:Checks how much of the tree-sitter query is used' \
+'completion:Generate shell completion script' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'topiary commands' commands "$@"
+}
+(( $+functions[_topiary__completion_commands] )) ||
+_topiary__completion_commands() {
+    local commands; commands=()
+    _describe -t commands 'topiary completion commands' commands "$@"
+}
+(( $+functions[_topiary__config_commands] )) ||
+_topiary__config_commands() {
+    local commands; commands=()
+    _describe -t commands 'topiary config commands' commands "$@"
+}
+(( $+functions[_topiary__coverage_commands] )) ||
+_topiary__coverage_commands() {
+    local commands; commands=()
+    _describe -t commands 'topiary coverage commands' commands "$@"
+}
+(( $+functions[_topiary__format_commands] )) ||
+_topiary__format_commands() {
+    local commands; commands=()
+    _describe -t commands 'topiary format commands' commands "$@"
+}
+(( $+functions[_topiary__help_commands] )) ||
+_topiary__help_commands() {
+    local commands; commands=(
+'format:Format inputs' \
+'visualise:Visualise the input'\''s Tree-sitter parse tree' \
+'config:Print the current configuration' \
+'prefetch:Prefetch all languages in the configuration' \
+'coverage:Checks how much of the tree-sitter query is used' \
+'completion:Generate shell completion script' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'topiary help commands' commands "$@"
+}
+(( $+functions[_topiary__help__completion_commands] )) ||
+_topiary__help__completion_commands() {
+    local commands; commands=()
+    _describe -t commands 'topiary help completion commands' commands "$@"
+}
+(( $+functions[_topiary__help__config_commands] )) ||
+_topiary__help__config_commands() {
+    local commands; commands=()
+    _describe -t commands 'topiary help config commands' commands "$@"
+}
+(( $+functions[_topiary__help__coverage_commands] )) ||
+_topiary__help__coverage_commands() {
+    local commands; commands=()
+    _describe -t commands 'topiary help coverage commands' commands "$@"
+}
+(( $+functions[_topiary__help__format_commands] )) ||
+_topiary__help__format_commands() {
+    local commands; commands=()
+    _describe -t commands 'topiary help format commands' commands "$@"
+}
+(( $+functions[_topiary__help__help_commands] )) ||
+_topiary__help__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'topiary help help commands' commands "$@"
+}
+(( $+functions[_topiary__help__prefetch_commands] )) ||
+_topiary__help__prefetch_commands() {
+    local commands; commands=()
+    _describe -t commands 'topiary help prefetch commands' commands "$@"
+}
+(( $+functions[_topiary__help__visualise_commands] )) ||
+_topiary__help__visualise_commands() {
+    local commands; commands=()
+    _describe -t commands 'topiary help visualise commands' commands "$@"
+}
+(( $+functions[_topiary__prefetch_commands] )) ||
+_topiary__prefetch_commands() {
+    local commands; commands=()
+    _describe -t commands 'topiary prefetch commands' commands "$@"
+}
+(( $+functions[_topiary__visualise_commands] )) ||
+_topiary__visualise_commands() {
+    local commands; commands=()
+    _describe -t commands 'topiary visualise commands' commands "$@"
+}
+
+if [ "$funcstack[1]" = "_topiary" ]; then
+    _topiary "$@"
+else
+    compdef _topiary topiary
+fi
