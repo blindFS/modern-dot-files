@@ -29,9 +29,7 @@
   CustomUserPreferences = {
     # indie input method per-app
     "com.apple.HIToolbox" = {
-      "AppleGlobalTextInputProperties" = {
-        "TextInputGlobalPropertyPerContextInput" = 1;
-      };
+      AppleGlobalTextInputProperties.TextInputGlobalPropertyPerContextInput = 1;
     };
   };
 }

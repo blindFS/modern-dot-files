@@ -76,7 +76,7 @@ return {
     -- end,
     dependencies = {
       -- NOTE: additional parser
-      { "nushell/tree-sitter-nu" },
+      -- { "nushell/tree-sitter-nu" },
     },
   },
   {
@@ -137,6 +137,24 @@ return {
       })
     end,
   },
+  {
+    {
+      "stevearc/conform.nvim",
+      dependencies = { "mason.nvim" },
+      lazy = true,
+      opts = {
+        formatters_by_ft = {
+          nu = { "topiary" },
+        },
+        formatters = {
+          topiary = {
+            command = "topiary",
+            args = { "format", "$FILENAME" },
+          },
+        },
+      },
+    },
+  },
   -- llm
   {
     "monkoose/neocodeium",
@@ -144,7 +162,7 @@ return {
     config = function()
       local neocodeium = require("neocodeium")
       neocodeium.setup()
-      vim.keymap.set("i", "<C-e>", neocodeium.accept)
+      vim.keymap.set("i", "<C-l>", neocodeium.accept)
       vim.keymap.set("i", "<C-t>", neocodeium.chat)
     end,
   },
@@ -158,7 +176,7 @@ return {
       -- provider = "claude",
       gemini = {
         -- @see https://ai.google.dev/gemini-api/docs/models/gemini
-        model = "gemini-1.5-pro-002",
+        model = "gemini-2.0-flash-exp",
         -- model = "gemini-1.5-flash",
         temperature = 0,
         max_tokens = 4096,

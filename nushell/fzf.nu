@@ -1,4 +1,4 @@
-const fzf_carapace_extra_args = [--read0 --ansi --no-tmux --height=50%]
+const fzf_carapace_extra_args = [--read0 --ansi --no-tmux --height=30%]
 const fzf_window_first_column_max_length = 25
 const fd_default_args = [--hidden --exclude .git --exclude .cache --max-depth 9]
 const fd_executable_args = [--exclude .git --exclude .cache --hidden --max-depth 5 --type x --color always '']
@@ -36,6 +36,7 @@ use lib.nu [
   substring_to_idx
   find_ast_node
 ]
+
 def get_variable_by_name [
   name: string # $foo.bar style
 ] {
