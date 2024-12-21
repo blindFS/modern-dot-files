@@ -10,6 +10,8 @@
     enable = true;
     prefix = "C-q";
     keyMode = "vi";
+    # for neovim autoread on file change
+    focusEvents = true;
     shell = "${pkgs.nushell}/bin/nu";
     terminal = "xterm-256color";
     baseIndex = 1;
