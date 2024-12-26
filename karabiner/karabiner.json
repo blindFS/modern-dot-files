@@ -9,6 +9,7 @@
                 "rules": [
                     {
                         "description": "Change command + h/j/k/l to Arrows",
+                        "enabled": false,
                         "manipulators": [
                             {
                                 "from": {

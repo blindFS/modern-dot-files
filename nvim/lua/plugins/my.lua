@@ -59,6 +59,17 @@ return {
           scope_incremental = "g+",
         },
       },
+      textobjects = {
+        swap = {
+          enable = true,
+          swap_next = {
+            ["<leader>pa"] = "@parameter.inner",
+          },
+          swap_previous = {
+            ["<leader>pA"] = "@parameter.inner",
+          },
+        },
+      },
     },
     -- config = function(_, opts)
     --   local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
