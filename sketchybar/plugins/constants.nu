@@ -21,7 +21,7 @@ export const app_icons = {
   'preview': ''
   'safari': '󰀹'
   'wechat': ''
-  'wezterm': ''
+  'ghostty': ''
 }
 export def get_icon_by_app_name []: string -> string {
   let name = $in | str trim | str downcase

@@ -10,7 +10,6 @@
 }:
 let
   zshrc = builtins.readFile ./dotfiles/zshrc;
-  wezterm = builtins.readFile ./dotfiles/wezterm.lua;
   colorscheme-dash = builtins.replaceStrings [ "_" ] [ "-" ] colorscheme;
   style-format =
     input-str:
@@ -67,7 +66,6 @@ in
 
   home.file.".zshrc".text = style-format zshrc { dash = true; };
   xdg.configFile = {
-    "wezterm/wezterm.lua".text = style-format wezterm { };
     "carapace/bridge/zsh/.zshrc" = {
       text =
         # sh
@@ -86,17 +84,24 @@ in
         $env.GEMINI_API_KEY = $env.GOOGLE_API_KEY
       '';
     "lazygit/config.yml".text =
-      style-format
-        # yaml
-        ''
-          gui:
-            nerdFontsVersion: "3"
+      # yaml
+      ''
+        gui:
+          nerdFontsVersion: "3"
 
-          git:
-            paging:
-              colorArg: always
-              pager: delta --paging=never --diff-so-fancy --syntax-theme=${colorscheme}
-        ''
-        { };
+        git:
+          paging:
+            colorArg: always
+            pager: delta --paging=never --diff-so-fancy --syntax-theme=${colorscheme}
+      '';
+    "ghostty/config".text = ''
+      initial-command = tmux new -A -s dev
+      font-family = "${monofont}"
+      font-size = 15
+      theme = "${builtins.split "_" colorscheme |> builtins.head}"
+      background-opacity = 0.8
+      background = #000000
+      macos-titlebar-style = hidden
+    '';
   };
 }

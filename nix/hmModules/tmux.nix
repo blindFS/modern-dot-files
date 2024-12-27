@@ -13,7 +13,7 @@
     # for neovim autoread on file change
     focusEvents = true;
     shell = "${pkgs.nushell}/bin/nu";
-    terminal = "xterm-256color";
+    terminal = "xterm-ghostty";
     baseIndex = 1;
     aggressiveResize = true;
     plugins = with pkgs; [
@@ -70,6 +70,7 @@
       }
     ];
     extraConfig = ''
+      set-env -g XDG_CONFIG_HOME "/Users/${username}/.config"
       set-option -g status-position top
       set -g set-titles on
       set -g set-titles-string '#I:#W'

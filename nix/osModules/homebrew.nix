@@ -15,6 +15,7 @@
     "diffusionbee"
     "discord"
     "dropbox"
+    "ghostty"
     "iina"
     "karabiner-elements"
     "kicad"
@@ -22,6 +23,5 @@
     "popclip"
     "raycast"
     "steam"
-    "wezterm"
   ];
 }
