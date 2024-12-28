@@ -160,7 +160,7 @@ return {
         formatters = {
           topiary = {
             command = "topiary",
-            args = { "format", "$FILENAME" },
+            args = { "format", "--language", "nu" },
           },
         },
       },

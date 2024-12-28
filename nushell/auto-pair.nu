@@ -187,8 +187,8 @@ export def --env "set auto_pair_keybindings" [] {
     | update keycode $"char_($k)"
     | update event.cmd $"auto_pair_complete r#'($k)'#"
   }
-  $env.config.keybindings = $env
-  | get -i config.keybindings | default []
-  | append $new_kbs
-  # | append $auto_pair_backspace_binding
+  $env.config.keybindings ++= [
+    ...$new_kbs
+    # $auto_pair_backspace_binding
+  ]
 }

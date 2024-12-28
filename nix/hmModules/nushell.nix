@@ -1,4 +1,4 @@
-{ colorscheme, ... }:
+{ colorscheme, pkgs, ... }:
 let
   cs = import ../colorscheme.nix { inherit colorscheme; };
   colorscheme-dash = builtins.replaceStrings [ "_" ] [ "-" ] colorscheme;
@@ -20,7 +20,10 @@ in
         $"($startship_leading)(ansi --escape $bg)($symbol)(ansi reset)(ansi --escape $fg)(ansi reset) "
       }
 
-      let dev_tag = if $nu.current-exe == $env.SHELL {""} else ' '
+      let dev_tag = if (
+        $nu.current-exe == (which nu).path.0
+        or $nu.current-exe == '${pkgs.nushell}/bin/nu'
+      ) {""} else ' '
       $env.PROMPT_INDICATOR = {|| "> "}
       $env.PROMPT_INDICATOR_VI_INSERT = {|| prompt_decorator "${cs.black}" "${cs.light_green}" ($dev_tag + "󰏫")}
       $env.PROMPT_INDICATOR_VI_NORMAL = {|| prompt_decorator "${cs.black}" "${cs.yellow}" ($dev_tag + "")}

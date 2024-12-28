@@ -29,7 +29,5 @@ export def matchit_exec [] {
 }
 
 export def --env "set matchit_keybinding" [] {
-  $env.config.keybindings = $env
-  | get -i config.keybindings | default []
-  | append $kb_config
+  $env.config.keybindings ++= [$kb_config]
 }

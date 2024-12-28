@@ -21,11 +21,6 @@ export-env {
         --terminal-width (term size).columns
       )
     }
-    config: (
-      $env.config? | default {} | merge {
-        render_right_prompt_on_last_line: true
-      }
-    )
     PROMPT_COMMAND_RIGHT: {||
       (
         ^starship prompt

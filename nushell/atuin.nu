@@ -7,7 +7,7 @@ let _atuin_pre_execution = {||
   if ($nu | get -i history-enabled) == false {
     return
   }
-  let cmd = (commandline)
+  let cmd = commandline
   if ($cmd | is-empty) {
     return
   }
@@ -25,18 +25,6 @@ let _atuin_pre_prompt = {||
   }
   hide-env ATUIN_HISTORY_ID
 }
-$env.config = ($env | default {} config).config
-$env.config = ($env.config | default {} hooks)
-$env.config = (
-  $env.config | upsert hooks (
-    $env.config.hooks
-    | upsert pre_execution (
-      $env.config.hooks | get -i pre_execution | default [] | append $_atuin_pre_execution
-    )
-    | upsert pre_prompt (
-      $env.config.hooks | get -i pre_prompt | default [] | append $_atuin_pre_prompt
-    )
-  )
-)
-$env.config = ($env.config | default [] keybindings)
 
+$env.config.hooks.pre_execution ++= [$_atuin_pre_execution]
+$env.config.hooks.pre_prompt ++= [$_atuin_pre_prompt]
