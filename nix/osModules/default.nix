@@ -110,6 +110,7 @@ in
     # https://mynixos.com/nix-darwin/options/system.defaults
     networking.hostName = hostname;
     system.defaults = import ./system.nix;
+    power.sleep.display = "never";
 
     # Set Git commit hash for darwin-version.
     system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;

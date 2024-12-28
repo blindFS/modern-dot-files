@@ -20,16 +20,16 @@ const fzf_prompt_default_setting = {
   symbol: ''
 }
 const fzf_prompt_info = {
-  Carapace: { bg: '#1d8f8f' symbol: '󰳗' }
-  Variable: { symbol: '󱄑' }
-  Directory: { symbol: '' }
-  File: { symbol: '󰈔' }
-  Remote: { symbol: '󰛳' }
-  Process: { symbol: '' }
-  Command: { symbol: '' }
-  Manpage: { bg: '#f7768e' symbol: '󰙃' }
-  Internals: { bg: '#0dcf6f' symbol: '' }
-  Externals: { bg: '#7aa2f7' symbol: '' }
+  Carapace: {bg: '#1d8f8f' symbol: '󰳗'}
+  Variable: {symbol: '󱄑'}
+  Directory: {symbol: ''}
+  File: {symbol: '󰈔'}
+  Remote: {symbol: '󰛳'}
+  Process: {symbol: ''}
+  Command: {symbol: ''}
+  Manpage: {bg: '#f7768e' symbol: '󰙃'}
+  Internals: {bg: '#0dcf6f' symbol: ''}
+  Externals: {bg: '#7aa2f7' symbol: ''}
 }
 use lib.nu [
   substring_from_idx
@@ -60,12 +60,12 @@ def get_variable_by_name [
         | get $seg
       }
     }
-  } catch {{}}
+  } catch { {} }
   $content
 }
 
 def _quote_if_not_empty [] {
-  if ($in | str trim | is-empty) {''} else {$"`($in)`"}
+  if ($in | str trim | is-empty) { '' } else { $"`($in)`" }
 }
 
 def _prompt_decorator [
@@ -74,8 +74,8 @@ def _prompt_decorator [
   symbol: string
   type: string
 ] {
-  let fg = { fg: $bg_color }
-  let bg = { fg: $fg_color bg: $bg_color }
+  let fg = {fg: $bg_color}
+  let bg = {fg: $fg_color bg: $bg_color}
   $"(ansi --escape $bg)▓▒░ ($type) ($symbol)(ansi reset)(ansi --escape $fg)(ansi reset) "
 }
 
@@ -217,10 +217,10 @@ def _complete_by_fzf [
       } else {
         # combine internals and externals
         _list_internal_commands
-        | par-each {_two_column_item $in 'NUSHELL_INTERNAL' '' (ansi green_italic)}
+        | par-each { _two_column_item $in 'NUSHELL_INTERNAL' '' (ansi green_italic) }
         | append (
           _list_external_commands
-          | par-each {_two_column_item $in 'EXTERNAL' '' (ansi blue_italic)}
+          | par-each { _two_column_item $in 'EXTERNAL' '' (ansi blue_italic) }
         )
         | str join "\n"
         | (
@@ -240,7 +240,7 @@ def _complete_by_fzf [
     }
     "kill" => {
       ps
-      | par-each {$"($in.pid)\t($in.name)"}
+      | par-each { $"($in.pid)\t($in.name)" }
       | str join "\n"
       | fzf ...(_build_fzf_args $query 'Process' $process_preview_cmd)
       | split row "\t" | get -i 0
@@ -272,7 +272,7 @@ def _complete_by_fzf [
     _ if ($cmd in ['use' 'source']) => {
       $env.NU_LIB_DIRS
       | append $nu.default-config-dir
-      | par-each {try {glob ($in | path join '**' '*.nu')} catch {[]}}
+      | par-each { try { glob ($in | path join '**' '*.nu') } catch { [] } }
       | flatten
       | uniq
       | str join "\n"
@@ -299,7 +299,7 @@ def _complete_by_fzf [
         $default_preview_cmd
       )
       | split row "\n"
-      | each {$in | _quote_if_not_empty}
+      | each { $in | _quote_if_not_empty }
       | str join ' '
     }
   }
@@ -320,7 +320,7 @@ def _final_spans_for_carapace [spans: list<string>] {
 # ansi strip
 def _fzf_post_process [] {
   let lines = $in
-  if ($lines | is-empty) {return null}
+  if ($lines | is-empty) { return null }
   let lines = $lines
   | split row "\n"
   | each {
@@ -337,7 +337,7 @@ def _fzf_post_process [] {
       | each {
         $in | _quote_if_not_empty
       }
-    } else {$lines}
+    } else { $lines }
   )
   | str join ' '
 }
@@ -352,7 +352,7 @@ def _carapace_by_fzf [command: string spans: list<string>] {
     _ if $carapace_preview_description => (
       $carapace_completion
       | par-each {
-        let value_style = ansi --escape ($in | get -i style | default { fg: yellow })
+        let value_style = ansi --escape ($in | get -i style | default {fg: yellow})
         $"($value_style)($in.value)(ansi reset)"
       }
       | str join (char nul)
@@ -373,7 +373,7 @@ def _carapace_by_fzf [command: string spans: list<string>] {
     _ => (
       $carapace_completion
       | par-each {
-        let value_style = ansi --escape ($in | get -i style | default { fg: yellow })
+        let value_style = ansi --escape ($in | get -i style | default {fg: yellow})
         (
           _two_column_item
           $in.value # drop items with no value field
@@ -407,7 +407,7 @@ def _env_by_fzf [
   let true_query = $parsed.0.true_query
   if $use_carapace {
     let res = _carapace_by_fzf 'get-env' [get-env ($true_query | str substring 1..)]
-    if ($res | is-empty) {$query} else {$prefix + '$env.' + $res}
+    if ($res | is-empty) { $query } else { $prefix + '$env.' + $res }
   } else {
     let segs = $true_query | split row '.'
     let seg_prefix = $segs | drop 1 | append '' | str join '.'
@@ -416,7 +416,7 @@ def _env_by_fzf [
       match ($content | describe | str substring 0..4) {
         'list<' => {
           0..(($content | length) - 1)
-          | each {$in | into string}
+          | each { $in | into string }
         }
         'recor' => {
           $content
@@ -452,7 +452,7 @@ $'value': ($segs | get (($segs | length) - 2))}}
         --preview-window right,70%
       )
     )
-    if ($res | is-empty) {$query} else {$prefix + $seg_prefix + $res}
+    if ($res | is-empty) { $query } else { $prefix + $seg_prefix + $res }
   }
 }
 
@@ -496,7 +496,7 @@ def _trim_spans [
     $spans
     # reversely take until ( or | or { or ; is found
     | reverse
-    | take until {|r| $r =~ '[ \n]*[|({;][ \n]*'}
+    | take until {|r| $r =~ '[ \n]*[|({;][ \n]*' }
     | reverse
   )
   if ($trimmed | is-empty) {
@@ -516,6 +516,7 @@ def _trim_spans [
 export def carapace_by_fzf [
   raw_spans: list<string> # list of commandline arguments to trigger `carapace <command> nushell ...($spans)`
 ] {
+  # return $raw_spans
   let spans = _trim_spans $raw_spans
   let query = $spans | last
   let res = try {
@@ -542,11 +543,11 @@ export def carapace_by_fzf [
         _carapace_by_fzf $spans.0 $spans
       }
     }
-  } catch {null}
+  } catch { null }
   match $res {
     null => null # continue with built-in completer, may cause another trigger of this completer
     '' => [$query] # nothing changes
-    _ => [({ description: 'From customized external completer' } | default $res 'value')]
+    _ => [({description: 'From customized external completer'} | default $res 'value')]
   }
 }
 
@@ -579,16 +580,16 @@ export def complete_line_by_fzf [] {
   let first_space = $cmd_with_query | str index-of ' '
   let first_enter = $cmd_with_query | str index-of "\n"
   let first_split = match [$first_space $first_enter] {
-    [ -1, _ ] => $first_enter
-    [ _ , -1 ] => $first_space
-    _ => {[$first_space $first_enter] | math min}
+    [-1 _] => $first_enter
+    [_ -1] => $first_space
+    _ => { [$first_space $first_enter] | math min }
   }
   let last_space = $cmd_with_query | str index-of -e ' '
   let last_enter = $cmd_with_query | str index-of -e "\n"
   let last_split = match [$last_space $last_enter] {
-    [ -1, _ ] => $last_enter
-    [ _ , -1 ] => $last_space
-    _ => {[$last_space $last_enter] | math max}
+    [-1 _] => $last_enter
+    [_ -1] => $last_space
+    _ => { [$last_space $last_enter] | math max }
   }
   let parsed = {
     prefix: ($cmd_raw | substring_to_idx ($start_offset - 1))
@@ -603,7 +604,7 @@ export def complete_line_by_fzf [] {
     } else {
       _complete_by_fzf $parsed.cmd_head $query
     }
-  } catch {$query}
+  } catch { $query }
   let completed_before_pos = $parsed.prefix + $parsed.cmd + $fzf_res
   | str replace --all (char nul) "\n"
   commandline edit --replace ($completed_before_pos + $suffix)
@@ -626,7 +627,8 @@ export def atuin_menus_func [
   prompt: string
 ]: nothing -> closure {
   {|buffer, position|
-    { # only history of current directory
+    {
+      # only history of current directory
       value: (
         nu -c $atuin_refresh_cmd
         | (
@@ -640,4 +642,3 @@ export def atuin_menus_func [
     }
   }
 }
-

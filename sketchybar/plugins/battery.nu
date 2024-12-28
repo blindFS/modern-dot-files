@@ -9,7 +9,7 @@ let percentage = (
   | into float
 )
 let icon = (
-  if ($raw_info | str contains 'AC Power') {''}
+  if ($raw_info | str contains 'AC Power') { '' }
   else {
     match $percentage {
       $p if $p > 80 => ''

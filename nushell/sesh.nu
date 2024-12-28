@@ -9,10 +9,11 @@ export def sesh_connect [] {
     kill: ^d
   }
   | transpose desc key
-  | each {$'(ansi cyan)($in.key)(ansi reset) ($in.desc)'}
+  | each { $'(ansi cyan)($in.key)(ansi reset) ($in.desc)' }
   | str join ' '
   let session = sesh list --icons
-  | (fzf --ansi --border-label ' sesh ' --prompt '󱐋 '
+  | (
+    fzf --ansi --border-label ' sesh ' --prompt '󱐋 '
     --tmux center,30%
     --header $'(ansi cyan)Keybindings(ansi reset): ($kbd_message)'
     --bind 'tab:down,btab:up'

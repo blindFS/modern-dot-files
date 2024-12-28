@@ -12,15 +12,15 @@ def modify_args_per_workspace [
   let icons = (
     aerospace list-windows --workspace $sid --json
     | from json | get app-name
-    | each {$in | get_icon_by_app_name}
+    | each { $in | get_icon_by_app_name }
     | uniq | sort
     | str join ' '
   )
   let extra = (
     if $sid == $focused_sid {
-      { highlight: on border_color: $colors.green }
+      {highlight: on border_color: $colors.green}
     } else {
-      { highlight: off border_color: $colors.fg }
+      {highlight: off border_color: $colors.fg}
     }
   )
   ['--set' $"space.($sid)"]

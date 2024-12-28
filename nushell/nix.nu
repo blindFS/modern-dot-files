@@ -2,15 +2,15 @@
 def nix-list-system []: nothing -> list<string> {
   ^nix-store -q --references /run/current-system/sw
   | lines
-  | filter {not ($in | str ends-with 'man')}
-  | each {$in | str replace -r '^[^-]*-' ''}
+  | filter { not ($in | str ends-with 'man') }
+  | each { $in | str replace -r '^[^-]*-' '' }
   | sort
 }
 
 # upgrade system packages
 def nix-upgrade [
   flake_path: string # path that confains a flake.nix
-  --interactive(-i) # select pacakges to upgrade interactively
+  --interactive (-i) # select pacakges to upgrade interactively
 ]: nothing -> nothing {
   let working_path = $flake_path | path expand
   if not ($working_path | path exists) {

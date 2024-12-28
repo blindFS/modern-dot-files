@@ -1,13 +1,13 @@
 const auto_pair_key_maps = {
-  `'`: { left: `'` right: `'` }
-  `"`: { left: `"` right: `"` }
-  '`': { left: '`' right: '`' }
-  (char lbrace): { left: (char lbrace) right: (char rbrace) }
-  (char lparen): { left: (char lparen) right: (char rparen) }
-  (char lbracket): { left: (char lbracket) right: (char rbracket) }
-  (char rbrace): { left: (char lbrace) right: (char rbrace) }
-  (char rparen): { left: (char lparen) right: (char rparen) }
-  (char rbracket): { left: (char lbracket) right: (char rbracket) }
+  `'`: {left: `'` right: `'`}
+  `"`: {left: `"` right: `"`}
+  '`': {left: '`' right: '`'}
+  (char lbrace): {left: (char lbrace) right: (char rbrace)}
+  (char lparen): {left: (char lparen) right: (char rparen)}
+  (char lbracket): {left: (char lbracket) right: (char rbracket)}
+  (char rbrace): {left: (char lbrace) right: (char rbrace)}
+  (char rparen): {left: (char lparen) right: (char rparen)}
+  (char rbracket): {left: (char lbracket) right: (char rbracket)}
 }
 const kb_template = {
   name: ''
@@ -50,7 +50,7 @@ def is_pair_matched [
   if $kp.left == $kp.right {
     # for '"`
     let occurrence = $char_list
-    | where {|it| $it == $char}
+    | where {|it| $it == $char }
     | length
     ($occurrence mod 2) == 0
   } else {
@@ -153,9 +153,9 @@ export def auto_pair_complete [
     ($left_char == $char)
     ($right_char == $char)
   ] {
-    [ true true ] => 'both'
-    [ true false ] => 'left'
-    [ false true ] => 'right'
+    [true true] => 'both'
+    [true false] => 'left'
+    [false true] => 'right'
     _ => 'none'
   }
   let cmd_info = analyse_commandline
@@ -170,12 +170,12 @@ export def auto_pair_complete [
     }
   )
   match $operation {
-    'move' => {commandline set-cursor ($cmd_info.cursor_pos + 1)}
+    'move' => { commandline set-cursor ($cmd_info.cursor_pos + 1) }
     'pair' => {
       commandline edit --insert $"($left_char)($right_char)"
       commandline set-cursor ($cmd_info.cursor_pos + 1)
     }
-    _ => {commandline edit --insert $char}
+    _ => { commandline edit --insert $char }
   }
 }
 

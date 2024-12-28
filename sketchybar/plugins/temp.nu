@@ -7,7 +7,7 @@ def extract_by_key [
 ] {
   $in
   | where key =~ $key
-  | par-each {|kv| $kv.value}
+  | par-each {|kv| $kv.value }
   | where quantity != 40
   | get -i quantity
   | default [40]
@@ -20,10 +20,10 @@ let cpu_temp = $temp_info | extract_by_key '^CPU'
 let gpu_temp = $temp_info | extract_by_key '^GPU'
 let info = (
   match ([$cpu_temp $gpu_temp] | math max) {
-    $t if $t > 80 => { icon: "" color: $colors.orange }
-    $t if $t > 60 => { icon: "" color: $colors.yellow }
-    $t if $t > 40 => { icon: "" color: $colors.green }
-    _ => { icon: "" color: $colors.blue }
+    $t if $t > 80 => {icon: "" color: $colors.orange}
+    $t if $t > 60 => {icon: "" color: $colors.yellow}
+    $t if $t > 40 => {icon: "" color: $colors.green}
+    _ => {icon: "" color: $colors.blue}
   }
 )
 | default (

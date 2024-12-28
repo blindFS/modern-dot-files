@@ -152,13 +152,13 @@ return {
     {
       "stevearc/conform.nvim",
       dependencies = { "mason.nvim" },
-      lazy = true,
+      event = "VeryLazy",
       opts = {
         formatters_by_ft = {
-          nu = { "topiary" },
+          nu = { "topiary_nu" },
         },
         formatters = {
-          topiary = {
+          topiary_nu = {
             command = "topiary",
             args = { "format", "--language", "nu" },
           },
@@ -180,7 +180,6 @@ return {
   {
     "yetone/avante.nvim",
     event = "VeryLazy",
-    lazy = false,
     version = false, -- set this if you want to always pull the latest change
     opts = {
       provider = "gemini",

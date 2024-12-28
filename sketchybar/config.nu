@@ -72,7 +72,7 @@ export def workspace_args [
 ]: nothing -> list<string> {
   aerospace list-workspaces --all
   | lines
-  | each {args_per_workspace $in $ws_config $plugin_dir}
+  | each { args_per_workspace $in $ws_config $plugin_dir }
   | flatten
 }
 
@@ -80,7 +80,7 @@ export def build_all_plugin_args [
   plugin_dir: string
 ]: record -> list<string> {
   $in
-  | each {$in | build_sketchybar_args $plugin_dir}
+  | each { $in | build_sketchybar_args $plugin_dir }
   | flatten
 }
 

@@ -27,8 +27,9 @@ source themes/tokyonight_night.nu
 
 $env.config.edit_mode = "vi"
 $env.config.show_banner = false
+$env.config.table.index_mode = 'auto'
 $env.config.highlight_resolved_externals = true
-$env.config.completions.external.completer = {|span| carapace_by_fzf $span}
+$env.config.completions.external.completer = {|span| carapace_by_fzf $span }
 $env.config.history.file_format = "sqlite"
 $env.config.history.max_size = 10000
 $env.config.shell_integration = {
@@ -61,15 +62,15 @@ $env.config.cursor_shape = {
 }
 
 $env.config.explore = {
-  status_bar_background: { bg: $extra_colors.explore_bg fg: $extra_colors.explore_fg }
-  command_bar_text: { fg: $extra_colors.explore_fg }
-  highlight: { fg: "black" bg: "yellow" }
+  status_bar_background: {bg: $extra_colors.explore_bg fg: $extra_colors.explore_fg}
+  command_bar_text: {fg: $extra_colors.explore_fg}
+  highlight: {fg: "black" bg: "yellow"}
   status: {
-    error: { fg: "white" bg: "red" }
+    error: {fg: "white" bg: "red"}
     warn: {}
     info: {}
   }
-  selected_cell: { bg: light_blue fg: "black" }
+  selected_cell: {bg: light_blue fg: "black"}
 }
 
 $env.config.menus ++= [
@@ -79,7 +80,7 @@ $env.config.menus ++= [
     name: my_history_menu
     only_buffer_difference: false
     marker: ''
-    type: { layout: ide }
+    type: {layout: ide}
     style: {}
     source: (
       atuin_menus_func
@@ -104,10 +105,10 @@ $env.config.menus ++= [
     }
     style: {
       text: $extra_colors.menu_text_color
-      selected_text: { attr: r }
+      selected_text: {attr: r}
       description_text: yellow
-      match_text: { attr: u }
-      selected_match_text: { attr: ur }
+      match_text: {attr: u}
+      selected_match_text: {attr: ur}
     }
   }
   {
@@ -132,7 +133,7 @@ $env.config.keybindings ++= [
     modifier: control
     keycode: char_h
     mode: [emacs vi_insert vi_normal]
-    event: { send: menu name: my_history_menu }
+    event: {send: menu name: my_history_menu}
   }
   {
     name: sesh
@@ -149,21 +150,21 @@ $env.config.keybindings ++= [
     modifier: shift
     keycode: char_k
     mode: vi_normal
-    event: { send: menu name: my_history_menu }
+    event: {send: menu name: my_history_menu}
   }
   {
     name: cut_line_to_end
     modifier: control
     keycode: char_k
     mode: [emacs vi_insert]
-    event: { edit: cuttoend }
+    event: {edit: cuttoend}
   }
   {
     name: cut_line_from_start
     modifier: control
     keycode: char_u
     mode: [emacs vi_insert]
-    event: { edit: cutfromstart }
+    event: {edit: cutfromstart}
   }
   {
     name: fuzzy_complete

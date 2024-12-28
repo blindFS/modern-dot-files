@@ -35,13 +35,13 @@ export def cherry-pick [
   mut res = []
   try {
     $res = [(do $test $input)]
-    | filter {$in | is-not-empty}
+    | filter { $in | is-not-empty }
   }
   if ($candidates | describe) =~ "^list|table" {
     $res
     | append (
       $candidates
-      | each {$in | cherry-pick $test}
+      | each { $in | cherry-pick $test }
     )
     | flatten
   } else {
@@ -89,11 +89,13 @@ export def find_ast_node [
       $span | _span_calibrate $offset
     } else null
     match $node_type {
-      'Subexpression' | 'Closure' => {
+      'Subexpression'|'Closure' => {
         let start_offset = ($span.start + 1 - $offset)
         # recurse into subexpressions and closures
-        ($input_raw | str substring
-          $start_offset..($span.end - 2 - $offset))
+        (
+          $input_raw | str substring
+          $start_offset..($span.end - 2 - $offset)
+        )
         | find_ast_node ($position - $start_offset) $type
         | _span_calibrate (0 - $start_offset)
         | default $ans
@@ -102,6 +104,6 @@ export def find_ast_node [
     }
   }
   $matching_spans
-  | sort-by {$in.end - $in.start}
+  | sort-by { $in.end - $in.start }
   | get -i 0
 }

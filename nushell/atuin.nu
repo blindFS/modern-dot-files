@@ -20,8 +20,8 @@ let _atuin_pre_prompt = {||
   if 'ATUIN_HISTORY_ID' not-in $env {
     return
   }
-  with-env { ATUIN_LOG: error } {
-    do {atuin history end $'--exit=($last_exit)' -- $env.ATUIN_HISTORY_ID} | complete
+  with-env {ATUIN_LOG: error} {
+    do { atuin history end $'--exit=($last_exit)' -- $env.ATUIN_HISTORY_ID } | complete
   }
   hide-env ATUIN_HISTORY_ID
 }

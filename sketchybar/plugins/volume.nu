@@ -6,9 +6,9 @@
 if ($env.SENDER == "volume_change") {
   let icon = (
     match ($env.INFO | into float) {
-      $v if $v > 60 => "󰕾",
-      $v if $v > 30 => "󰖀",
-      $v if $v > 0 => "󰕿",
+      $v if $v > 60 => "󰕾"
+      $v if $v > 30 => "󰖀"
+      $v if $v > 0 => "󰕿"
       _ => "󰖁"
     }
   )
