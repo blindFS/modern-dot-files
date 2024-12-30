@@ -71,20 +71,27 @@ return {
         },
       },
     },
-    -- config = function(_, opts)
-    --   local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-    --   parser_config.nu = {
-    --     install_info = {
-    --       url = "~/Workspace/tree-sitter-nu", -- local path or git repo
-    --       files = { "src/parser.c", "src/scanner.c" }, -- note that some parsers also require src/scanner.c or src/scanner.cc
-    --       branch = "pr", -- default branch in case of git repo if different from master
-    --       generate_requires_npm = false, -- if stand-alone parser without npm dependencies
-    --       requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
-    --     },
-    --     filetype = "nu", -- if filetype does not match the parser name
-    --   }
-    --   require("nvim-treesitter.configs").setup(opts)
-    -- end,
+    config = function(_, opts)
+      -- local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+      -- parser_config.nu = {
+      --   install_info = {
+      --     url = "~/Workspace/tree-sitter-nu", -- local path or git repo
+      --     files = { "src/parser.c", "src/scanner.c" }, -- note that some parsers also require src/scanner.c or src/scanner.cc
+      --     branch = "pr", -- default branch in case of git repo if different from master
+      --     generate_requires_npm = false, -- if stand-alone parser without npm dependencies
+      --     requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
+      --   },
+      --   filetype = "nu", -- if filetype does not match the parser name
+      -- }
+      require("nvim-treesitter.configs").setup(opts)
+      vim.treesitter.language.register("nu", "nushell")
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "nu",
+        callback = function(event)
+          vim.bo[event.buf].commentstring = "# %s"
+        end,
+      })
+    end,
     dependencies = {
       -- NOTE: additional parser
       -- { "nushell/tree-sitter-nu" },
@@ -135,11 +142,12 @@ return {
         cmd = {
           -- "/Users/farseerhe/Workspace/nushell/target/release/nu",
           "nu",
-          "--include-path",
-          vim.fn.expand("%:p:h"),
           "--no-config-file",
           "--lsp",
         },
+        root_dir = function(fname)
+          return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
+        end,
         filetypes = { "nu" },
         offset_encoding = "utf-16",
         capabilities = {
