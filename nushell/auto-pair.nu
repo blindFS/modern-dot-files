@@ -74,10 +74,8 @@ def analyse_commandline [] {
   let cmd_raw = commandline
   let cursor_pos = commandline get-cursor
   let all_chars = $cmd_raw | split chars
-  let char_next = (
-    $all_chars
-    | get -i $cursor_pos | default ''
-  )
+  let char_next = $all_chars | get -i $cursor_pos | default ''
+
   let char_current = (
     $all_chars
     | get -i (
