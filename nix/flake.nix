@@ -15,8 +15,6 @@
     sublime-tokyonight.url = "github:folke/tokyonight.nvim";
     sublime-tokyonight.flake = false;
     # tmux plugins
-    tmux-sessionx.url = "github:omerxx/tmux-sessionx";
-    tmux-sessionx.inputs.nixpkgs.follows = "nixpkgs";
     tmux-catppuccin.url = "github:catppuccin/tmux";
     tmux-catppuccin.flake = false;
     # homebrew

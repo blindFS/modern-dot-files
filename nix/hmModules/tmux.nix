@@ -2,7 +2,6 @@
   pkgs,
   inputs,
   username,
-  arch,
   ...
 }:
 {
@@ -22,22 +21,6 @@
         extraConfig = ''
           bind -Tcopy-mode-vi v send -X begin-selection
           bind -Tcopy-mode-vi y send -X copy-pipe "xclip -selection clipboard"
-        '';
-      }
-      {
-        plugin = inputs.tmux-sessionx.packages."${arch}".default;
-        extraConfig = ''
-          set -g @sessionx-bind 'o'
-          set -g @sessionx-zoxide-mode 'on'
-          set -g @sessionx-custom-paths '/Users/${username}/Workspace'
-          set -g @sessionx-custom-paths-subdirectories 'false'
-          set -g @sessionx-fzf-builtin-tmux 'on'
-          set -g @sessionx-window-mode 'on'
-          set -g @sessionx-tree-mode 'off'
-          set -g @sessionx-ls-command 'eza --tree -L 3 --color=always'
-          set -g @sessionx-preview-location 'right'
-          set -g @sessionx-preview-ratio '55%'
-          set -g @sessionx-additional-options "--color pointer:9,spinner:92,marker:46"
         '';
       }
       {
