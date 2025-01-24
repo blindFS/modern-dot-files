@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/release-24.11";
     # nix-darwin
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
@@ -40,8 +41,14 @@
     let
       arch = "aarch64-darwin";
       pkgs = import inputs.nixpkgs { system = arch; };
+      pkgstable = import inputs.nixpkgs-stable { system = arch; };
       args = {
-        inherit inputs pkgs arch;
+        inherit
+          inputs
+          pkgs
+          pkgstable
+          arch
+          ;
         username = "farseerhe";
         hostname = "Hes-Mac-mini";
         colorscheme = "tokyonight_night";

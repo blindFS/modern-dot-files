@@ -143,6 +143,8 @@ return {
           "/Users/farseerhe/Workspace/nushell/target/debug/nu",
           -- "nu",
           "--no-config-file",
+          -- "-I",
+          -- "~/Workspace/nu_scripts/\x1e~/Workspace/nushell",
           "--lsp",
         },
         root_dir = function(fname)

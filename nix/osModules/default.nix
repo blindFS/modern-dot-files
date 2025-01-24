@@ -1,6 +1,7 @@
 {
   inputs,
   pkgs,
+  pkgstable,
   username,
   hostname,
   arch,
@@ -61,7 +62,7 @@ in
       sesh
       sops
       starship
-      texliveMedium
+      pkgstable.texliveMedium
       thefuck
       tig
       tldr

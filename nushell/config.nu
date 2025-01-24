@@ -25,13 +25,14 @@ use fzf.nu [
 use sesh.nu sesh_connect
 source themes/tokyonight_night.nu
 
-$env.config.edit_mode = "vi"
-$env.config.show_banner = false
-$env.config.table.index_mode = 'auto'
-$env.config.highlight_resolved_externals = true
 $env.config.completions.external.completer = {|span| carapace_by_fzf $span }
+$env.config.edit_mode = "vi"
+$env.config.highlight_resolved_externals = true
 $env.config.history.file_format = "sqlite"
 $env.config.history.max_size = 10000
+$env.config.show_banner = false
+$env.config.table.header_on_separator = true
+$env.config.table.index_mode = 'auto'
 $env.config.shell_integration = {
   # osc2 abbreviates the path if in the home_dir, sets the tab/window title, shows the running command in the tab/window title
   osc2: false # osc7 is a way to communicate the path to the terminal, this is helpful for spawning new tabs in the same directory
