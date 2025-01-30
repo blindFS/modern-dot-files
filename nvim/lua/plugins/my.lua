@@ -144,7 +144,7 @@ return {
           -- "nu",
           "--no-config-file",
           -- "-I",
-          -- "~/Workspace/nu_scripts/\x1e~/Workspace/nushell",
+          -- "~/Workspace/nu_scripts/\x1e~/Workspace/nushell/",
           "--lsp",
         },
         root_dir = function(fname)
@@ -190,14 +190,23 @@ return {
     event = "VeryLazy",
     version = false, -- set this if you want to always pull the latest change
     opts = {
-      provider = "gemini",
-      -- provider = "claude",
+      -- provider = "gemini",
+      provider = "groq",
       gemini = {
         -- @see https://ai.google.dev/gemini-api/docs/models/gemini
         model = "gemini-2.0-flash-exp",
         -- model = "gemini-1.5-flash",
         temperature = 0,
         max_tokens = 4096,
+      },
+      vendors = {
+        groq = {
+          __inherited_from = "openai",
+          api_key_name = "GROQ_API_KEY",
+          -- endpoint = "https://api.groq.com/openai/v1/",
+          endpoint = "https://tidy-dragonfly-37.deno.dev/api.groq.com/openai/v1/",
+          model = "deepseek-r1-distill-llama-70b",
+        },
       },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
