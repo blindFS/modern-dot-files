@@ -190,22 +190,20 @@ return {
     event = "VeryLazy",
     version = false, -- set this if you want to always pull the latest change
     opts = {
-      -- provider = "gemini",
-      provider = "groq",
+      provider = "gemini",
+      -- provider = "openrouter",
       gemini = {
         -- @see https://ai.google.dev/gemini-api/docs/models/gemini
-        model = "gemini-2.0-flash-exp",
-        -- model = "gemini-1.5-flash",
+        model = "gemini-2.0-flash-001",
         temperature = 0,
         max_tokens = 4096,
       },
       vendors = {
-        groq = {
+        openrouter = {
           __inherited_from = "openai",
-          api_key_name = "GROQ_API_KEY",
-          -- endpoint = "https://api.groq.com/openai/v1/",
-          endpoint = "https://tidy-dragonfly-37.deno.dev/api.groq.com/openai/v1/",
-          model = "deepseek-r1-distill-llama-70b",
+          api_key_name = "OPENROUTER_API_KEY",
+          endpoint = "https://openrouter.ai/api/v1/",
+          model = "deepseek/deepseek-r1:free",
         },
       },
     },

@@ -482,39 +482,11 @@ def _expand_alias_if_exist [cmd: string] {
   | default $cmd
 }
 
-# This command is for customized completer to get true content for completion
-# example1: `(foo | bar baz` should => [bar baz]
-# example2: `(foo | (b` should => [b]
-# also expands aliases
-def _trim_spans [
-  spans: list<string> # original spans of space splited terms of current command, provided by nushell
-] {
-  let trimmed = (
-    $spans
-    # reversely take until ( or | or { or ; is found
-    | reverse
-    | take until {|r| $r =~ '[ \n]*[|({;][ \n]*' }
-    | reverse
-  )
-  if ($trimmed | is-empty) {
-    [''] # never empty
-  } else {
-    $trimmed
-    | skip 1
-    | prepend (
-      _expand_alias_if_exist $trimmed.0
-      | split row ' '
-    )
-  }
-}
-
 # Completion done by external carapace command
 # specially treated when something like `vim **` is present
 export def carapace_by_fzf [
-  raw_spans: list<string> # list of commandline arguments to trigger `carapace <command> nushell ...($spans)`
+  spans: list<string> # list of commandline arguments to trigger `carapace <command> nushell ...($spans)`
 ] {
-  # return $raw_spans
-  let spans = _trim_spans $raw_spans
   let query = $spans | last
   let res = try {
     match $spans.0 {

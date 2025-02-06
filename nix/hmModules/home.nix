@@ -39,7 +39,7 @@ in
   sops.defaultSopsFile = ./secrets/secrets.yaml;
   sops.defaultSopsFormat = "yaml";
   sops.age.keyFile = "/Users/${username}/.ssh/nix.key";
-  sops.secrets."llm/grok_api_key" = { };
+  sops.secrets."llm/openrouter_api_key" = { };
   sops.secrets."llm/gemini_api_key" = { };
 
   # Home Manager needs a bit of information about you and the
@@ -82,7 +82,7 @@ in
     "nushell/auth/llm.nu".text =
       # nu
       ''
-        $env.GROQ_API_KEY = (open ${config.sops.secrets."llm/grok_api_key".path})
+        $env.OPENROUTER_API_KEY = (open ${config.sops.secrets."llm/openrouter_api_key".path})
         $env.GOOGLE_API_KEY = (open ${config.sops.secrets."llm/gemini_api_key".path})
         $env.GEMINI_API_KEY = $env.GOOGLE_API_KEY
       '';
