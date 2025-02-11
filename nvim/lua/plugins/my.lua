@@ -147,10 +147,6 @@ return {
           -- "~/Workspace/nu_scripts/\x1e~/Workspace/nushell/",
           "--lsp",
         },
-        root_dir = function(fname)
-          -- return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
-          return vim.fs.dirname(fname)
-        end,
         flags = { debounce_text_changes = 1000 },
         filetypes = { "nu" },
       })
