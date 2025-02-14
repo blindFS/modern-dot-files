@@ -78,7 +78,7 @@ export def workspace_args [
 
 export def build_all_plugin_args [
   plugin_dir: string
-]: record -> list<string> {
+]: list -> list<string> {
   $in
   | each { $in | build_sketchybar_args $plugin_dir }
   | flatten

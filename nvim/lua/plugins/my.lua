@@ -1,3 +1,12 @@
+local rainbow_highlight = {
+  "SnacksIndent1",
+  "SnacksIndent2",
+  "SnacksIndent3",
+  "SnacksIndent4",
+  "SnacksIndent5",
+  "SnacksIndent6",
+  "SnacksIndent7",
+}
 return {
   -- eyecandy
   {
@@ -13,6 +22,36 @@ return {
   {
     "HiPhish/rainbow-delimiters.nvim",
     event = "VeryLazy",
+    config = function()
+      require("rainbow-delimiters.setup").setup({
+        highlight = rainbow_highlight,
+      })
+    end,
+  },
+  {
+    "folke/snacks.nvim",
+    opts = {
+      indent = {
+        indent = {
+          priority = 1,
+          enabled = true, -- enable indent guides
+          char = "│",
+          only_scope = false, -- only show indent guides of the scope
+          only_current = true, -- only show indent guides in the current window
+          hl = "SnacksIndent", ---@type string|string[] hl groups for indent guides
+        },
+        ---@class snacks.indent.Scope.Config: snacks.scope.Config
+        scope = {
+          enabled = true, -- enable highlighting the current scope
+          priority = 200,
+          char = "│",
+          underline = true, -- underline the start of the scope
+          only_current = true, -- only show scope in the current window
+          -- hl = "SnacksIndentScope", ---@type string|string[] hl group for scopes
+          hl = rainbow_highlight,
+        },
+      },
+    },
   },
   {
     "norcalli/nvim-colorizer.lua",
