@@ -142,7 +142,8 @@ return {
         cmd = {
           "/Users/farseerhe/Workspace/nushell/target/debug/nu",
           -- "nu",
-          "--no-config-file",
+          "--config",
+          vim.env.XDG_CONFIG_HOME .. "/nushell/lsp.nu",
           -- "-I",
           -- "~/Workspace/nu_scripts/\x1e~/Workspace/nushell/",
           "--lsp",
