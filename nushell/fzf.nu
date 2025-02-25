@@ -10,7 +10,7 @@ const process_preview_cmd = 'ps | where pid == ({1} | into int) | transpose Prop
 const remote_preview_cmd = "dig {} | jc --dig | from json | get -i answer.0 | table -i false"
 const default_preview_cmd = "if ({} | path type) == 'dir'" + $" {($dir_preview_cmd)} else {($file_preview_cmd)}"
 const help_preview_cmd = "try {help {1}} catch {'custom command or alias'}"
-const external_tldr_cmd = "try {tldr -C {1}} catch {'No doc yet'}"
+const external_tldr_cmd = "try {tldr -c {1}} catch {'No doc yet'}"
 const hybrid_help_cmd = $"if {2} == 'EXTERNAL' {($external_tldr_cmd)} else ($help_preview_cmd)"
 const fzf_prompt_default_setting = {
   fg: '#000000'

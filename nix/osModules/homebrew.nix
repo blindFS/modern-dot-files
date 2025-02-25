@@ -6,6 +6,7 @@
   brews = [
     "rust"
     "node"
+    "podman"
   ];
   casks = [
     "balenaetcher"

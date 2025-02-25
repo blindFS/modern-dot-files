@@ -45,7 +45,7 @@ in
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = username;
-  home.homeDirectory = lib.mkForce "/Users/${username}";
+  home.homeDirectory = "/Users/${username}";
 
   # Packages that should be installed to the user profile.
   home.packages = [ ];

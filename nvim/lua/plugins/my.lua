@@ -228,6 +228,9 @@ return {
     opts = {
       provider = "gemini",
       -- provider = "openrouter",
+      behaviour = {
+        enable_cursor_planning_mode = true,
+      },
       gemini = {
         -- @see https://ai.google.dev/gemini-api/docs/models/gemini
         model = "gemini-2.0-flash-001",
