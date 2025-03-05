@@ -128,6 +128,23 @@ return {
         pattern = "nu",
         callback = function(event)
           vim.bo[event.buf].commentstring = "# %s"
+          vim.api.nvim_buf_set_keymap(event.buf, "i", "<C-f>", "", {
+            callback = function()
+              vim.lsp.buf.signature_help()
+            end,
+          })
+          vim.api.nvim_create_autocmd("User", {
+            pattern = "BlinkCmpAccept",
+            callback = function(ev)
+              local item = ev.data.item
+              -- function/method kind
+              if item.kind == 3 or item.kind == 2 then
+                vim.defer_fn(function()
+                  vim.lsp.buf.signature_help()
+                end, 500)
+              end
+            end,
+          })
         end,
       })
     end,
@@ -137,19 +154,25 @@ return {
     },
   },
   {
-    "nvim-telescope/telescope.nvim",
-    opts = function()
-      local actions = require("telescope.actions")
-      return {
-        defaults = {
-          mappings = {
-            i = {
-              ["<esc>"] = actions.close,
+    "saghen/blink.cmp",
+    opts = {
+      completion = {
+        accept = {
+          auto_brackets = {
+            enabled = true,
+            kind_resolution = {
+              enabled = true,
+              blocked_filetypes = { "nu" },
+            },
+            semantic_token_resolution = {
+              enabled = true,
+              blocked_filetypes = { "nu" },
+              timeout_ms = 500,
             },
           },
         },
-      }
-    end,
+      },
+    },
   },
   {
     "neovim/nvim-lspconfig",
@@ -183,8 +206,6 @@ return {
           -- "nu",
           "--config",
           vim.env.XDG_CONFIG_HOME .. "/nushell/lsp.nu",
-          -- "-I",
-          -- "~/Workspace/nu_scripts/\x1e~/Workspace/nushell/",
           "--lsp",
         },
         flags = { debounce_text_changes = 1000 },

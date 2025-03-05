@@ -12,3 +12,4 @@ $env.config.completions.external.completer = {|spans: list<string>|
   | from json
   | if ($in | default [] | where value =~ '^-.*ERR$' | is-empty) { $in } else { null }
 }
+const NU_LIB_DIRS = ["~/Workspace/nu_scripts/"]
