@@ -154,27 +154,6 @@ return {
     },
   },
   {
-    "saghen/blink.cmp",
-    opts = {
-      completion = {
-        accept = {
-          auto_brackets = {
-            enabled = true,
-            kind_resolution = {
-              enabled = true,
-              blocked_filetypes = { "nu" },
-            },
-            semantic_token_resolution = {
-              enabled = true,
-              blocked_filetypes = { "nu" },
-              timeout_ms = 500,
-            },
-          },
-        },
-      },
-    },
-  },
-  {
     "neovim/nvim-lspconfig",
     opts = function()
       local lspconfig = require("lspconfig")

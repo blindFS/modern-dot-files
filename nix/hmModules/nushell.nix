@@ -29,7 +29,7 @@ in
       $env.PROMPT_INDICATOR_VI_NORMAL = {|| prompt_decorator "${cs.black}" "${cs.yellow}" ($dev_tag + "") }
       $env.LS_COLORS = (vivid generate ${colorscheme-dash} | str trim)
       $env.FZF_DEFAULT_OPTS = (
-        "--exit-0 --layout reverse --header-first --tmux center,80%,60% "
+        "--layout reverse --header-first --tmux center,80%,60% "
         + "--pointer ▶ --marker 󰍕 --preview-window right,65% "
         + "--bind 'bs:backward-delete-char/eof,tab:accept-or-print-query,ctrl-t:toggle+down,ctrl-s:change-multi' "
         + $"--prompt '(prompt_decorator '${cs.black}' '${cs.green}' '▓▒░ ' false)' "
