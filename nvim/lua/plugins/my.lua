@@ -193,19 +193,17 @@ return {
     end,
   },
   {
-    {
-      "stevearc/conform.nvim",
-      dependencies = { "mason.nvim" },
-      event = "VeryLazy",
-      opts = {
-        formatters_by_ft = {
-          nu = { "topiary_nu" },
-        },
-        formatters = {
-          topiary_nu = {
-            command = "topiary",
-            args = { "format", "--language", "nu" },
-          },
+    "stevearc/conform.nvim",
+    dependencies = { "mason.nvim" },
+    event = "VeryLazy",
+    opts = {
+      formatters_by_ft = {
+        nu = { "topiary_nu" },
+      },
+      formatters = {
+        topiary_nu = {
+          command = "topiary",
+          args = { "format", "--language", "nu" },
         },
       },
     },
@@ -222,63 +220,21 @@ return {
     end,
   },
   {
-    "yetone/avante.nvim",
+    "olimorris/codecompanion.nvim",
     event = "VeryLazy",
-    version = false, -- set this if you want to always pull the latest change
-    opts = {
-      provider = "gemini",
-      -- provider = "openrouter",
-      behaviour = {
-        enable_cursor_planning_mode = true,
-      },
-      gemini = {
-        -- @see https://ai.google.dev/gemini-api/docs/models/gemini
-        model = "gemini-2.0-flash-001",
-        temperature = 0,
-        max_tokens = 4096,
-      },
-      vendors = {
-        openrouter = {
-          __inherited_from = "openai",
-          api_key_name = "OPENROUTER_API_KEY",
-          endpoint = "https://openrouter.ai/api/v1/",
-          model = "deepseek/deepseek-r1:free",
-        },
-      },
-    },
-    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-    build = "make",
     dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-      "stevearc/dressing.nvim",
       "nvim-lua/plenary.nvim",
-      "MunifTanjim/nui.nvim",
-      --- The below dependencies are optional,
-      "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-      {
-        -- support for image pasting
-        "HakonHarnes/img-clip.nvim",
-        event = "VeryLazy",
-        opts = {
-          -- recommended settings
-          default = {
-            embed_image_as_base64 = false,
-            prompt_for_file_name = false,
-            drag_and_drop = {
-              insert_mode = true,
-            },
-            -- required for Windows users
-            use_absolute_path = true,
-          },
+      "nvim-treesitter/nvim-treesitter",
+    },
+    opts = {
+      strategies = {
+        -- Change the default chat adapter
+        chat = {
+          adapter = "gemini",
         },
-      },
-      {
-        -- Make sure to set this up properly if you have lazy=true
-        "MeanderingProgrammer/render-markdown.nvim",
-        opts = {
-          file_types = { "markdown", "Avante" },
+        inline = {
+          adapter = "gemini",
         },
-        ft = { "markdown", "Avante" },
       },
     },
   },
