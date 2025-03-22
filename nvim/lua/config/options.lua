@@ -4,4 +4,4 @@
 
 vim.diagnostic.config({ virtual_text = false })
 -- https://github.com/Saghen/blink.cmp/issues/1303
-vim.g.lazyvim_picker = "telescope"
+-- vim.g.lazyvim_picker = "telescope"

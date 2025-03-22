@@ -4,8 +4,8 @@
   onActivation.autoUpdate = true;
   onActivation.upgrade = true;
   brews = [
-    "rust"
     "node"
+    "rust"
     "podman"
   ];
   casks = [

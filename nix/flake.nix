@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/release-24.11";
     # nix-darwin
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
@@ -22,8 +21,6 @@
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
     nix-homebrew.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.inputs.nix-darwin.follows = "nix-darwin";
-    homebrew-bundle.url = "github:homebrew/homebrew-bundle";
-    homebrew-bundle.flake = false;
     # secrets
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
@@ -35,18 +32,15 @@
       nix-darwin,
       nix-homebrew,
       home-manager,
-      homebrew-bundle,
       ...
     }@inputs:
     let
       arch = "aarch64-darwin";
       pkgs = import inputs.nixpkgs { system = arch; };
-      pkgstable = import inputs.nixpkgs-stable { system = arch; };
       args = {
         inherit
           inputs
           pkgs
-          pkgstable
           arch
           ;
         username = "farseerhe";
@@ -65,11 +59,10 @@
           nix-homebrew.darwinModules.nix-homebrew
           {
             nix-homebrew = {
-              enable = true;
+              enable = false;
               user = args.username;
               enableRosetta = false;
               autoMigrate = true;
-              taps."homebrew/bundle" = homebrew-bundle;
               # mutableTaps = true;
               mutableTaps = false; # functional homebrew
             };

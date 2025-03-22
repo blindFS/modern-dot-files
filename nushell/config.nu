@@ -135,6 +135,7 @@ $env.config.keybindings ++= [
     keycode: char_h
     mode: [emacs vi_insert vi_normal]
     event: {send: menu name: my_history_menu}
+    # event: {send: menu name: ide_completion_menu}
   }
   {
     name: sesh
