@@ -489,6 +489,7 @@ export def carapace_by_fzf [
 ] {
   let query = $spans | last
   let res = try {
+    let spans = $spans | skip 1 | prepend (_expand_alias_if_exist $spans.0)
     match $spans.0 {
       _ if "$" in $query => {
         _env_by_fzf $query

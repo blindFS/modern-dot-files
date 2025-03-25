@@ -1,6 +1,7 @@
 {
   "extras": [
     "lazyvim.plugins.extras.dap.core",
+    "lazyvim.plugins.extras.lang.markdown",
     "lazyvim.plugins.extras.lang.rust"
   ],
   "install_version": 7,
