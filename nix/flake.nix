@@ -59,12 +59,12 @@
           nix-homebrew.darwinModules.nix-homebrew
           {
             nix-homebrew = {
-              enable = false;
+              enable = true;
               user = args.username;
               enableRosetta = false;
               autoMigrate = true;
               # mutableTaps = true;
-              mutableTaps = false; # functional homebrew
+              # mutableTaps = false; # functional homebrew
             };
           }
         ];

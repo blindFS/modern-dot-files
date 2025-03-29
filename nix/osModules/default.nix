@@ -96,7 +96,7 @@ in
     borders.inactive_color = cs.dark_grey;
 
     # homebrew
-    # homebrew = import ./homebrew.nix;
+    homebrew = import ./homebrew.nix;
 
     # Auto upgrade nix package and the daemon service.
     nix.package = pkgs.nix;

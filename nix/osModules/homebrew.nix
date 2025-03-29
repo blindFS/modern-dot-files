@@ -24,5 +24,6 @@
     "popclip"
     "raycast"
     "steam"
+    "zed"
   ];
 }

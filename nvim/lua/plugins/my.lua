@@ -155,10 +155,12 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
-    opts = function()
+    opts = function(_, opts)
+      -- use virtual_lines instead of virtual_text
+      opts.diagnostics.virtual_text = false
       local lspconfig = require("lspconfig")
       local get_flake_cmd = string.format('(builtins.getFlake "%s/nix")', vim.env.HOME)
-      local flake_os_cmd = string.format("%s.darwinConfigurations.%s.options", get_flake_cmd, vim.loop.os_gethostname())
+      local flake_os_cmd = string.format("%s.darwinConfigurations.%s.options", get_flake_cmd, vim.fn.hostname())
       local flake_hm_cmd = string.format("%s.homeConfigurations.%s.options", get_flake_cmd, vim.env.USER)
       lspconfig.nixd.setup({
         cmd = { "nixd" },
@@ -190,6 +192,7 @@ return {
         flags = { debounce_text_changes = 1000 },
         filetypes = { "nu" },
       })
+      return opts
     end,
   },
   {
