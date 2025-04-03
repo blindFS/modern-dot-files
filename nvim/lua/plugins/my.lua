@@ -196,6 +196,28 @@ return {
     end,
   },
   {
+    "mrcjkb/rustaceanvim",
+    ft = { "rust" },
+    config = function(_, opts)
+      if LazyVim.has("mason.nvim") then
+        local package_path = require("mason-registry").get_package("codelldb"):get_install_path()
+        local codelldb = package_path .. "/extension/adapter/codelldb"
+        local library_path = package_path .. "/extension/lldb/lib/liblldb.dylib"
+        opts.dap = {
+          adapter = require("rustaceanvim.config").get_codelldb_adapter(codelldb, library_path),
+        }
+      end
+      -- diable checkOnSave by default
+      opts.server.default_settings["rust-analyzer"].checkOnSave = false
+      vim.g.rustaceanvim = vim.tbl_deep_extend("keep", vim.g.rustaceanvim or {}, opts or {})
+
+      local function clippy()
+        vim.cmd.RustLsp("flyCheck")
+      end
+      vim.keymap.set("n", "<leader>tc", clippy, { desc = "Run linter clippy" })
+    end,
+  },
+  {
     "stevearc/conform.nvim",
     dependencies = { "mason.nvim" },
     event = "VeryLazy",
