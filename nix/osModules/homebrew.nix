@@ -6,13 +6,14 @@
   brews = [
     "node"
     "rust"
+    "rust-analyzer"
     "podman"
   ];
   casks = [
     "balenaetcher"
     "bilibili"
     "blender"
-    "chatgpt"
+    "claude"
     "discord"
     "dropbox"
     "freecad"

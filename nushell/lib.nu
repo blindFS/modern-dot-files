@@ -1,3 +1,5 @@
+# Some utility functions
+
 # get substring from start to the given index, returns empty string if negative
 export def substring_to_idx [
   index: int # end index (included)

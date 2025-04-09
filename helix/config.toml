@@ -1,0 +1,14 @@
+theme = "tokyonight"
+
+[editor.lsp]
+auto-signature-help = false
+
+[keys.insert]
+C-f = "signature_help"
+
+[editor]
+end-of-line-diagnostics = "hint"
+
+[editor.inline-diagnostics]
+cursor-line = "warning" # show warnings and errors on the cursorline inline
+

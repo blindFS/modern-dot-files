@@ -38,7 +38,7 @@ in
       bat
       carapace
       delta
-      emacs30
+      # emacs30
       eza
       fd
       ffmpeg
@@ -46,6 +46,7 @@ in
       gh
       gotop
       graphviz
+      helix
       home-manager
       ispell
       jankyborders
@@ -67,6 +68,7 @@ in
       tmux
       topiary
       tree-sitter
+      uv
       vivid
       yazi
       yt-dlp
