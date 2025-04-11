@@ -111,7 +111,8 @@ return {
       },
     },
     config = function(_, opts)
-      -- local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+      ---@type table<string, any>
+      local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
       -- parser_config.nu = {
       --   install_info = {
       --     url = "~/Workspace/tree-sitter-nu", -- local path or git repo
@@ -122,8 +123,18 @@ return {
       --   },
       --   filetype = "nu", -- if filetype does not match the parser name
       -- }
-      require("nvim-treesitter.configs").setup(opts)
+
+      parser_config.openscad = {
+        install_info = {
+          url = "https://github.com/mkatychev/tree-sitter-openscad",
+          files = { "src/parser.c" },
+          branch = "master",
+        },
+        filetype = "openscad",
+      }
+
       vim.treesitter.language.register("nu", "nushell")
+
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "nu",
         callback = function(event)
@@ -147,10 +158,19 @@ return {
           })
         end,
       })
+
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "openscad",
+        callback = function(event)
+          vim.bo[event.buf].commentstring = "// %s"
+        end,
+      })
+
+      require("nvim-treesitter.configs").setup(opts)
     end,
     dependencies = {
       -- NOTE: additional parser
-      -- { "nushell/tree-sitter-nu" },
+      { "mkatychev/tree-sitter-openscad" },
     },
   },
   {
@@ -202,11 +222,16 @@ return {
     opts = {
       formatters_by_ft = {
         nu = { "topiary_nu" },
+        openscad = { "topiary_scad" },
       },
       formatters = {
         topiary_nu = {
           command = "topiary",
-          args = { "format", "--language", "nu" },
+          args = { "-M", "-C", vim.env.HOME .. "/.config/topiary/languages.ncl", "format", "--language", "nu" },
+        },
+        topiary_scad = {
+          command = "topiary",
+          args = { "format", "--language", "openscad" },
         },
       },
     },
