@@ -4,7 +4,7 @@ const fd_default_args = [--hidden --exclude .git --exclude .cache --max-depth 9]
 const fd_executable_args = [--exclude .git --exclude .cache --hidden --max-depth 5 --type x --color always '']
 const carapace_preview_description = true
 const manpage_preview_cmd = 'man {} | col -bx | bat -l man -p --color=always --line-range :200'
-const dir_preview_cmd = "eza --tree -L 3 --color=always {} | head -200"
+const dir_preview_cmd = "eza --tree -L 3 --icons=always --color=always {} | head -200"
 const file_preview_cmd = "bat -n --color=always --line-range :200 {}"
 const process_preview_cmd = 'ps | where pid == ({1} | into int) | transpose Property Value | table -i false'
 const remote_preview_cmd = "dig {} | jc --dig | from json | get -i answer.0 | table -i false"

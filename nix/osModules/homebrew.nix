@@ -11,7 +11,6 @@
   ];
   casks = [
     "balenaetcher"
-    "bilibili"
     "blender"
     "claude"
     "discord"
@@ -22,6 +21,7 @@
     "karabiner-elements"
     "kicad"
     "macs-fan-control"
+    "openscad"
     "popclip"
     "raycast"
     "steam"

@@ -21,7 +21,6 @@ return {
   },
   {
     "HiPhish/rainbow-delimiters.nvim",
-    event = "VeryLazy",
     config = function()
       require("rainbow-delimiters.setup").setup({
         highlight = rainbow_highlight,
@@ -205,6 +204,7 @@ return {
         cmd = {
           "/Users/farseerhe/Workspace/nushell/target/debug/nu",
           -- "nu",
+          -- "--no-config-file",
           "--config",
           vim.env.XDG_CONFIG_HOME .. "/nushell/lsp.nu",
           "--lsp",
