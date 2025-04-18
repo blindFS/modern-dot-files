@@ -60,11 +60,67 @@ return {
     end,
   },
   {
+    "echasnovski/mini.icons",
+    opts = {
+      filetype = {
+        nu = { glyph = "", hl = "MiniIconsGreen" },
+      },
+    },
+  },
+  {
     "nvim-lualine/lualine.nvim",
     opts = {
       options = {
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
+      },
+    },
+  },
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    opts = {
+      lsp = {
+        hover = { enabled = true },
+        signature = { enabled = true },
+      },
+      presets = {
+        lsp_doc_border = true, -- add a border to hover docs and signature help
+      },
+    },
+  },
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    ft = { "markdown", "norg", "rmd", "org", "codecompanion" },
+    opts = {
+      heading = {
+        sign = true,
+        icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
+      },
+      checkbox = { enabled = true },
+      completions = {
+        blink = { enabled = true },
+        lsp = { enabled = true },
+      },
+    },
+  },
+  {
+    "saghen/blink.cmp",
+    opts = {
+      completion = {
+        menu = {
+          draw = {
+            treesitter = { "lsp" },
+          },
+        },
+        documentation = {
+          auto_show = true,
+          auto_show_delay_ms = 200,
+          treesitter_highlighting = true,
+        },
+        ghost_text = {
+          enabled = true,
+        },
       },
     },
   },
