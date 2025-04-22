@@ -433,7 +433,7 @@ def _env_by_fzf [
           _build_fzf_args ($segs | last)
           'Variable'
           (
-            $"const raw = ($content | to json); " +
+            $"$env.config.use_ansi_coloring = true; const raw = ($content | to json --serialize); " +
             `(match ($raw | describe | str substring ..4) {
 'list<' => {$raw | get -i ({} | into int)},
 _ => {$raw | table -i false -t basic | find {}
@@ -441,8 +441,7 @@ _ => {$raw | table -i false -t basic | find {}
 {$'name': ($segs | get 1)
 $'value': ($segs | get (($segs | length) - 2))}}
 | table -i false}})
-| str replace --regex '((│(\s*\w+\s*))*│)\n├' $"(ansi green)$1(ansi reset)\n├"
-| str replace --regex --all '([╭├][┬┼─]+[┤╮])' $'(ansi green)$1(ansi reset)'`
+`
           )
         )
         --tmux center,90%,50%
