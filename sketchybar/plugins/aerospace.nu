@@ -53,7 +53,7 @@ def workspace_modification_args [
   let focused_sid = (aerospace list-workspaces --focused)
   let ids_to_modify = (
     if ($last_sid | is-empty) {
-      (aerospace list-workspaces --all | lines)
+      aerospace list-workspaces --all | lines
     }
     else {
       [$focused_sid $last_sid]
@@ -71,6 +71,7 @@ def workspace_modification_args [
 # remained for other possible signals
 match $env.SENDER {
   _ => {
+    # osascript -e 'display notification "Workspace changed!"'
     # invisible item to store last focused sid
     let last_sid = (sketchybar --query $env.NAME | from json | get label.value)
     sketchybar --animate tanh $animate_frames ...(workspace_modification_args $env.NAME $last_sid)

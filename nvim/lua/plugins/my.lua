@@ -118,9 +118,7 @@ return {
           auto_show_delay_ms = 200,
           treesitter_highlighting = true,
         },
-        ghost_text = {
-          enabled = true,
-        },
+        ghost_text = { enabled = true },
       },
     },
   },
@@ -307,13 +305,34 @@ return {
     "olimorris/codecompanion.nvim",
     event = "VeryLazy",
     dependencies = {
+      "ravitemer/mcphub.nvim",
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
     },
     opts = {
+      adapters = {
+        gemini = function()
+          return require("codecompanion.adapters").extend("gemini", {
+            schema = {
+              model = {
+                default = "gemini-2.5-pro-exp-03-25",
+              },
+            },
+          })
+        end,
+      },
       strategies = {
         -- Change the default chat adapter
         chat = {
+          tools = {
+            ["mcp"] = {
+              -- Prevent mcphub from loading before needed
+              callback = function()
+                return require("mcphub.extensions.codecompanion")
+              end,
+              description = "Call tools and resources from the MCP Servers",
+            },
+          },
           adapter = "gemini",
         },
         inline = {
@@ -321,5 +340,34 @@ return {
         },
       },
     },
+  },
+  {
+    "ravitemer/mcphub.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    -- cmd = "MCPHub", -- lazy load
+    build = "npm install -g mcp-hub@latest",
+    config = function()
+      require("mcphub").setup({
+        auto_approve = false,
+        auto_toggle_mcp_servers = true,
+        -- Extensions configuration
+        extensions = {
+          codecompanion = {
+            show_result_in_chat = false, -- Show the mcp tool result in the chat buffer
+            make_vars = true, -- make chat #variables from MCP server resources
+            make_slash_commands = true, -- make /slash commands from MCP server prompts
+          },
+        },
+      })
+      require("lualine").setup({
+        sections = {
+          lualine_x = {
+            { require("mcphub.extensions.lualine") },
+          },
+        },
+      })
+    end,
   },
 }
