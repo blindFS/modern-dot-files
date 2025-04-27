@@ -1,0 +1,2 @@
+[default_session]
+preview_command = "eza --tree -L 3 --icons=always --color=always {}"

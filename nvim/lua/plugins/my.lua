@@ -107,6 +107,21 @@ return {
   {
     "saghen/blink.cmp",
     opts = {
+      cmdline = {
+        enabled = true,
+        sources = function()
+          local type = vim.fn.getcmdtype()
+          -- Search forward and backward
+          if type == "/" or type == "?" then
+            return { "buffer" }
+          end
+          -- Commands
+          if type == ":" or type == "@" then
+            return { "cmdline" }
+          end
+          return {}
+        end,
+      },
       completion = {
         menu = {
           draw = {
@@ -179,9 +194,9 @@ return {
 
       parser_config.openscad = {
         install_info = {
-          url = "https://github.com/mkatychev/tree-sitter-openscad",
+          url = "https://github.com/openscad/tree-sitter-openscad",
           files = { "src/parser.c" },
-          branch = "master",
+          branch = "main",
         },
         filetype = "openscad",
       }
@@ -223,7 +238,7 @@ return {
     end,
     dependencies = {
       -- NOTE: additional parser
-      { "mkatychev/tree-sitter-openscad" },
+      "openscad/tree-sitter-openscad",
     },
   },
   {
@@ -361,13 +376,10 @@ return {
           },
         },
       })
-      require("lualine").setup({
-        sections = {
-          lualine_x = {
-            { require("mcphub.extensions.lualine") },
-          },
-        },
-      })
+      local lualine = require("lualine")
+      local config = lualine.get_config()
+      table.insert(config.sections.lualine_x, require("mcphub.extensions.lualine"))
+      lualine.setup(config)
     end,
   },
 }
