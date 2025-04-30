@@ -336,18 +336,19 @@ return {
           })
         end,
       },
+      extensions = {
+        mcphub = {
+          callback = "mcphub.extensions.codecompanion",
+          opts = {
+            make_vars = true,
+            make_slash_commands = true,
+            show_result_in_chat = false,
+          },
+        },
+      },
       strategies = {
         -- Change the default chat adapter
         chat = {
-          tools = {
-            ["mcp"] = {
-              -- Prevent mcphub from loading before needed
-              callback = function()
-                return require("mcphub.extensions.codecompanion")
-              end,
-              description = "Call tools and resources from the MCP Servers",
-            },
-          },
           adapter = "gemini",
         },
         inline = {
@@ -355,6 +356,23 @@ return {
         },
       },
     },
+    config = function(_, opts)
+      require("codecompanion").setup(opts)
+      local spinner = require("custom.spinner")
+      vim.api.nvim_create_autocmd("User", {
+        pattern = {
+          "CodeCompanionRequestStarted",
+          "CodeCompanionRequestFinished",
+        },
+        callback = function(args)
+          if args.match == "CodeCompanionRequestStarted" then
+            spinner.start_spinner()
+          elseif args.match == "CodeCompanionRequestFinished" then
+            spinner.stop_spinner()
+          end
+        end,
+      })
+    end,
   },
   {
     "ravitemer/mcphub.nvim",
@@ -367,14 +385,6 @@ return {
       require("mcphub").setup({
         auto_approve = false,
         auto_toggle_mcp_servers = true,
-        -- Extensions configuration
-        extensions = {
-          codecompanion = {
-            show_result_in_chat = false, -- Show the mcp tool result in the chat buffer
-            make_vars = true, -- make chat #variables from MCP server resources
-            make_slash_commands = true, -- make /slash commands from MCP server prompts
-          },
-        },
       })
       local lualine = require("lualine")
       local config = lualine.get_config()
