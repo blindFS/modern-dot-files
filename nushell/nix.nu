@@ -32,5 +32,6 @@ def nix-upgrade [
     nix flake update
   }
   cd $pwd
-  darwin-rebuild switch --flake $working_path --show-trace
+  # darwin-rebuild switch --flake $working_path --show-trace
+  nh darwin switch $working_path
 }

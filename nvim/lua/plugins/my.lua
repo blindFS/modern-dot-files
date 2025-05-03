@@ -271,8 +271,8 @@ return {
       })
       lspconfig.nushell.setup({
         cmd = {
-          "/Users/farseerhe/Workspace/nushell/target/debug/nu",
-          -- "nu",
+          -- "/Users/farseerhe/Workspace/nushell/target/debug/nu",
+          "nu",
           -- "--no-config-file",
           "--config",
           vim.env.XDG_CONFIG_HOME .. "/nushell/lsp.nu",
@@ -320,21 +320,17 @@ return {
     "olimorris/codecompanion.nvim",
     event = "VeryLazy",
     dependencies = {
-      "ravitemer/mcphub.nvim",
+      "echasnovski/mini.nvim",
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
+      "ravitemer/mcphub.nvim",
     },
     opts = {
-      adapters = {
-        gemini = function()
-          return require("codecompanion.adapters").extend("gemini", {
-            schema = {
-              model = {
-                default = "gemini-2.5-pro-exp-03-25",
-              },
-            },
-          })
-        end,
+      display = {
+        diff = {
+          enabled = true,
+          provider = "mini_diff", -- default|mini_diff
+        },
       },
       extensions = {
         mcphub = {
@@ -350,6 +346,12 @@ return {
         -- Change the default chat adapter
         chat = {
           adapter = "gemini",
+          tools = {
+            opts = {
+              auto_submit_errors = false,
+              auto_submit_success = true,
+            },
+          },
         },
         inline = {
           adapter = "gemini",

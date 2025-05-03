@@ -18,7 +18,7 @@
     tmux-catppuccin.url = "github:catppuccin/tmux";
     tmux-catppuccin.flake = false;
     # homebrew
-    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     nix-homebrew.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.inputs.nix-darwin.follows = "nix-darwin";
     # secrets
