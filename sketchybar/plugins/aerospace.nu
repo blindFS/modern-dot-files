@@ -25,7 +25,7 @@ def modify_args_per_workspace [
   )
   ['--set' $"space.($sid)"]
   | append (
-    if (($icons | is-empty) and ($sid != $focused_sid)) {
+    if ($icons | is-empty) and ($sid != $focused_sid) {
       [
         background.drawing=off
         label=
@@ -48,32 +48,38 @@ def modify_args_per_workspace [
 def workspace_modification_args [
   name: string
   last_sid: string
+  new_sid: string
 ]: nothing -> list<string> {
-  # use listener's label to store last focused space id
-  let focused_sid = (aerospace list-workspaces --focused)
   let ids_to_modify = (
     if ($last_sid | is-empty) {
       aerospace list-workspaces --all | lines
     }
     else {
-      [$focused_sid $last_sid]
+      [$new_sid $last_sid]
     }
   )
   $ids_to_modify
   | uniq
   | each {
-    modify_args_per_workspace $in $focused_sid
+    modify_args_per_workspace $in $new_sid
   }
   | flatten
-  | append ["--set" $name $"label=($focused_sid)"]
+  # use listener's label to store last focused space id
+  | append ["--set" $name $"label=($new_sid)"]
 }
 
 # remained for other possible signals
 match $env.SENDER {
   _ => {
-    # osascript -e 'display notification "Workspace changed!"'
     # invisible item to store last focused sid
-    let last_sid = (sketchybar --query $env.NAME | from json | get label.value)
-    sketchybar --animate tanh $animate_frames ...(workspace_modification_args $env.NAME $last_sid)
+    let last_sid = sketchybar --query $env.NAME | from json | get label.value
+    let focused_sid = aerospace list-workspaces --focused
+    if $last_sid != $focused_sid {
+      # osascript -e 'display notification "Workspace changed!"'
+      sketchybar --animate tanh $animate_frames ...(
+        workspace_modification_args
+        $env.NAME $last_sid $focused_sid
+      )
+    }
   }
 }
