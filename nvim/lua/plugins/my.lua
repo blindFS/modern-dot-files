@@ -30,6 +30,8 @@ return {
   {
     "folke/snacks.nvim",
     opts = {
+      image = { enabled = true },
+      scroll = { enabled = false },
       indent = {
         indent = {
           priority = 1,
@@ -326,12 +328,6 @@ return {
       "ravitemer/mcphub.nvim",
     },
     opts = {
-      display = {
-        diff = {
-          enabled = true,
-          provider = "mini_diff", -- default|mini_diff
-        },
-      },
       extensions = {
         mcphub = {
           callback = "mcphub.extensions.codecompanion",

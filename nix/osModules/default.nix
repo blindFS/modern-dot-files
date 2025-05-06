@@ -49,6 +49,7 @@ in
       helix
       home-manager
       ispell
+      imagemagick
       jankyborders
       jc
       lazygit
