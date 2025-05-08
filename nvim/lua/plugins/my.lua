@@ -298,7 +298,7 @@ return {
       formatters = {
         topiary_nu = {
           command = "topiary",
-          args = { "-M", "-C", vim.env.HOME .. "/.config/topiary/languages.ncl", "format", "--language", "nu" },
+          args = { "-M", "-C", vim.env.XDG_CONFIG_HOME .. "/topiary/languages.ncl", "format", "--language", "nu" },
         },
         topiary_scad = {
           command = "topiary",
