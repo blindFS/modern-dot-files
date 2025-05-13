@@ -1,5 +1,6 @@
 #!/usr/bin/env nu
 
+# osascript -e $'display notification "($env | get -i INFO | default "unk")"'
 const hidden_offset = 30
 const shown_offset = 0
 const animation_args = [--animate sin 30]
