@@ -119,6 +119,7 @@ in
     # Used for backwards compatibility, please read the changelog before changing.
     # $ darwin-rebuild changelog
     system.stateVersion = 5;
+    system.primaryUser = username;
 
     # The platform the configuration will be used on.
     nixpkgs.hostPlatform = arch;
