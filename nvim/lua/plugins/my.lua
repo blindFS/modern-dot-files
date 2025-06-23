@@ -157,6 +157,7 @@ return {
   },
   {
     "nvim-treesitter/nvim-treesitter",
+    -- branch = "main",
     opts = {
       incremental_selection = {
         disable = {},
@@ -183,16 +184,16 @@ return {
     config = function(_, opts)
       ---@type table<string, any>
       local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-      -- parser_config.nu = {
-      --   install_info = {
-      --     url = "~/Workspace/tree-sitter-nu", -- local path or git repo
-      --     files = { "src/parser.c", "src/scanner.c" }, -- note that some parsers also require src/scanner.c or src/scanner.cc
-      --     branch = "pr", -- default branch in case of git repo if different from master
-      --     generate_requires_npm = false, -- if stand-alone parser without npm dependencies
-      --     requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
-      --   },
-      --   filetype = "nu", -- if filetype does not match the parser name
-      -- }
+      parser_config.nu = {
+        install_info = {
+          url = "~/Workspace/tree-sitter-nu", -- local path or git repo
+          files = { "src/parser.c", "src/scanner.c" }, -- note that some parsers also require src/scanner.c or src/scanner.cc
+          branch = "main", -- default branch in case of git repo if different from master
+          generate_requires_npm = false, -- if stand-alone parser without npm dependencies
+          requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
+        },
+        filetype = "nu", -- if filetype does not match the parser name
+      }
 
       parser_config.openscad = {
         install_info = {

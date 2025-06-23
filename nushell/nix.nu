@@ -2,7 +2,7 @@
 def nix-list-system []: nothing -> list<string> {
   ^nix-store -q --references /run/current-system/sw
   | lines
-  | filter { not ($in | str ends-with 'man') }
+  | where { not ($in | str ends-with 'man') }
   | each { $in | str replace -r '^[^-]*-' '' }
   | sort
 }

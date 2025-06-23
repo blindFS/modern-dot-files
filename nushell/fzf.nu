@@ -486,6 +486,7 @@ def _expand_alias_if_exist [cmd: string] {
 export def carapace_by_fzf [
   spans: list<string> # list of commandline arguments to trigger `carapace <command> nushell ...($spans)`
 ] {
+  # return $spans
   let query = $spans | last
   let res = try {
     let spans = $spans | skip 1 | prepend (_expand_alias_if_exist $spans.0)
@@ -610,7 +611,7 @@ atuin search --search-mode full-text --delete $cmd'##
 export def atuin_menus_func [
   prompt: string
 ]: nothing -> closure {
-  {|buffer, position|
+  {|buffer position|
     {
       # only history of current directory
       value: (
