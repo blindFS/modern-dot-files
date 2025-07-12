@@ -4,7 +4,7 @@ $env.PATH = $env.PATH
 | split row (char esep)
 | append '/usr/local/bin'
 | append ($env.HOME | path join ".elan" "bin")
-| append ($env.HOME | path join ".cargo" "bin")
+| prepend ($env.HOME | path join ".cargo" "bin")
 | prepend ($env.HOME | path join ".local" "bin")
 | uniq
 $env.FZF_DEFAULT_COMMAND = "fd --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9"

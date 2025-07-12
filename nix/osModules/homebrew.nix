@@ -7,7 +7,8 @@
     "node"
     "rust"
     "rust-analyzer"
-    "podman"
+    "cargo-binstall"
+    "cargo-instruments"
   ];
   casks = [
     "balenaetcher"
