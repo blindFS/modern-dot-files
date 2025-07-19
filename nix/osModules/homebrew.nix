@@ -4,21 +4,19 @@
   onActivation.autoUpdate = true;
   onActivation.upgrade = true;
   brews = [
+    "cargo-binstall"
+    "cargo-instruments"
     "node"
     "rust"
     "rust-analyzer"
-    "cargo-binstall"
-    "cargo-instruments"
+    "topiary"
   ];
   casks = [
     "balenaetcher"
     "blender"
-    "claude"
     "discord"
     "dropbox"
-    "freecad"
     "ghostty"
-    "iina"
     "karabiner-elements"
     "kicad"
     "macs-fan-control"

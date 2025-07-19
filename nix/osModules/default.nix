@@ -67,7 +67,6 @@ in
       tig
       tldr
       tmux
-      topiary
       tree-sitter
       uv
       vivid
