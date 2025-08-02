@@ -46,7 +46,7 @@ def is_pair_matched [
   char_list: list<string>
   char: string
 ] {
-  let kp = $auto_pair_key_maps | get -i $char
+  let kp = $auto_pair_key_maps | get -o $char
   if $kp.left == $kp.right {
     # for '"`
     let occurrence = $char_list
@@ -74,11 +74,11 @@ def analyse_commandline [] {
   let cmd_raw = commandline
   let cursor_pos = commandline get-cursor
   let all_chars = $cmd_raw | split chars
-  let char_next = $all_chars | get -i $cursor_pos | default ''
+  let char_next = $all_chars | get -o $cursor_pos | default ''
 
   let char_current = (
     $all_chars
-    | get -i (
+    | get -o (
       [($cursor_pos - 1) 0]
       | math max
     ) | default ' '
@@ -139,7 +139,7 @@ export def auto_pair_backspace [] {
 export def auto_pair_complete [
   char: string # which key is pressed
 ] {
-  let key_pairs = $auto_pair_key_maps | get -i $char
+  let key_pairs = $auto_pair_key_maps | get -o $char
   if ($key_pairs | is-empty) {
     # unknown key
     commandline edit --insert $char

@@ -53,7 +53,7 @@ def _find_matching_node [
       }
     }
   }
-  ($matching_pair | get -i $'($offset)' | default (-1)) + 1
+  ($matching_pair | get -o $'($offset)' | default (-1)) + 1
 }
 
 export def matchit_exec [] {

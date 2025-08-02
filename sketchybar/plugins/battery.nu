@@ -4,7 +4,7 @@ let raw_info = (pmset -g batt)
 let percentage = (
   $raw_info
   | parse --regex '.*\s(\d+)%; .*'
-  | get -i 0.capture0
+  | get -o 0.capture0
   | default 100
   | into float
 )

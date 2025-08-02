@@ -20,11 +20,11 @@ export def arg_to_setting [plugin_dir: string]: record -> list<string> {
 }
 
 def build_sketchybar_args [plugin_dir: string]: record -> list<string> {
-  let name = $in | get -i name | default temp_name
-  let pos = $in | get -i pos | default right
-  let events = $in | get -i events | default []
-  let args = $in | get -i args | default []
-  let popups = $in | get -i popups | default []
+  let name = $in | get -o name | default temp_name
+  let pos = $in | get -o pos | default right
+  let events = $in | get -o events | default []
+  let args = $in | get -o args | default []
+  let popups = $in | get -o popups | default []
   mut arg_list = [--add item $name $pos]
   if ($events | is-not-empty) {
     $arg_list = $arg_list
@@ -42,7 +42,7 @@ def build_sketchybar_args [plugin_dir: string]: record -> list<string> {
       $popups
       | each {|p_it|
         mut p_it_cml_args = [--add item $p_it.name popup.($name)]
-        let p_it_args = $p_it | get -i args | default []
+        let p_it_args = $p_it | get -o args | default []
         if ($p_it_args | is-not-empty) {
           $p_it_cml_args = $p_it_cml_args
           | append [--set $p_it.name]

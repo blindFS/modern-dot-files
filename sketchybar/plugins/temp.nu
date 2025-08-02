@@ -9,7 +9,7 @@ def extract_by_key [
   | where key =~ $key
   | par-each {|kv| $kv.value }
   | where quantity != 40
-  | get -i quantity
+  | get -o quantity
   | default [40]
   | math max
 }

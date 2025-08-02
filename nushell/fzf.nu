@@ -7,7 +7,7 @@ const manpage_preview_cmd = 'man {} | col -bx | bat -l man -p --color=always --l
 const dir_preview_cmd = "eza --tree -L 3 --icons=always --color=always {} | head -200"
 const file_preview_cmd = "bat -n --color=always --line-range :200 {}"
 const process_preview_cmd = 'ps | where pid == ({1} | into int) | transpose Property Value | table -i false'
-const remote_preview_cmd = "dig {} | jc --dig | from json | get -i answer.0 | table -i false"
+const remote_preview_cmd = "dig {} | jc --dig | from json | get -o answer.0 | table -i false"
 const default_preview_cmd = "if ({} | path type) == 'dir'" + $" {($dir_preview_cmd)} else {($file_preview_cmd)}"
 const help_preview_cmd = "$env.config.use_ansi_coloring = true; try {help {1}} catch {'custom command or alias'}"
 const external_tldr_cmd = "try {tldr -c {1}} catch {'No doc yet'}"
@@ -80,7 +80,7 @@ def _build_fzf_prompt [
   key: string
 ] {
   let prompt_config = $fzf_prompt_info
-  | get -i $key
+  | get -o $key
   | default {}
   | default $fzf_prompt_default_setting.fg fg
   | default $fzf_prompt_default_setting.bg bg
@@ -149,7 +149,7 @@ export def update_manpage_cache [
   --force (-f) # force update if the file already exists
   --silent (-s) # print no message if set
 ]: nothing -> string {
-  let cache_fp = $env | get -i 'MANPAGECACHE'
+  let cache_fp = $env | get -o 'MANPAGECACHE'
   if ($cache_fp | is-empty) {
     if not $silent {
       print '$env.MANPAGECACHE should be set before using this command.'
@@ -225,7 +225,7 @@ def _complete_by_fzf [
           ...(_build_fzf_args $query 'Command' $hybrid_help_cmd)
         )
         | split row "\t"
-        | get -i 0
+        | get -o 0
         | default $query
         | str trim
       }
@@ -240,7 +240,7 @@ def _complete_by_fzf [
       | par-each { $"($in.pid)\t($in.name)" }
       | str join "\n"
       | fzf ...(_build_fzf_args $query 'Process' $process_preview_cmd)
-      | split row "\t" | get -i 0
+      | split row "\t" | get -o 0
     }
     "ssh" => {
       let ssh_known_host_fp = $env.HOME | path join '.ssh' 'known_hosts'
@@ -252,7 +252,7 @@ def _complete_by_fzf [
           | each {
             $in
             | split column ' '
-            | get -i 0.column1
+            | get -o 0.column1
             | str replace -r '.*\[(.+)\].*' '$1'
           }
           | uniq
@@ -323,7 +323,7 @@ def _fzf_post_process [] {
   | each {
     $in
     | split row "\t"
-    | get -i 0
+    | get -o 0
     | ansi strip
     | str trim
   }
@@ -349,7 +349,7 @@ def _carapace_by_fzf [command: string spans: list<string>] {
     _ if $carapace_preview_description => (
       $carapace_completion
       | par-each {
-        let value_style = ansi --escape ($in | get -i style | default {fg: yellow})
+        let value_style = ansi --escape ($in | get -o style | default {fg: yellow})
         $"($value_style)($in.value)(ansi reset)"
       }
       | str join (char nul)
@@ -359,7 +359,7 @@ def _carapace_by_fzf [command: string spans: list<string>] {
         --preview (
           $"const raw = ($carapace_completion | to json); " +
           `$"(ansi purple_reverse)Description:(ansi reset) " + ` +
-          `($raw | where value == ({} | ansi strip) | get -i 0.description | default '')`
+          `($raw | where value == ({} | ansi strip) | get -o 0.description | default '')`
         )
         --preview-window top,10%
         ...(_carapace_git_diff_preview $spans)
@@ -370,11 +370,11 @@ def _carapace_by_fzf [command: string spans: list<string>] {
     _ => (
       $carapace_completion
       | par-each {
-        let value_style = ansi --escape ($in | get -i style | default {fg: yellow})
+        let value_style = ansi --escape ($in | get -o style | default {fg: yellow})
         (
           _two_column_item
           $in.value # drop items with no value field
-          ($in | get -i description | default '')
+          ($in | get -o description | default '')
           $value_style
           (ansi purple_italic)
         )
@@ -435,7 +435,7 @@ def _env_by_fzf [
           (
             $"$env.config.use_ansi_coloring = true; const raw = ($content | to json --serialize); " +
             `(match ($raw | describe | str substring ..4) {
-'list<' => {$raw | get -i ({} | into int)},
+'list<' => {$raw | get -o ({} | into int)},
 _ => {$raw | table -i false -t basic | find {}
 | each {let segs = $in | split row '|'
 {$'name': ($segs | get 1)
@@ -456,7 +456,7 @@ def _carapace_git_diff_preview [
   spans: list<string>
 ] {
   match $spans.0 {
-    'git' if ($spans | get -i 1 | default '') in [
+    'git' if ($spans | get -o 1 | default '') in [
       'add'
       'show'
       'diff'
@@ -477,7 +477,7 @@ def _carapace_git_diff_preview [
 def _expand_alias_if_exist [cmd: string] {
   scope aliases
   | where name == $cmd
-  | get -i 0.expansion
+  | get -o 0.expansion
   | default $cmd
 }
 

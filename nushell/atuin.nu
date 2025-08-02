@@ -4,7 +4,7 @@ hide-env -i ATUIN_HISTORY_ID
 # Magic token to make sure we don't record commands run by keybindings
 let ATUIN_KEYBINDING_TOKEN = $"# (random uuid)"
 let _atuin_pre_execution = {||
-  if ($nu | get -i history-enabled) == false {
+  if ($nu | get -o history-enabled) == false {
     return
   }
   let cmd = commandline
