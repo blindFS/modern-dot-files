@@ -1,11 +1,10 @@
-export const app_icons = {
+const app_icons = {
   'app store': ''
   'arc': '󰣇'
   'blender': ''
   'books': ''
   'calculator': ''
   'calendar': ''
-  'code': '󰨞'
   'dictionary': ''
   'discord': '󰙯'
   'emacs': ''
@@ -25,7 +24,9 @@ export const app_icons = {
   'steam helper': '󰓓'
   'system settings': '󰒓'
   'wechat': ''
+  'zed': '󰬡'
 }
+
 export def get_icon_by_app_name []: string -> string {
   let name = $in | str trim | str downcase
   $app_icons

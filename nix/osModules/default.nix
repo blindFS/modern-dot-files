@@ -64,7 +64,6 @@ in
       sops
       starship
       # texliveMedium
-      tig
       tldr
       tmux
       tree-sitter

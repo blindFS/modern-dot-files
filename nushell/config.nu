@@ -22,10 +22,11 @@ use fzf.nu [
   atuin_menus_func
 ]
 use sesh.nu sesh_connect
-source themes/tokyonight_night.nu
+source $themes_config_file
 
 $env.config.completions.external.completer = {|span| carapace_by_fzf $span }
 $env.config.edit_mode = "vi"
+$env.config.buffer_editor = "nvim"
 $env.config.highlight_resolved_externals = true
 $env.config.history.file_format = "sqlite"
 $env.config.history.max_size = 10000

@@ -248,8 +248,6 @@ return {
         filetype = "openscad",
       }
 
-      vim.treesitter.language.register("nu", "nushell")
-
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "nu",
         callback = function(event)
@@ -318,6 +316,7 @@ return {
       lspconfig.nushell.setup({
         cmd = {
           "nu",
+          -- "/Users/farseerhe/Workspace/nushell/target/debug/nu",
           "--config",
           vim.env.XDG_CONFIG_HOME .. "/nushell/lsp.nu",
           "--lsp",

@@ -38,5 +38,6 @@ in
         + "--color=info:${cs.blue},prompt:${cs.yellow},pointer:${cs.red} "
         + "--color=marker:${cs.white},spinner:${cs.green},header:${cs.white}"
       )
+      const themes_config_file = "themes/${colorscheme}.nu"
     '';
 }

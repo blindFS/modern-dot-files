@@ -172,7 +172,7 @@ export def update_manpage_cache [
   $cache_fp
 }
 
-# Do a fzf search of misc contents accroding to current command
+# Do a fzf search of misc contents according to current command
 def _complete_by_fzf [
   cmd: string # command whose arguments need to complete at present
   query: string # preceding string to search for
