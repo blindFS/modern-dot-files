@@ -9,8 +9,8 @@ def nix-list-system []: nothing -> list<string> {
 
 # upgrade system packages
 def nix-upgrade [
-  flake_path: string # path that confains a flake.nix
-  --interactive (-i) # select pacakges to upgrade interactively
+  flake_path: string # path that contains a flake.nix
+  --interactive (-i) # select packages to upgrade interactively
 ]: nothing -> nothing {
   let working_path = $flake_path | path expand
   if not ($working_path | path exists) {

@@ -4,12 +4,7 @@
   onActivation.autoUpdate = true;
   onActivation.upgrade = true;
   brews = [
-    "cargo-binstall"
-    "cargo-instruments"
     "node"
-    "rust"
-    "rust-analyzer"
-    "topiary"
   ];
   casks = [
     "balenaetcher"

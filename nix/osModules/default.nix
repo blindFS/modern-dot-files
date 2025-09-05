@@ -60,12 +60,14 @@ in
       nushell
       plistwatch
       ripgrep
+      rustup
       sesh
       sops
       starship
       # texliveMedium
       tldr
       tmux
+      topiary
       tree-sitter
       uv
       vivid
