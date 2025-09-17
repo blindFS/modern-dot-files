@@ -61,7 +61,7 @@ in
         success_symbol = txt-fg-bg "" cs.black cs.white;
         error_symbol = txt-fg-bg "󰊠" cs.warn cs.white;
         vimcmd_symbol = txt-fg-bg "" cs.black cs.white;
-        format = "${txt-fg "▓" cs.white}[ $symbol ](bg:${cs.white})";
+        format = "${txt-fg "▓" cs.white}[$symbol ](bg:${cs.white})";
       };
 
       cmd_duration.min_time = 20000;

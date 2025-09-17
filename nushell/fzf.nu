@@ -15,19 +15,19 @@ const hybrid_help_cmd = $"if {2} == 'EXTERNAL' {($external_tldr_cmd)} else {($he
 const fzf_prompt_default_setting = {
   fg: '#000000'
   bg: '#c0caf5'
-  symbol: ''
+  symbol: ' '
 }
 const fzf_prompt_info = {
-  Carapace: {bg: '#1d8f8f' symbol: '󰳗'}
-  Variable: {symbol: '󱄑'}
-  Directory: {symbol: ''}
-  File: {symbol: '󰈔'}
-  Remote: {symbol: '󰛳'}
-  Process: {symbol: ''}
-  Command: {symbol: ''}
-  Manpage: {bg: '#f7768e' symbol: '󰙃'}
-  Internals: {bg: '#0dcf6f' symbol: ''}
-  Externals: {bg: '#7aa2f7' symbol: ''}
+  Carapace: {bg: '#1d8f8f' symbol: '󰳗 '}
+  Variable: {symbol: '󱄑 '}
+  Directory: {symbol: ' '}
+  File: {symbol: '󰈔 '}
+  Remote: {symbol: '󰛳 '}
+  Process: {symbol: ' '}
+  Command: {symbol: ' '}
+  Manpage: {bg: '#f7768e' symbol: '󰙃 '}
+  Internals: {bg: '#0dcf6f' symbol: ' '}
+  Externals: {bg: '#7aa2f7' symbol: ' '}
 }
 use lib.nu [
   substring_from_idx

@@ -62,7 +62,8 @@ return {
     end,
   },
   {
-    "echasnovski/mini.icons",
+    "nvim-mini/mini.icons",
+    verion = "*",
     opts = {
       filetype = {
         nu = { glyph = "", hl = "MiniIconsGreen" },
@@ -185,8 +186,9 @@ return {
   },
   -- keymaps
   {
-    "echasnovski/mini.surround",
+    "nvim-mini/mini.surround",
     event = "VeryLazy",
+    verion = "*",
     opts = {
       mappings = {
         add = "'a",
@@ -356,6 +358,18 @@ return {
         },
       },
     },
+  },
+  {
+    "nvim-mini/mini.align",
+    version = false,
+    config = function()
+      require("mini.align").setup({
+        mappings = {
+          start = "al",
+          start_with_preview = "aL",
+        },
+      })
+    end,
   },
   -- llm
   {

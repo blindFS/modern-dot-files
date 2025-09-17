@@ -104,6 +104,7 @@ in
       background-opacity = 0.8
       background = #000000
       macos-titlebar-style = hidden
+      custom-shader = shaders/amber_v4.glsl
     '';
   };
 }
