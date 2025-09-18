@@ -111,21 +111,6 @@ return {
     "saghen/blink.cmp",
     dependencies = { "archie-judd/blink-cmp-words" },
     opts = {
-      cmdline = {
-        enabled = true,
-        sources = function()
-          local type = vim.fn.getcmdtype()
-          -- Search forward and backward
-          if type == "/" or type == "?" then
-            return { "buffer" }
-          end
-          -- Commands
-          if type == ":" or type == "@" then
-            return { "cmdline" }
-          end
-          return {}
-        end,
-      },
       completion = {
         menu = {
           draw = {
@@ -203,18 +188,8 @@ return {
   },
   {
     "nvim-treesitter/nvim-treesitter",
-    -- branch = "main",
+    branch = "main",
     opts = {
-      incremental_selection = {
-        disable = {},
-        enable = true,
-        keymaps = {
-          init_selection = "+",
-          node_decremental = "-",
-          node_incremental = "+",
-          scope_incremental = "g+",
-        },
-      },
       textobjects = {
         swap = {
           enable = true,
@@ -228,37 +203,44 @@ return {
       },
     },
     config = function(_, opts)
-      ---@type table<string, any>
-      local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-      parser_config.nu = {
-        install_info = {
-          url = "~/Workspace/tree-sitter-nu", -- local path or git repo
-          files = { "src/parser.c", "src/scanner.c" }, -- note that some parsers also require src/scanner.c or src/scanner.cc
-          branch = "main", -- default branch in case of git repo if different from master
-          generate_requires_npm = false, -- if stand-alone parser without npm dependencies
-          requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
-        },
-        filetype = "nu", -- if filetype does not match the parser name
-      }
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "TSUpdate",
+        callback = function()
+          ---@type table<string, any>
+          local parser_config = require("nvim-treesitter.parsers")
+          -- parser_config.nu = {
+          --   install_info = {
+          --     url = "~/Workspace/tree-sitter-nu", -- local path or git repo
+          --     files = { "src/parser.c", "src/scanner.c" }, -- note that some parsers also require src/scanner.c or src/scanner.cc
+          --     branch = "main", -- default branch in case of git repo if different from master
+          --     generate_requires_npm = false, -- if stand-alone parser without npm dependencies
+          --     requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
+          --   },
+          -- }
 
-      parser_config.openscad = {
-        install_info = {
-          url = "https://github.com/openscad/tree-sitter-openscad",
-          files = { "src/parser.c" },
-          branch = "main",
-        },
-        filetype = "openscad",
-      }
+          parser_config.openscad = {
+            install_info = {
+              url = "https://github.com/openscad/tree-sitter-openscad",
+              branch = "main",
+              queries = "queries",
+            },
+          }
+        end,
+      })
 
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "nu",
         callback = function(event)
-          vim.bo[event.buf].commentstring = "# %s"
+          vim.treesitter.start()
+          -- tree-sitter based folding
+          vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+          -- signature help keybinding
           vim.api.nvim_buf_set_keymap(event.buf, "i", "<C-f>", "", {
             callback = function()
               vim.lsp.buf.signature_help()
             end,
           })
+          -- signature help after completing a command name
           vim.api.nvim_create_autocmd("User", {
             pattern = "BlinkCmpAccept",
             callback = function(ev)
@@ -274,19 +256,17 @@ return {
         end,
       })
 
+      vim.filetype.add({ extension = { openscad = "openscad" } })
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "openscad",
         callback = function(event)
           vim.bo[event.buf].commentstring = "// %s"
+          vim.treesitter.start()
         end,
       })
 
-      require("nvim-treesitter.configs").setup(opts)
+      require("nvim-treesitter").setup(opts)
     end,
-    dependencies = {
-      -- NOTE: additional parser
-      "openscad/tree-sitter-openscad",
-    },
   },
   {
     "neovim/nvim-lspconfig",
