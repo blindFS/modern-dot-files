@@ -9,14 +9,6 @@
     # home manager
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    # bat syntaxes/themes
-    sublime-nushell.url = "github:stevenxxiu/sublime_text_nushell";
-    sublime-nushell.flake = false;
-    sublime-tokyonight.url = "github:folke/tokyonight.nvim";
-    sublime-tokyonight.flake = false;
-    # tmux plugins
-    tmux-catppuccin.url = "github:catppuccin/tmux";
-    tmux-catppuccin.flake = false;
     # homebrew
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     # secrets

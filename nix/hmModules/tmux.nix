@@ -1,6 +1,5 @@
 {
   pkgs,
-  inputs,
   username,
   ...
 }:
@@ -24,31 +23,24 @@
         '';
       }
       {
-        # plugin = tmuxPlugins.catppuccin;
-        plugin = tmuxPlugins.mkTmuxPlugin {
-          pluginName = "catppuccin";
-          version = "unstable";
-          src = inputs.tmux-catppuccin;
-        };
+        plugin = tmuxPlugins.tokyo-night-tmux;
         extraConfig = ''
-          set -g @catppuccin_flavor "mocha"
-          # set -g @catppuccin_window_status_style "basic"
-          set -g @catppuccin_window_status_style ""
-          set -g @catppuccin_window_text " #W"
-          set -g @catppuccin_window_current_text " #W"
-          set -g @catppuccin_window_flags "icon"
-          set -g @catppuccin_window_flags_icon_last " 󰖰" # -
-          set -g @catppuccin_window_flags_icon_current " 󰖯" # *
-          set -g @catppuccin_window_flags_icon_zoom " 󰁌" # Z
-          set -g @catppuccin_window_flags_icon_mark " 󰃀" # M
-          set -g @catppuccin_window_flags_icon_silent " 󰂛" # ~
-          set -g @catppuccin_window_flags_icon_activity " 󱅫" # #
-          set -g @catppuccin_window_flags_icon_bell " 󰂞" # !
-          set -g @catppuccin_status_background "none"
-          set -g @catppuccin_status_connect_separator "yes"
-          set -g status-left "#{E:@catppuccin_status_session}"
-          set -g status-right "#{E:@catppuccin_status_user}"
-          set -ag status-right "#{E:@catppuccin_status_directory}"
+          set -g @tokyo-night-tmux_transparent 1
+          set -g @tokyo-night-tmux_window_id_style digital
+          set -g @tokyo-night-tmux_pane_id_style hsquare
+          set -g @tokyo-night-tmux_zoom_id_style dsquare
+          set -g @tokyo-night-tmux_show_datetime 0
+
+          # Icon styles
+          set -g @tokyo-night-tmux_terminal_icon 
+          set -g @tokyo-night-tmux_active_terminal_icon 
+
+          # No extra spaces between icons
+          set -g @tokyo-night-tmux_window_tidy_icons 0
+
+          # Widgets
+          set -g @tokyo-night-tmux_show_path 1
+          set -g @tokyo-night-tmux_path_format relative
         '';
       }
     ];
