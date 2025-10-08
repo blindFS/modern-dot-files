@@ -5,6 +5,7 @@
   onActivation.upgrade = true;
   brews = [
     "node"
+    "gemini-cli"
   ];
   casks = [
     "balenaetcher"

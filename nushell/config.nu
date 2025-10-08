@@ -68,7 +68,7 @@ $env.config.menus ++= [
         prompt_decorator
         $extra_colors.prompt_symbol_color
         'light_blue'
-        '▓▒░ Ctrl-d to del  '
+        '▓▒░ Ctrl-d to del '
         false
       )
     )
@@ -76,7 +76,7 @@ $env.config.menus ++= [
   {
     name: completion_menu
     only_buffer_difference: false
-    marker: (prompt_decorator $extra_colors.prompt_symbol_color "yellow" " ")
+    marker: (prompt_decorator $extra_colors.prompt_symbol_color "yellow" "")
     type: {
       layout: columnar
       columns: 4
@@ -94,7 +94,7 @@ $env.config.menus ++= [
   {
     name: history_menu
     only_buffer_difference: false
-    marker: (prompt_decorator $extra_colors.prompt_symbol_color "light_blue" " ")
+    marker: (prompt_decorator $extra_colors.prompt_symbol_color "light_blue" "")
     type: {
       layout: list
       page_size: 30
