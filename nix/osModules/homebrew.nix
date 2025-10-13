@@ -1,8 +1,8 @@
 {
   enable = true;
   onActivation.cleanup = "zap";
-  onActivation.autoUpdate = true;
-  onActivation.upgrade = true;
+  onActivation.autoUpdate = false;
+  onActivation.upgrade = false;
   brews = [
     "node"
     "gemini-cli"
@@ -20,6 +20,7 @@
     "popclip"
     "raycast"
     "steam"
+    "yam-display"
     "zed"
   ];
 }
