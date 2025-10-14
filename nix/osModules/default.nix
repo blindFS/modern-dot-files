@@ -39,6 +39,7 @@ in
       carapace
       delta
       # emacs30
+      elan
       eza
       fd
       ffmpeg
