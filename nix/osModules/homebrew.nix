@@ -9,6 +9,7 @@
   ];
   casks = [
     "balenaetcher"
+    "betterdisplay"
     "blender"
     "discord"
     "dropbox"
