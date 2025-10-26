@@ -362,4 +362,17 @@ return {
       vim.keymap.set("i", "<C-t>", neocodeium.chat)
     end,
   },
+  -- git
+  {
+    "lewis6991/gitsigns.nvim",
+    event = "LazyFile",
+    opts = {
+      -- requires the gh cli tool to show clickable links
+      gh = true,
+    },
+    keys = {
+      { "<leader>gB", "<cmd>Gitsigns blame_line<cr>", desc = "Git blame links" },
+      { "<leader>uB", "<cmd>Gitsigns toggle_current_line_blame<cr>", desc = "Toggle git blame virtual line" },
+    },
+  },
 }

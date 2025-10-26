@@ -7,7 +7,7 @@
         name = "blindfs";
         email = "blindfs19@gmail.com";
       };
-      aliases = {
+      alias = {
         pb = "pull --rebase";
         st = "status";
         co = "commit -m";
