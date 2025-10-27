@@ -53,6 +53,45 @@ return {
         },
       },
     },
+    config = function(_, opts)
+      -- new toggle for gitsigns inline blame
+      local toggle_inline_blame = {
+        name = "Inline Git Blame",
+        get = function()
+          return require("gitsigns.config").config.current_line_blame
+        end,
+        set = function(state)
+          require("gitsigns").toggle_current_line_blame(state)
+        end,
+      }
+      Snacks.toggle.new(toggle_inline_blame):map("<leader>uB")
+
+      -- new toggle for gitsigns inline blame
+      vim.api.nvim_create_augroup("DiagHover", { clear = true })
+      local group_opts = { group = "DiagHover" }
+      local toggle_diagnostic_float_on_hover = {
+        name = "Show Line Diagnostics on Hover",
+        get = function()
+          return #vim.api.nvim_get_autocmds(group_opts) > 0
+        end,
+        set = function(state)
+          if state then
+            vim.api.nvim_create_autocmd("CursorHold", {
+              group = "DiagHover",
+              pattern = "*",
+              callback = function()
+                vim.diagnostic.open_float()
+              end,
+            })
+          else
+            vim.api.nvim_clear_autocmds(group_opts)
+          end
+        end,
+      }
+      Snacks.toggle.new(toggle_diagnostic_float_on_hover):map("<leader>uH")
+
+      require("snacks").setup(opts)
+    end,
   },
   {
     "norcalli/nvim-colorizer.lua",
@@ -372,7 +411,6 @@ return {
     },
     keys = {
       { "<leader>gB", "<cmd>Gitsigns blame_line<cr>", desc = "Git blame links" },
-      { "<leader>uB", "<cmd>Gitsigns toggle_current_line_blame<cr>", desc = "Toggle git blame virtual line" },
     },
   },
 }

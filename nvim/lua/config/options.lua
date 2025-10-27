@@ -2,11 +2,6 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
 
--- vim.diagnostic.config({
---   virtual_lines = { current_line = true },
--- })
-vim.opt.spell = true
-
 local function fold_virt_text(result, start_text, lnum)
   local text = ""
   local hl
@@ -43,3 +38,5 @@ function _G.custom_foldtext()
 end
 
 vim.opt.foldtext = "v:lua.custom_foldtext()"
+vim.o.winborder = "rounded"
+vim.opt.spell = true
