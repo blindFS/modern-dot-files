@@ -1,6 +1,7 @@
 const app_icons = {
   'app store': ''
   'arc': '󰣇'
+  'betterdisplay': '󰍺'
   'blender': ''
   'books': ''
   'calculator': ''
@@ -21,6 +22,7 @@ const app_icons = {
   'podcasts': ''
   'preview': ''
   'safari': '󰀹'
+  'shadowrocket': ''
   'steam helper': '󰓓'
   'system settings': '󰒓'
   'wechat': ''

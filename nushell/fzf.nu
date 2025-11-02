@@ -473,14 +473,6 @@ def _carapace_git_diff_preview [
   }
 }
 
-# if the current command is an alias, get it's expansion
-def _expand_alias_if_exist [cmd: string] {
-  scope aliases
-  | where name == $cmd
-  | get -o 0.expansion
-  | default $cmd
-}
-
 # Completion done by external carapace command
 # specially treated when something like `vim **` is present
 export def carapace_by_fzf [
@@ -489,7 +481,6 @@ export def carapace_by_fzf [
   # return $spans
   let query = $spans | last
   let res = try {
-    let spans = $spans | skip 1 | prepend (_expand_alias_if_exist $spans.0)
     match $spans.0 {
       _ if "$" in $query => {
         _env_by_fzf $query

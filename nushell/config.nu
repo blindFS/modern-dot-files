@@ -29,7 +29,7 @@ $env.config.edit_mode = "vi"
 $env.config.buffer_editor = "nvim"
 $env.config.highlight_resolved_externals = true
 $env.config.history.file_format = "sqlite"
-$env.config.history.max_size = 10000
+$env.config.history.max_size = 2000
 $env.config.show_banner = false
 $env.config.table.header_on_separator = true
 $env.config.table.index_mode = 'auto'
@@ -174,6 +174,5 @@ source atuin.nu
 # alias
 alias vim = nvim
 alias boc = brew outdated --cask --greedy
-alias ll = ls -al
-alias c = zi
+alias ll = ^eza --tree -L 1 -l -a --icons=always --color=always
 alias less = less -R
