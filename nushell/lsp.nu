@@ -7,6 +7,7 @@ $env.PATH = $env.PATH
 
 $env.CARAPACE_LENIENT = 1
 $env.CARAPACE_BRIDGES = 'zsh'
+$env.config.completions.algorithm = 'fuzzy'
 $env.config.completions.external.completer = {|spans: list<string>|
   carapace $spans.0 nushell ...$spans
   | from json

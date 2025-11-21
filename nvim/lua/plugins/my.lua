@@ -53,6 +53,36 @@ return {
         },
       },
     },
+    keys = {
+      {
+        "<leader>gi",
+        function()
+          Snacks.picker.gh_issue()
+        end,
+        desc = "GitHub Issues (open)",
+      },
+      {
+        "<leader>gI",
+        function()
+          Snacks.picker.gh_issue({ state = "all" })
+        end,
+        desc = "GitHub Issues (all)",
+      },
+      {
+        "<leader>gp",
+        function()
+          Snacks.picker.gh_pr()
+        end,
+        desc = "GitHub Pull Requests (open)",
+      },
+      {
+        "<leader>gP",
+        function()
+          Snacks.picker.gh_pr({ state = "all" })
+        end,
+        desc = "GitHub Pull Requests (all)",
+      },
+    },
     config = function(_, opts)
       -- new toggle for gitsigns inline blame
       local toggle_inline_blame = {
@@ -369,7 +399,7 @@ return {
       formatters = {
         topiary_nu = {
           command = "topiary",
-          args = { "-M", "-C", vim.env.XDG_CONFIG_HOME .. "/topiary/languages.ncl", "format", "--language", "nu" },
+          args = { "format", "--language", "nu" },
         },
         topiary_scad = {
           command = "topiary",
