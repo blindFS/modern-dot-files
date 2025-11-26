@@ -13,6 +13,7 @@ let
     xargb = true;
     alpha = "dd";
   };
+  topiary-nu = inputs.topiary-nu.packages.${pkgs.stdenv.hostPlatform.system}.default;
 in
 {
   imports = [
@@ -68,7 +69,7 @@ in
       # texliveMedium
       tldr
       tmux
-      topiary
+      topiary-nu
       tree-sitter
       uv
       vivid

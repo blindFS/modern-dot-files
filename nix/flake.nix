@@ -14,6 +14,9 @@
     # secrets
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    # topiary-nushell
+    topiary-nu.url = "github:blindFS/topiary-nushell";
+    topiary-nu.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =

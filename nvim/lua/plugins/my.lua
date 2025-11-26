@@ -398,11 +398,11 @@ return {
       },
       formatters = {
         topiary_nu = {
-          command = "topiary",
+          command = "topiary-nushell",
           args = { "format", "--language", "nu" },
         },
         topiary_scad = {
-          command = "topiary",
+          command = "topiary-nushell",
           args = { "format", "--language", "openscad" },
         },
       },
