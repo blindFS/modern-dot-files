@@ -96,6 +96,18 @@ return {
       }
       Snacks.toggle.new(toggle_inline_blame):map("<leader>uB")
 
+      -- new toggle for Next Edit Suggestions
+      local toggle_nes = {
+        name = "Toggle Copilot NES",
+        get = function()
+          return require("sidekick.nes").enabled
+        end,
+        set = function(state)
+          require("sidekick.nes").enable(state)
+        end,
+      }
+      Snacks.toggle.new(toggle_nes):map("<leader>uP")
+
       -- new toggle for gitsigns inline blame
       vim.api.nvim_create_augroup("DiagHover", { clear = true })
       local group_opts = { group = "DiagHover" }
@@ -180,6 +192,16 @@ return {
     "saghen/blink.cmp",
     dependencies = { "archie-judd/blink-cmp-words" },
     opts = {
+      keymap = {
+        ["<Tab>"] = {
+          "snippet_forward",
+          function() -- sidekick next edit suggestion
+            return require("sidekick").nes_jump_or_apply()
+          end,
+          "fallback",
+        },
+      },
+
       completion = {
         menu = {
           draw = {

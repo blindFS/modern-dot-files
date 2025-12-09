@@ -69,6 +69,7 @@ in
       # texliveMedium
       tldr
       tmux
+      topiary
       topiary-nu
       tree-sitter
       uv
