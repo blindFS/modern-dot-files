@@ -92,9 +92,9 @@ in
           nerdFontsVersion: "3"
 
         git:
-          paging:
-            colorArg: always
-            pager: delta --paging=never --diff-so-fancy --syntax-theme=${colorscheme}
+          pagers:
+            - pager: delta --paging=never --diff-so-fancy --syntax-theme=${colorscheme}
+              colorArg: always
       '';
     "ghostty/config".text = ''
       initial-command = tmux new -A -s dev
