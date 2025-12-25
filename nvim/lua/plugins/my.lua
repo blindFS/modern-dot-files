@@ -320,11 +320,29 @@ return {
       })
 
       vim.api.nvim_create_autocmd("FileType", {
+        pattern = "*",
+        callback = function(_)
+          local lang = vim.treesitter.language.get_lang(vim.bo.filetype)
+          if lang then
+            if vim.treesitter.query.get(lang, "highlights") then
+              vim.treesitter.start()
+            end
+            -- tree-sitter based folding
+            if vim.treesitter.query.get(lang, "folds") then
+              vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+              vim.wo[0][0].foldmethod = "expr"
+            end
+            -- tree-sitter based indentation
+            if vim.treesitter.query.get(lang, "indents") then
+              vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+            end
+          end
+        end,
+      })
+
+      vim.api.nvim_create_autocmd("FileType", {
         pattern = "nu",
         callback = function(event)
-          vim.treesitter.start()
-          -- tree-sitter based folding
-          vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
           -- signature help keybinding
           vim.api.nvim_buf_set_keymap(event.buf, "i", "<C-f>", "", {
             callback = function()
@@ -352,7 +370,6 @@ return {
         pattern = "openscad",
         callback = function(event)
           vim.bo[event.buf].commentstring = "// %s"
-          vim.treesitter.start()
         end,
       })
 
