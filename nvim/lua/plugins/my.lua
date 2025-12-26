@@ -280,8 +280,11 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     branch = "main",
-    opts = {
-      textobjects = {
+    opts = function(_, opts)
+      opts.highlight.enable = true
+      opts.folds.enable = true
+      opts.indent.enable = true
+      opts.textobjects = {
         swap = {
           enable = true,
           swap_next = {
@@ -291,9 +294,8 @@ return {
             ["<leader>pA"] = "@parameter.inner",
           },
         },
-      },
-    },
-    config = function(_, opts)
+      }
+
       vim.api.nvim_create_autocmd("User", {
         pattern = "TSUpdate",
         callback = function()
@@ -316,27 +318,6 @@ return {
               queries = "queries",
             },
           }
-        end,
-      })
-
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = "*",
-        callback = function(_)
-          local lang = vim.treesitter.language.get_lang(vim.bo.filetype)
-          if lang then
-            if vim.treesitter.query.get(lang, "highlights") then
-              vim.treesitter.start()
-            end
-            -- tree-sitter based folding
-            if vim.treesitter.query.get(lang, "folds") then
-              vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
-              vim.wo[0][0].foldmethod = "expr"
-            end
-            -- tree-sitter based indentation
-            if vim.treesitter.query.get(lang, "indents") then
-              vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-            end
-          end
         end,
       })
 
@@ -373,7 +354,7 @@ return {
         end,
       })
 
-      require("nvim-treesitter").setup(opts)
+      return opts
     end,
   },
   {
