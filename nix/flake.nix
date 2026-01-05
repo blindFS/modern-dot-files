@@ -39,7 +39,7 @@
         username = "farseerhe";
         hostname = "Hes-Mac-mini";
         colorscheme = "tokyonight_night";
-        monofont = "Iosevka Nerd Font Mono";
+        monofont = "IosevkaTerm Nerd Font Mono";
       };
     in
     {

@@ -4,6 +4,7 @@
   onActivation.autoUpdate = false;
   onActivation.upgrade = false;
   brews = [
+    "neovim"
     "node"
     "gemini-cli"
   ];
@@ -17,6 +18,7 @@
     "karabiner-elements"
     "kicad"
     "macs-fan-control"
+    "neovide-app"
     "openscad"
     "popclip"
     "raycast"

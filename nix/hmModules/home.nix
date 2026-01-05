@@ -105,6 +105,7 @@ in
       background = #000000
       macos-titlebar-style = hidden
       custom-shader = shaders/cursor_blaze.glsl
+      quit-after-last-window-closed = true
     '';
   };
 }

@@ -40,3 +40,8 @@ end
 vim.opt.foldtext = "v:lua.custom_foldtext()"
 vim.o.winborder = "rounded"
 vim.opt.spell = true
+
+if vim.g.neovide then
+  -- vim.o.guifont = "FiraCode Nerd Font Mono:h15"
+  vim.g.neovide_opacity = 0.85
+end

@@ -9,6 +9,7 @@ const app_icons = {
   'dictionary': ''
   'discord': '󰙯'
   'emacs': ''
+  'neovide': ''
   'finder': '󰀶'
   'ghostty': ''
   'gimp': ''
