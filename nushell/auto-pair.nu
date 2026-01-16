@@ -50,8 +50,8 @@ def is_pair_matched [
   if $kp.left == $kp.right {
     # for '"`
     let occurrence = $char_list
-    | where {|it| $it == $char }
-    | length
+      | where {|it| $it == $char }
+      | length
     ($occurrence mod 2) == 0
   } else {
     # for ([{
@@ -112,12 +112,12 @@ def backspace_delete_by_replace [
 export def auto_pair_backspace [] {
   let cmd_info = analyse_commandline
   let need_check = $auto_pair_key_maps
-  | transpose
-  | any {|r|
-    (
-      $cmd_info.char_current == $r.column1.left and $cmd_info.char_next == $r.column1.right
-    )
-  }
+    | transpose
+    | any {|r|
+      (
+        $cmd_info.char_current == $r.column1.left and $cmd_info.char_next == $r.column1.right
+      )
+    }
   if $need_check and (
     is_pair_matched
     $cmd_info.all_chars $cmd_info.char_current
@@ -179,12 +179,12 @@ export def auto_pair_complete [
 
 export def --env "set auto_pair_keybindings" [] {
   let new_kbs = $keys_to_bind
-  | each {|k|
-    $kb_template
-    | update name $"auto_pair_key_($k)"
-    | update keycode $"char_($k)"
-    | update event.cmd $"auto_pair_complete r#'($k)'#"
-  }
+    | each {|k|
+      $kb_template
+      | update name $"auto_pair_key_($k)"
+      | update keycode $"char_($k)"
+      | update event.cmd $"auto_pair_complete r#'($k)'#"
+    }
   $env.config.keybindings ++= [
     ...$new_kbs
     # $auto_pair_backspace_binding

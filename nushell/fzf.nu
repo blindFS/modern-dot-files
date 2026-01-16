@@ -38,23 +38,23 @@ def get_variable_by_name [
   name: string # $foo.bar style
 ] {
   let segs = $name
-  | split row '.'
+    | split row '.'
   mut content = {
     '$env': $env
     '$nu': $nu
   }
   for var in (scope variables) {
     $content = $content
-    | default $var.value $var.name
+      | default $var.value $var.name
   }
   try {
     for seg in $segs {
       if ($content | describe | str starts-with 'list') {
         $content = $content
-        | get ($seg | into int)
+          | get ($seg | into int)
       } else {
         $content = $content
-        | get $seg
+          | get $seg
       }
     }
   } catch { {} }
@@ -80,11 +80,11 @@ def _build_fzf_prompt [
   key: string
 ] {
   let prompt_config = $fzf_prompt_info
-  | get -o $key
-  | default {}
-  | default $fzf_prompt_default_setting.fg fg
-  | default $fzf_prompt_default_setting.bg bg
-  | default $fzf_prompt_default_setting.symbol symbol
+    | get -o $key
+    | default {}
+    | default $fzf_prompt_default_setting.fg fg
+    | default $fzf_prompt_default_setting.bg bg
+    | default $fzf_prompt_default_setting.symbol symbol
   (
     _prompt_decorator
     $prompt_config.fg
@@ -102,12 +102,12 @@ def _build_fzf_args [
   mut args = [-q $query]
   if ($preview_cmd | is-not-empty) {
     $args = $args
-    | append [--preview $preview_cmd]
+      | append [--preview $preview_cmd]
   }
 
   if ($prompt_key | is-not-empty) {
     $args = $args
-    | append [--prompt (_build_fzf_prompt $prompt_key)]
+      | append [--prompt (_build_fzf_prompt $prompt_key)]
   }
   $args
 }
@@ -319,14 +319,14 @@ def _fzf_post_process [] {
   let lines = $in
   if ($lines | is-empty) { return null }
   let lines = $lines
-  | split row "\n"
-  | each {
-    $in
-    | split row "\t"
-    | get -o 0
-    | ansi strip
-    | str trim
-  }
+    | split row "\n"
+    | each {
+      $in
+      | split row "\t"
+      | get -o 0
+      | ansi strip
+      | str trim
+    }
   # multiple items only triggered for files
   (
     if ($lines | length) > 1 {
@@ -342,7 +342,7 @@ def _fzf_post_process [] {
 def _carapace_by_fzf [command: string spans: list<string>] {
   let query = $spans | last
   let carapace_completion = carapace $command nushell ...(_final_spans_for_carapace $spans)
-  | from json
+    | from json
   match ($carapace_completion | length) {
     0 => null
     1 => $carapace_completion.0.value
@@ -530,9 +530,9 @@ export def find_command [
       if ' ' not-in $content_to_cursor {
         # e.g. $env.foo.a
         $query_node = $query_node
-        | default {}
-        | update content $content_to_cursor
-        | update span {start: $node.span.start end: $query_node.span.end}
+          | default {}
+          | update content $content_to_cursor
+          | update span {start: $node.span.start end: $query_node.span.end}
       }
       break
     }
@@ -582,7 +582,7 @@ export def complete_line_by_fzf [] {
     }
   } catch { $query }
   let completed_before_pos = $parsed.prefix + $parsed.cmd + $fzf_res
-  | str replace --all (char nul) "\n"
+    | str replace --all (char nul) "\n"
   commandline edit --replace ($completed_before_pos + $suffix)
   commandline set-cursor ($completed_before_pos | str length -g)
 }

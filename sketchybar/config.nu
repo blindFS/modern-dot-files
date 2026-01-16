@@ -28,30 +28,30 @@ def build_sketchybar_args [plugin_dir: string]: record -> list<string> {
   mut arg_list = [--add item $name $pos]
   if ($events | is-not-empty) {
     $arg_list = $arg_list
-    | append [--subscribe $name]
-    | append $events
+      | append [--subscribe $name]
+      | append $events
   }
   if ($args | is-not-empty) {
     $arg_list = $arg_list
-    | append [--set $name]
-    | append ($args | arg_to_setting $plugin_dir)
+      | append [--set $name]
+      | append ($args | arg_to_setting $plugin_dir)
   }
   if ($popups | is-not-empty) {
     $arg_list = $arg_list
-    | append (
-      $popups
-      | each {|p_it|
-        mut p_it_cml_args = [--add item $p_it.name popup.($name)]
-        let p_it_args = $p_it | get -o args | default []
-        if ($p_it_args | is-not-empty) {
-          $p_it_cml_args = $p_it_cml_args
-          | append [--set $p_it.name]
-          | append ($p_it_args | arg_to_setting $plugin_dir)
+      | append (
+        $popups
+        | each {|p_it|
+          mut p_it_cml_args = [--add item $p_it.name popup.($name)]
+          let p_it_args = $p_it | get -o args | default []
+          if ($p_it_args | is-not-empty) {
+            $p_it_cml_args = $p_it_cml_args
+              | append [--set $p_it.name]
+              | append ($p_it_args | arg_to_setting $plugin_dir)
+          }
+          $p_it_cml_args
         }
-        $p_it_cml_args
-      }
-      | flatten
-    )
+        | flatten
+      )
   }
   $arg_list
 }

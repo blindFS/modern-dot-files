@@ -1,9 +1,9 @@
 # Minimal config file for LSP
 $env.PATH = $env.PATH
-| split row (char esep)
-| append '/usr/local/bin'
-| append ($env.HOME | path join ".cargo" "bin")
-| uniq
+  | split row (char esep)
+  | append '/usr/local/bin'
+  | append ($env.HOME | path join ".cargo" "bin")
+  | uniq
 
 $env.CARAPACE_LENIENT = 1
 $env.CARAPACE_BRIDGES = 'zsh'

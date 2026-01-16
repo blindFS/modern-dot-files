@@ -21,12 +21,12 @@ def nix-upgrade [
   cd $working_path
   if $interactive {
     let selections = nix flake metadata . --json
-    | from json
-    | get locks.nodes
-    | columns
-    | str join "\n"
-    | fzf --multi --tmux center,20%
-    | lines
+      | from json
+      | get locks.nodes
+      | columns
+      | str join "\n"
+      | fzf --multi --tmux center,20%
+      | lines
     nix flake update ...$selections
   } else {
     nix flake update
