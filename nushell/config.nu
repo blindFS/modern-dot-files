@@ -167,7 +167,6 @@ use matchit.nu *
 set matchit_keybinding
 source zoxide.nu
 source nix.nu
-source auth/llm.nu
 source atuin.nu
 
 # alias

@@ -1,28 +1,28 @@
-{ pkgs, ... }:
-let
-  trigger = event: variables: "${pkgs.sketchybar}/bin/sketchybar --trigger ${event} ${variables}";
-  aeroswitch = mode: [
-    "mode ${mode}"
-    ("exec-and-forget" + trigger "aerospace_mode_change" "MODE=${mode}")
-  ];
-  move-and-focus = space: [
-    "move-node-to-workspace ${space}"
-    "workspace ${space}"
-  ];
-  move-to-monitor = which: [
-    "move-node-to-monitor ${which}"
-    "focus-monitor ${which}"
-  ];
-  tiling-to = position: [
-    "layout tiling"
-    "move ${position}"
-  ];
-in
 {
-  config = {
-    services.aerospace = {
-      enable = true;
-      settings = {
+  flake.darwinModules.aerospace =
+    { pkgs, ... }:
+    let
+      trigger = event: variables: "${pkgs.sketchybar}/bin/sketchybar --trigger ${event} ${variables}";
+      aeroswitch = mode: [
+        "mode ${mode}"
+        ("exec-and-forget" + trigger "aerospace_mode_change" "MODE=${mode}")
+      ];
+      move-and-focus = space: [
+        "move-node-to-workspace ${space}"
+        "workspace ${space}"
+      ];
+      move-to-monitor = which: [
+        "move-node-to-monitor ${which}"
+        "focus-monitor ${which}"
+      ];
+      tiling-to = position: [
+        "layout tiling"
+        "move ${position}"
+      ];
+    in
+    {
+      services.aerospace.enable = true;
+      services.aerospace.settings = {
         default-root-container-layout = "tiles";
         default-root-container-orientation = "auto";
         exec-on-workspace-change = [
@@ -100,5 +100,4 @@ in
         };
       };
     };
-  };
 }

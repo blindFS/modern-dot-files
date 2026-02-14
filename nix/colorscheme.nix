@@ -32,7 +32,7 @@ let
 in
 default-set
 |> builtins.attrNames
-|> builtins.map (key: {
+|> map (key: {
   name = key;
   value = convert-color default-set.${key};
 })
