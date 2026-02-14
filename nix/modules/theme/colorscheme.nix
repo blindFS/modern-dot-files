@@ -25,6 +25,5 @@ in
   flake.theme = {
     inherit colors colors_xargb;
     colorscheme = "tokyonight_night";
-    monofont = "IosevkaTerm Nerd Font Mono";
   };
 }

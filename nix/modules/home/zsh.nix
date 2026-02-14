@@ -1,6 +1,6 @@
 { self, ... }:
 {
-  flake.homeManagerModules.zsh =
+  flake.homeModules.zsh =
     { pkgs, ... }:
     {
       home.file.".zshrc".text =

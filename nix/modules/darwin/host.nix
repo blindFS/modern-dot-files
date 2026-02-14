@@ -12,8 +12,7 @@
     { ... }:
     {
       imports = [
-        self.darwinModules.aerospace
-        self.darwinModules.borders
+        self.darwinModules.desktop
         self.darwinModules.envvar
         self.darwinModules.fonts
         self.darwinModules.homeManager
@@ -21,7 +20,6 @@
         self.darwinModules.misc
         self.darwinModules.nix
         self.darwinModules.preferrence
-        self.darwinModules.sketchybar
       ];
 
       networking.hostName = self.identity.hostname;

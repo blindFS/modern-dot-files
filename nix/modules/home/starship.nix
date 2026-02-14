@@ -17,7 +17,7 @@ let
   };
 in
 {
-  flake.homeManagerModules.starship = {
+  flake.homeModules.starship = {
     programs.starship = {
       enable = true;
       enableNushellIntegration = false; # manually handled

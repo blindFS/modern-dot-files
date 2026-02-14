@@ -53,12 +53,12 @@
     };
   };
 
-  flake.homeManagerModules.ghostty =
+  flake.homeModules.ghostty =
     { pkgs, ... }:
     {
       xdg.configFile."ghostty/config".text = ''
         initial-command = ${lib.getExe pkgs.tmux} new -A -s dev
-        font-family = "${self.theme.monofont}"
+        font-family = "${self.font.monofont}"
         font-size = 15
         theme = "${builtins.split "_" self.theme.colorscheme |> builtins.head}"
         background-opacity = 0.8
@@ -69,7 +69,7 @@
       '';
     };
 
-  flake.homeManagerModules.nushell =
+  flake.homeModules.nushell =
     let
       cs = self.theme.colors;
       colorscheme-dash = builtins.replaceStrings [ "_" ] [ "-" ] self.theme.colorscheme;

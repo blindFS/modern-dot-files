@@ -1,6 +1,6 @@
 { inputs, self, ... }:
 {
-  flake.homeManagerModules.security =
+  flake.homeModules.security =
     { pkgs, ... }:
     {
       imports = [

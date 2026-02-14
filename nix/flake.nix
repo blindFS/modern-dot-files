@@ -31,13 +31,6 @@
 
         imports = tree.imports ++ [
           inputs.home-manager.flakeModules.home-manager
-          {
-            options.flake.homeManagerModules = inputs.nixpkgs.lib.mkOption {
-              type = inputs.nixpkgs.lib.types.lazyAttrsOf inputs.nixpkgs.lib.types.raw;
-              default = { };
-              description = "HM modules to be exported from this flake.";
-            };
-          }
           inputs.nix-darwin.flakeModules.default
           {
             options.flake.darwinModules = inputs.nixpkgs.lib.mkOption {

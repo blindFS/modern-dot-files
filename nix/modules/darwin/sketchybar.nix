@@ -4,7 +4,7 @@
     services.sketchybar.enable = true;
   };
 
-  flake.homeManagerModules.sketchybar =
+  flake.homeModules.sketchybar =
     let
       cs = self.theme.colors_xargb;
       color-alpha = hex: alpha: builtins.replaceStrings [ "0xff" ] [ "0x${alpha}" ] hex;
@@ -35,7 +35,7 @@
             resize: '${cs.light_green}'
             service: '${cs.white}'
           }
-          export const monofont = '${self.theme.monofont}'
+          export const monofont = '${self.font.monofont}'
         '';
     };
 }

@@ -1,6 +1,6 @@
 { self, ... }:
 {
-  flake.homeManagerModules.bat = {
+  flake.homeModules.bat = {
     programs.bat = {
       enable = true;
       config = {

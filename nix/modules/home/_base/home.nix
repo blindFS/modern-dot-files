@@ -8,15 +8,15 @@ let
 in
 {
   imports = [
-    self.homeManagerModules.bat
-    self.homeManagerModules.ghostty
-    self.homeManagerModules.git
-    self.homeManagerModules.nushell
-    self.homeManagerModules.security
-    self.homeManagerModules.sketchybar
-    self.homeManagerModules.starship
-    self.homeManagerModules.tmux
-    self.homeManagerModules.zsh
+    self.homeModules.bat
+    self.homeModules.ghostty
+    self.homeModules.git
+    self.homeModules.nushell
+    self.homeModules.security
+    self.homeModules.sketchybar
+    self.homeModules.starship
+    self.homeModules.tmux
+    self.homeModules.zsh
   ];
 
   # Home Manager needs a bit of information about you and the

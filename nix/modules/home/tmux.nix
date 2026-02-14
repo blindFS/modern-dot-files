@@ -1,6 +1,6 @@
 { self, ... }:
 {
-  flake.homeManagerModules.tmux =
+  flake.homeModules.tmux =
     { pkgs, ... }:
     {
       programs.tmux = {
@@ -22,27 +22,29 @@
             '';
           }
           {
-            plugin = tmuxPlugins.tokyo-night-tmux;
+            plugin = tmuxPlugins.catppuccin;
             extraConfig = ''
-              set -g @tokyo-night-tmux_transparent 1
-              set -g @tokyo-night-tmux_window_id_style digital
-              set -g @tokyo-night-tmux_pane_id_style hsquare
-              set -g @tokyo-night-tmux_zoom_id_style dsquare
-              set -g @tokyo-night-tmux_show_datetime 0
+              # Configure the catppuccin plugin
+              set -g @catppuccin_flavor "mocha"
+              set -g @catppuccin_status_background "none"
 
-              # Icon styles
-              set -g @tokyo-night-tmux_terminal_icon 
-              set -g @tokyo-night-tmux_active_terminal_icon 
+              # status left style
+              set -g status-left-length 100
+              set -g status-left ""
+              set -ga status-left "#{?client_prefix,#{#[bg=#{@thm_red},fg=#{@thm_mantle},bold]  #S },#{#[bg=#{@thm_mantle},fg=#{@thm_green}]  #S }}"
+              set -ga status-left "#[bg=#{@thm_mantle},fg=#{@thm_overlay_0},none]│"
+              set -ga status-left "#[bg=#{@thm_mantle},fg=#{@thm_maroon}]  #{pane_current_command} "
+              set -ga status-left "#[bg=#{@thm_mantle},fg=#{@thm_overlay_0},none]│"
+              set -ga status-left "#[bg=#{@thm_mantle},fg=#{@thm_blue}]  #{=/-32/...:#{s|$USER|~|:#{b:pane_current_path}}} "
 
-              # No extra spaces between icons
-              set -g @tokyo-night-tmux_window_tidy_icons 0
+              # status right style
+              set -g status-right-length 100
+              set -g status-right ""
+              set -ga status-right "#[bg=#{@thm_mantle},fg=#{@thm_blue}] 󰭦 %Y-%m-%d 󰅐 %H:%M "
 
-              # Widgets
-              set -g @tokyo-night-tmux_show_path 1
-              set -g @tokyo-night-tmux_path_format relative
-
-              # Clickable links
-              set -ga terminal-features ",*:hyperlinks"
+              # window style
+              set -g window-status-separator '|'
+              set -g status-justify 'absolute-centre'
             '';
           }
         ];
@@ -55,6 +57,9 @@
           bind ^j resizep -D 10
           bind ^h resizep -L 10
           bind ^l resizep -R 10
+
+          # Clickable links
+          set -ga terminal-features ",*:hyperlinks"
         '';
       };
     };
