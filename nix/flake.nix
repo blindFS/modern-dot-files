@@ -22,28 +22,6 @@
   };
 
   outputs =
-    inputs:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } (
-      let
-        tree = inputs.import-tree ./modules;
-      in
-      {
-
-        imports = tree.imports ++ [
-          inputs.home-manager.flakeModules.home-manager
-          inputs.nix-darwin.flakeModules.default
-          {
-            options.flake.darwinModules = inputs.nixpkgs.lib.mkOption {
-              type = inputs.nixpkgs.lib.types.lazyAttrsOf inputs.nixpkgs.lib.types.raw;
-              default = { };
-              description = "Darwin modules to be exported from this flake.";
-            };
-          }
-        ];
-
-        flake = {
-          # Host configurations are defined in modules/*
-        };
-      }
-    );
+    inputs@{ flake-parts, import-tree, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } (import-tree ./modules);
 }

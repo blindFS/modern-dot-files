@@ -1,5 +1,12 @@
 { inputs, self, ... }:
 {
+  imports = [
+    # The flakeModule provides:
+    # - flake.homeConfigurations option (for proper merging across modules)
+    # - flake.homeModules option (for reusable modules)
+    inputs.home-manager.flakeModules.home-manager
+  ];
+
   flake.darwinModules.homeManager =
     { pkgs, ... }:
     {
