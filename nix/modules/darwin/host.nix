@@ -12,12 +12,13 @@
     { ... }:
     {
       imports = [
+        self.darwinModules.cli
         self.darwinModules.desktop
+        self.darwinModules.dev
         self.darwinModules.envvar
         self.darwinModules.fonts
         self.darwinModules.homeManager
         self.darwinModules.homebrew
-        self.darwinModules.misc
         self.darwinModules.nix
         self.darwinModules.preferrence
       ];

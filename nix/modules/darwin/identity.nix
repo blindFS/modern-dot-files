@@ -1,4 +1,3 @@
-{ ... }:
 {
   flake.identity = {
     username = "farseerhe";

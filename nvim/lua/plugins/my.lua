@@ -362,9 +362,6 @@ return {
     opts = function(_, opts)
       -- use virtual_lines instead of virtual_text
       local lspconfig = require("lspconfig")
-      local get_flake_cmd = string.format('(builtins.getFlake "%s/nix")', vim.env.HOME)
-      local flake_os_cmd = string.format("%s.darwinConfigurations.%s.options", get_flake_cmd, vim.fn.hostname())
-      local flake_hm_cmd = string.format("%s.homeConfigurations.%s.options", get_flake_cmd, vim.env.USER)
       lspconfig.nixd.setup({
         cmd = { "nixd" },
         filetypes = { "nix" },
@@ -372,14 +369,6 @@ return {
           nixd = {
             formatting = {
               command = { "nixfmt" },
-            },
-            options = {
-              nixos = {
-                expr = flake_os_cmd,
-              },
-              home_manager = {
-                expr = flake_hm_cmd,
-              },
             },
           },
         },
@@ -409,7 +398,6 @@ return {
   },
   {
     "stevearc/conform.nvim",
-    dependencies = { "mason.nvim" },
     event = "VeryLazy",
     opts = {
       formatters_by_ft = {

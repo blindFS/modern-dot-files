@@ -11,6 +11,7 @@ in
     self.homeModules.bat
     self.homeModules.ghostty
     self.homeModules.git
+    self.homeModules.nh
     self.homeModules.nushell
     self.homeModules.security
     self.homeModules.sketchybar

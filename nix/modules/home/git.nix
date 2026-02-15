@@ -45,5 +45,7 @@
         ];
       };
     };
+
+    programs.gh.enable = true;
   };
 }
