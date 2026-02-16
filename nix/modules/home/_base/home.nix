@@ -1,8 +1,4 @@
-{
-  lib,
-  self,
-  ...
-}:
+{ lib, self, ... }:
 let
   username = self.identity.username;
 in

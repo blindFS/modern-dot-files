@@ -43,8 +43,21 @@
               set -ga status-right "#[bg=#{@thm_mantle},fg=#{@thm_blue}] 󰭦 %Y-%m-%d 󰅐 %H:%M "
 
               # window style
-              set -g window-status-separator '|'
               set -g status-justify 'absolute-centre'
+
+              set -g @catppuccin_window_status_style 'custom'
+              set -g @catppuccin_window_number ""
+              set -g @catppuccin_window_text "#[fg=#{@thm_rosewater},bg=#{@thm_mantle}] #W"
+              set -g @catppuccin_window_current_number ""
+              set -g @catppuccin_window_current_text "#[fg=#{@thm_mantle},bg=#{@thm_green}] #W"
+              set -g @catppuccin_window_flags "icon" # none, icon, or text
+              set -g @catppuccin_window_flags_icon_last " " # -
+              set -g @catppuccin_window_flags_icon_current " " # *
+              set -g @catppuccin_window_flags_icon_zoom " " # Z
+              set -g @catppuccin_window_flags_icon_mark " " # M
+              set -g @catppuccin_window_flags_icon_silent " " # ~
+              set -g @catppuccin_window_flags_icon_activity " " # #
+              set -g @catppuccin_window_flags_icon_bell " " # !
             '';
           }
         ];
