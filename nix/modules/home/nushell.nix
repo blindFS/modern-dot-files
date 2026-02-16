@@ -1,6 +1,6 @@
 { lib, self, ... }:
 {
-  flake.darwinModules.homebrewNushell = {
+  flake.darwinModules.homebrew = {
     homebrew.brews = [ "nushell" ];
   };
 

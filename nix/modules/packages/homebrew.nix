@@ -1,11 +1,7 @@
 { inputs, self, ... }:
 {
   flake.darwinModules.homebrew = {
-    imports = [
-      inputs.nix-homebrew.darwinModules.nix-homebrew
-      self.darwinModules.homebrewNushell
-      self.darwinModules.homebrewGhostty
-    ];
+    imports = [ inputs.nix-homebrew.darwinModules.nix-homebrew ];
 
     # nix-homebrew configuration
     nix-homebrew = {

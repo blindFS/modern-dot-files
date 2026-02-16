@@ -1,6 +1,6 @@
 # Darwin flake-parts integration
 # Uses official nix-darwin.flakeModules.default
-{ inputs, ... }:
+{ lib, inputs, ... }:
 {
   # Define flake.darwinModules for merging
   # flake.nixosModules is provided by flake-parts
@@ -9,7 +9,8 @@
     inputs.nix-darwin.flakeModules.default
     {
       options.flake.darwinModules = inputs.nixpkgs.lib.mkOption {
-        type = inputs.nixpkgs.lib.types.lazyAttrsOf inputs.nixpkgs.lib.types.raw;
+        # type = lib.types.lazyAttrsOf inputs.nixpkgs.lib.types.raw;
+        type = lib.types.attrsOf lib.types.deferredModule;
         default = { };
         description = "Darwin system modules.";
       };
