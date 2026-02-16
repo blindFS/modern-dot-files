@@ -1,4 +1,4 @@
-{ self, ... }:
+{ lib, self, ... }:
 let
   cs = self.theme.colors_xargb;
   color-alpha = hex: alpha: builtins.replaceStrings [ "0xff" ] [ "0x${alpha}" ] hex;
@@ -14,7 +14,7 @@ in
       launchd.user.agents.borders = {
         serviceConfig = {
           ProgramArguments = [
-            "${pkgs.jankyborders}/bin/borders"
+            "${lib.getExe pkgs.jankyborders}"
             "hidpi=on"
             "width=${width}"
             "active_color=${active_color}"

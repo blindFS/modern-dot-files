@@ -1,8 +1,9 @@
+{ lib, ... }:
 {
   flake.darwinModules.aerospace =
     { pkgs, ... }:
     let
-      trigger = event: variables: "${pkgs.sketchybar}/bin/sketchybar --trigger ${event} ${variables}";
+      trigger = event: variables: "${lib.getExe pkgs.sketchybar} --trigger ${event} ${variables}";
       aeroswitch = mode: [
         "mode ${mode}"
         ("exec-and-forget" + trigger "aerospace_mode_change" "MODE=${mode}")

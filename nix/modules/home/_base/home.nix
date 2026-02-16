@@ -8,12 +8,10 @@ in
     self.homeModules.ghostty
     self.homeModules.git
     self.homeModules.nh
-    self.homeModules.nushell
     self.homeModules.security
+    self.homeModules.shell
     self.homeModules.sketchybar
-    self.homeModules.starship
     self.homeModules.tmux
-    self.homeModules.zsh
   ];
 
   # Home Manager needs a bit of information about you and the
