@@ -1,4 +1,9 @@
-{ inputs, self, ... }:
+{
+  lib,
+  inputs,
+  self,
+  ...
+}:
 {
   imports = [
     # The flakeModule provides:
@@ -8,7 +13,7 @@
   ];
 
   flake.darwinModules.homeManager =
-    { pkgs, ... }:
+    { pkgs, config, ... }:
     {
       imports = [
         inputs.home-manager.darwinModules.home-manager
@@ -20,7 +25,32 @@
         extraSpecialArgs = {
           inherit inputs self pkgs;
         };
-        users.${self.identity.username} = import ../home/_base/home.nix;
+        users.${self.identity.username} = {
+          imports = [
+            self.homeModules.bat
+            self.homeModules.ghostty
+            self.homeModules.git
+            self.homeModules.nh
+            self.homeModules.security
+            self.homeModules.shell
+            self.homeModules.sketchybar
+            self.homeModules.tmux
+          ];
+
+          # Home Manager needs a bit of information about you and the
+          # paths it should manage.
+          home.username = self.identity.username;
+          # TODO: get rid of mkForce
+          home.homeDirectory = lib.mkForce config.environment.variables.HOME;
+
+          # use XDG_CONFIG_HOME if set
+          xdg.enable = true;
+
+          home.sessionVariables.EDITOR = "nvim";
+          home.stateVersion = "26.05";
+
+          programs.home-manager.enable = true;
+        };
       };
     };
 }

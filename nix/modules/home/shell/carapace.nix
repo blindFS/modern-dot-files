@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, self, ... }:
 {
   flake.homeModules.carapace =
     { pkgs, ... }:
@@ -9,6 +9,7 @@
           ''
             fpath=(/run/current-system/sw/share/zsh/site-functions \
               /opt/homebrew/share/zsh/site-functions \
+              /etc/profiles/per-user/${self.identity.username}/share/zsh/site-functions \
               $XDG_CONFIG_HOME/carapace/bridge/zsh/site-functions \
               $fpath)
             autoload -U compinit && compinit

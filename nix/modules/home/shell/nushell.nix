@@ -1,4 +1,4 @@
-{ lib, self, ... }:
+{ self, ... }:
 {
   flake.darwinModules.homebrew = {
     homebrew.brews = [ "nushell" ];
@@ -13,13 +13,9 @@
       xdg.configFile."nushell/env.nu".text =
         # nu
         ''
-          const nix_path = [
-            ${lib.concatStringsSep "\n  " self.paths}
-          ]
           $env.PATH = $env.PATH
             | split row (char esep)
             | append '/usr/local/bin'
-            | append $nix_path
             | append ($env.HOME | path join ".elan" "bin")
             | prepend ($env.HOME | path join ".cargo" "bin")
             | prepend ($env.HOME | path join ".local" "bin")

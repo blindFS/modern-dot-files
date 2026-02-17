@@ -1,4 +1,0 @@
-[language-server.nu-lsp]
-command = "/Users/farseerhe/Workspace/nushell/target/debug/nu"
-# command = "nu"
-args = ["--config", "/Users/farseerhe/.config/nushell/lsp.nu", "--lsp"]

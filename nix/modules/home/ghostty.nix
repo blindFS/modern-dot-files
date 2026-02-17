@@ -7,8 +7,9 @@
   flake.homeModules.ghostty =
     { pkgs, ... }:
     {
+      # need to call zsh first in initial-command to load env variables set by nix
       xdg.configFile."ghostty/config".text = ''
-        initial-command = ${lib.getExe pkgs.tmux} new -A -s dev
+        initial-command = zsh -l -c "${lib.getExe pkgs.tmux} new -A -s dev"
         font-family = "${self.font.monofont}"
         font-size = 15
         theme = "${builtins.split "_" self.theme.colorscheme |> builtins.head}"

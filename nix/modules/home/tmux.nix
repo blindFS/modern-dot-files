@@ -1,4 +1,3 @@
-{ self, ... }:
 {
   flake.homeModules.tmux =
     { pkgs, ... }:
@@ -62,7 +61,6 @@
           }
         ];
         extraConfig = ''
-          set-env -g XDG_CONFIG_HOME "/Users/${self.identity.username}/.config"
           set-option -g status-position top
           set -g set-titles on
           set -g set-titles-string '#I:#W'

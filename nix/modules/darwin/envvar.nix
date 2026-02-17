@@ -1,19 +1,22 @@
-{ lib, self, ... }:
+{ self, ... }:
+let
+  username = self.identity.username;
+  home = "/Users/${username}";
+  config_home = "${home}/.config";
+in
 {
   flake.darwinModules.envvar =
     { ... }:
     {
       environment.variables = {
-        XDG_CONFIG_HOME = "/Users/${self.identity.username}/.config";
+        HOME = home;
+        XDG_CONFIG_HOME = config_home;
       };
 
-      environment.systemPath = self.paths;
-      environment.etc."paths.d/100-nix".text = lib.concatStringsSep "\n" self.paths;
+      environment.systemPath = [
+        "/opt/homebrew/bin"
+        "/run/current-system/sw/bin"
+        "/etc/profiles/per-user/${username}/bin"
+      ];
     };
-
-  flake.paths = [
-    "/opt/homebrew/bin"
-    "/run/current-system/sw/bin"
-    "/etc/profiles/per-user/${self.identity.username}/bin"
-  ];
 }

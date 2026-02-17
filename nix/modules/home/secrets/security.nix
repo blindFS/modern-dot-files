@@ -1,4 +1,4 @@
-{ inputs, self, ... }:
+{ inputs, ... }:
 {
   flake.homeModules.security =
     { pkgs, ... }:
@@ -14,7 +14,7 @@
       # decrypt secrets
       sops.defaultSopsFile = ./secrets.yaml;
       sops.defaultSopsFormat = "yaml";
-      sops.age.keyFile = "/Users/${self.identity.username}/.ssh/nix.key";
+      sops.age.keyFile = "${builtins.getEnv "HOME"}/.ssh/nix.key";
       sops.secrets."llm/gemini_api_key" = { };
     };
 }
