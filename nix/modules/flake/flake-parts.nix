@@ -2,9 +2,10 @@
 {
   imports = [ inputs.flake-parts.flakeModules.modules ];
 
-  config = {
-    systems = [
-      self.identity.arch
-    ];
-  };
+  # for nixd completion
+  debug = true;
+
+  systems = [
+    self.identity.arch
+  ];
 }

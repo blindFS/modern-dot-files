@@ -371,6 +371,7 @@ return {
         get_flake_cmd,
         host_name
       )
+      local flake_fp_cmd = string.format("%s.debug.options", get_flake_cmd)
       lspconfig.nixd.setup({
         cmd = { "nixd" },
         filetypes = { "nix" },
@@ -382,6 +383,7 @@ return {
             options = {
               darwin = { expr = flake_os_cmd },
               home_manager = { expr = flake_hm_cmd },
+              flake_parts = { expr = flake_fp_cmd },
             },
           },
         },

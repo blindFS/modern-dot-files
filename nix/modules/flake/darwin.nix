@@ -8,8 +8,8 @@
   imports = [
     inputs.nix-darwin.flakeModules.default
     {
-      options.flake.darwinModules = inputs.nixpkgs.lib.mkOption {
-        # type = lib.types.lazyAttrsOf inputs.nixpkgs.lib.types.raw;
+      options.flake.darwinModules = lib.mkOption {
+        # type = lib.types.lazyAttrsOf lib.types.raw;
         type = lib.types.attrsOf lib.types.deferredModule;
         default = { };
         description = "Darwin system modules.";
