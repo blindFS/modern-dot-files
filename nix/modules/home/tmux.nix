@@ -73,5 +73,18 @@
           set -ga terminal-features ",*:hyperlinks"
         '';
       };
+
+      # required for sesh tmux integration
+      programs.fzf.tmux.enableShellIntegration = true;
+
+      programs.sesh = {
+        enable = true;
+        tmuxKey = "s";
+        settings = {
+          default_session = {
+            preview_command = "eza --tree -L 3 --icons=always --color=always {}";
+          };
+        };
+      };
     };
 }

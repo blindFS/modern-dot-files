@@ -14,7 +14,6 @@ use fzf.nu [
   update_manpage_cache
   atuin_menus_func
 ]
-use sesh.nu sesh_connect
 source $themes_config_file
 
 $env.config.completions.external.completer = {|span| carapace_by_fzf $span }
@@ -108,16 +107,6 @@ $env.config.keybindings ++= [
     mode: [emacs vi_insert vi_normal]
     event: {send: menu name: my_history_menu}
     # event: {send: menu name: ide_completion_menu}
-  }
-  {
-    name: sesh
-    modifier: control
-    keycode: char_s
-    mode: [emacs vi_insert vi_normal]
-    event: {
-      send: executehostcommand
-      cmd: sesh_connect
-    }
   }
   {
     name: vicmd_history_menu

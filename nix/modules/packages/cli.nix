@@ -16,7 +16,6 @@
         imagemagick
         jc
         ripgrep
-        sesh
         tldr
         uv
         vivid
