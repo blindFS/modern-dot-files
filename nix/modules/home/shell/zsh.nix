@@ -1,7 +1,7 @@
-{ self, ... }:
-{
-  flake.homeModules.zsh = {
-    home.file.".zshrc".text =
+{ lib, ... }:
+let
+  zshConfigEarlyInit =
+    lib.mkOrder 500
       # sh
       ''
         zmodload zsh/zprof
@@ -32,7 +32,11 @@
 
         zinit ice wait'1' lucid
         zinit light Aloxaf/fzf-tab
-
+      '';
+  zshConfig =
+    lib.mkOrder 1000
+      # sh
+      ''
         bindkey -v
         bindkey -M vicmd 'gh' vi-beginning-of-line
         bindkey -M vicmd 'gl' vi-end-of-line
@@ -52,36 +56,34 @@
         bindkey -M menuselect 'k' vi-up-line-or-history
         bindkey -M menuselect 'l' vi-forward-char
 
-        if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
-        if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
-
-        # ---- Prompt ----
-
-        eval "$(starship init zsh)"
-
-        # ---- Zoxide (better cd) ----
-        eval "$(zoxide init zsh)"
-        alias cd="z"
-        alias zi="__zoxide_zi"
-
-        # ---- Carapace (external completion) ----
-        eval "$(carapace carapace zsh)"
-        zstyle ':completion:*:*:*:*:*'            menu             select
-        zstyle ':completion:*:options'            description      'yes'
-        zstyle ':completion:*:options'            auto-description '%d'
-        zstyle ':completion:*:descriptions'       format           $' \e[30;42m 󰵅 %d \e[0m\e[32m\e[0m'
-        zstyle ':completion:*:messages'           format           $' \e[30;45m 󰍡 %d \e[0m\e[35m\e[0m'
-        zstyle ':completion:*:warnings'           format           $' \e[30;41m  \e[0m\e[31m\e[0m'
-
-        alias ls='eza --color=always --long --no-filesize --icons=always --no-time --no-user --no-permissions'
-        alias ll='eza --color=always --long --git --icons=always'
-        alias boc='brew outdated --cask --greedy'
-
-        # env vars
-        export PATH="$HOME/bin:/usr/local/sbin:$PATH"
-        export LANG=en_US.UTF-8
-        export LC_ALL=en_US.UTF-8
-        export LS_COLORS=$(vivid generate ${builtins.replaceStrings [ "_" ] [ "-" ] self.theme.colorscheme})
+        zstyle ':completion:*:*:*:*:*'      menu             select
+        zstyle ':completion:*:options'      description      'yes'
+        zstyle ':completion:*:options'      auto-description '%d'
+        zstyle ':completion:*:descriptions' format           $' \e[30;42m 󰵅 %d \e[0m\e[32m\e[0m'
+        zstyle ':completion:*:messages'     format           $' \e[30;45m 󰍡 %d \e[0m\e[35m\e[0m'
+        zstyle ':completion:*:warnings'     format           $' \e[30;41m  \e[0m\e[31m\e[0m'
       '';
-  };
+in
+{
+  flake.homeModules.zsh =
+    { ... }:
+    {
+      programs.zsh = {
+        enable = true;
+        initContent = lib.mkMerge [
+          zshConfigEarlyInit
+          zshConfig
+        ];
+        sessionVariables = {
+          LANG = "en_US.UTF-8";
+          LC_ALL = "en_US.UTF-8";
+        };
+        shellAliases = {
+          boc = "brew outdated --cask --greedy";
+          ll = "eza --tree -L 1 -l -a";
+          vim = "nvim";
+          zi = "__zoxide_zi";
+        };
+      };
+    };
 }

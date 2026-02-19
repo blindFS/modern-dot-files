@@ -82,6 +82,7 @@
 
       programs.sesh = {
         enable = true;
+        enableAlias = false;
         tmuxKey = "s";
         settings = {
           default_session = {

@@ -4,6 +4,8 @@
     { pkgs, ... }:
     {
       programs.carapace.enable = true;
+      # manually handled
+      programs.carapace.enableNushellIntegration = false;
 
       xdg.configFile."carapace/bridge/zsh/.zshrc" = {
         text =

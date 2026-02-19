@@ -4,8 +4,6 @@
     {
       environment.systemPackages = with pkgs; [
         aria2
-        atuin
-        eza
         fd
         ffmpeg
         gotop
@@ -16,10 +14,8 @@
         ripgrep
         tldr
         uv
-        vivid
         yazi
         yt-dlp
-        zoxide
       ];
     };
 }

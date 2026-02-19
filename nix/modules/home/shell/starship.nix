@@ -20,7 +20,6 @@ in
   flake.homeModules.starship = {
     programs.starship = {
       enable = true;
-      enableNushellIntegration = false; # manually handled
 
       settings = {
         add_newline = false;
