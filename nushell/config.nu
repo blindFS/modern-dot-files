@@ -1,7 +1,6 @@
 # env-vars
 source env.nu
 source style.nu
-$env.FZF_DEFAULT_COMMAND = "fd --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9"
 $env.CARAPACE_LENIENT = 1
 $env.CARAPACE_BRIDGES = 'zsh'
 $env.MANPAGER = "col -bx | bat -l man -p"

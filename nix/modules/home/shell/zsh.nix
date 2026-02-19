@@ -55,12 +55,6 @@
         if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
         if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
-        # ---- FZF ----
-
-        export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9"
-        export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-        export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9"
-
         # ---- Prompt ----
 
         eval "$(starship init zsh)"

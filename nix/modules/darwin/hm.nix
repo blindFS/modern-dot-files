@@ -28,6 +28,7 @@
         users.${self.identity.username} = {
           imports = [
             self.homeModules.bat
+            self.homeModules.fzf
             self.homeModules.ghostty
             self.homeModules.git
             self.homeModules.nh

@@ -3,6 +3,8 @@
   flake.homeModules.carapace =
     { pkgs, ... }:
     {
+      programs.carapace.enable = true;
+
       xdg.configFile."carapace/bridge/zsh/.zshrc" = {
         text =
           # sh

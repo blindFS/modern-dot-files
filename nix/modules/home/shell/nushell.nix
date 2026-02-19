@@ -44,16 +44,7 @@
           $env.PROMPT_INDICATOR_VI_INSERT = {|| prompt_decorator "${cs.black}" "${cs.light_green}" ($dev_tag + "󰏫") }
           $env.PROMPT_INDICATOR_VI_NORMAL = {|| prompt_decorator "${cs.black}" "${cs.yellow}" ($dev_tag + "") }
           $env.LS_COLORS = (vivid generate ${colorscheme-dash} | str trim)
-          $env.FZF_DEFAULT_OPTS = (
-            "--layout reverse --header-first --tmux center,80%,60% "
-            + "--pointer ▶ --marker 󰍕 --preview-window right,65% "
-            + "--bind 'bs:backward-delete-char/eof,tab:accept-or-print-query,ctrl-t:toggle+down,ctrl-s:change-multi' "
-            + $"--prompt '(prompt_decorator '${cs.black}' '${cs.green}' '▓▒░ ' false)' "
-            + "--color=fg:${cs.white},hl:${cs.red} "
-            + "--color=fg+:${cs.cyan},bg+:${cs.black},hl+:${cs.red} "
-            + "--color=info:${cs.blue},prompt:${cs.yellow},pointer:${cs.red} "
-            + "--color=marker:${cs.white},spinner:${cs.green},header:${cs.white}"
-          )
+          $env.FZF_DEFAULT_OPTS = ($env.FZF_DEFAULT_OPTS? | default "") + $" --prompt '(prompt_decorator '${cs.black}' '${cs.green}' '▓▒░ ' false)'"
           const themes_config_file = "themes/${self.theme.colorscheme}.nu"
         '';
     };
