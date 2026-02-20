@@ -1,6 +1,6 @@
 {
   flake.homeModules.tmux =
-    { config, pkgs, ... }:
+    { pkgs, ... }:
     {
       programs.tmux = {
         enable = true;
@@ -68,9 +68,6 @@
           bind ^j resizep -D 10
           bind ^h resizep -L 10
           bind ^l resizep -R 10
-
-          set-env -g FZF_DEFAULT_COMMAND "${config.programs.fzf.defaultCommand}"
-          set-env -g FZF_DEFAULT_OPTS "${config.home.sessionVariables.FZF_DEFAULT_OPTS}"
 
           # Clickable links
           set -ga terminal-features ",*:hyperlinks"

@@ -4,7 +4,6 @@
     {
       environment.systemPackages = with pkgs; [
         aria2
-        fd
         ffmpeg
         gotop
         graphviz

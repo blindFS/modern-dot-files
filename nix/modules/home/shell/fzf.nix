@@ -1,14 +1,35 @@
-{ self, ... }:
+{ lib, self, ... }:
 let
   cs = self.theme.colors;
+  keybindings = {
+    "bs" = "backward-delete-char/eof";
+    "tab" = "accept-or-print-query";
+    "ctrl-t" = "toggle+down";
+    "ctrl-s" = "change-multi";
+  };
+  kbd_opts = lib.mapAttrsToList (k: v: "${k}:${v}") keybindings |> lib.concatStringsSep ",";
 in
 {
   flake.homeModules.fzf =
     { ... }:
     {
+      programs.fd = {
+        enable = true;
+        hidden = true;
+        ignores = [
+          ".git"
+          ".cache"
+          "*.bak"
+        ];
+        extraOptions = [
+          "--strip-cwd-prefix"
+          "--max-depth 9"
+        ];
+      };
+
       programs.fzf = {
         enable = true;
-        defaultCommand = "fd --hidden --strip-cwd-prefix --exclude .git --exclude .cache --max-depth 9";
+        defaultCommand = "fd";
         defaultOptions = [
           "--layout reverse"
           "--header-first"
@@ -16,7 +37,7 @@ in
           "--pointer ▶"
           "--marker 󰍕"
           "--preview-window right,65%"
-          "--bind 'bs:backward-delete-char/eof,tab:accept-or-print-query,ctrl-t:toggle+down,ctrl-s:change-multi'"
+          "--bind '${kbd_opts}'"
         ];
         colors = {
           fg = cs.white;
