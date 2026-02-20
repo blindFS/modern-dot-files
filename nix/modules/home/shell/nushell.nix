@@ -63,9 +63,12 @@
         enable = true;
         # installed via homebrew
         package = null;
-        shellAliases = pg.zsh.shellAliases // {
-          less = "less -R";
-        };
+        shellAliases = removeAttrs (
+          pg.zsh.shellAliases
+          // {
+            less = "less -R";
+          }
+        ) [ "ls" ];
         settings = {
           history = {
             file_format = "sqlite";

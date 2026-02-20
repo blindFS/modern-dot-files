@@ -3,41 +3,11 @@ let
   zshConfigEarlyInit =
     lib.mkOrder 500
       # sh
-      ''
-        zmodload zsh/zprof
-        zmodload zsh/complist
-
-        ZINIT_HOME="$HOME/.zinit/zinit.git"
-        [ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
-        [ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-        source "$ZINIT_HOME/zinit.zsh"
-
-        zinit light zsh-users/zsh-history-substring-search
-        zinit snippet OMZP::extract/extract.plugin.zsh
-
-        zinit wait lucid for \
-         atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
-            zdharma-continuum/fast-syntax-highlighting \
-         blockf \
-            zsh-users/zsh-completions \
-         atload"!_zsh_autosuggest_start" \
-            zsh-users/zsh-autosuggestions
-        export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-
-        zinit ice wait'0c' lucid atinit'zpcompinit;zpcdreplay'
-        zinit light hlissner/zsh-autopair
-
-        zinit ice depth=1
-        zinit light jeffreytse/zsh-vi-mode
-
-        zinit ice wait'1' lucid
-        zinit light Aloxaf/fzf-tab
-      '';
+      "zmodload zsh/zprof";
   zshConfig =
     lib.mkOrder 1000
       # sh
       ''
-        bindkey -v
         bindkey -M vicmd 'gh' vi-beginning-of-line
         bindkey -M vicmd 'gl' vi-end-of-line
         bindkey -M vicmd 'k' history-substring-search-up
@@ -51,6 +21,8 @@ let
         bindkey -M viins '^F' forward-word
         bindkey -M viins '^A' beginning-of-line
         bindkey -M viins '^E' end-of-line
+
+        zmodload zsh/complist
         bindkey -M menuselect 'h' vi-backward-char
         bindkey -M menuselect 'j' vi-down-line-or-history
         bindkey -M menuselect 'k' vi-up-line-or-history
@@ -70,6 +42,32 @@ in
     {
       programs.zsh = {
         enable = true;
+        defaultKeymap = "viins";
+
+        # plugins
+        historySubstringSearch.enable = true;
+        autosuggestion = {
+          enable = true;
+          strategy = [
+            "history"
+            "completion"
+          ];
+        };
+        syntaxHighlighting = {
+          enable = true;
+          highlighters = [
+            "brackets"
+            "cursor"
+          ];
+        };
+        antidote = {
+          enable = true;
+          plugins = [
+            "hlissner/zsh-autopair"
+            "Aloxaf/fzf-tab"
+          ];
+        };
+
         initContent = lib.mkMerge [
           zshConfigEarlyInit
           zshConfig
