@@ -1,4 +1,7 @@
 { self, ... }:
+let
+  cs = self.theme.colors;
+in
 {
   flake.homeModules.git =
     { ... }:
@@ -25,11 +28,15 @@
 
       programs.delta = {
         enable = true;
+        enableGitIntegration = true;
         options = {
           navigate = true;
-          side-by-side = false;
           syntax-theme = self.theme.colorscheme;
+          line-numbers = true;
+          side-by-side = false;
           diff-so-fancy = true;
+          minus-style = "syntax strike ${cs.dark_grey}";
+          plus-style = "syntax ${cs.grey}";
           line-numbers-minus-style = "bold red";
           line-numbers-plus-style = "bold green";
         };
@@ -42,7 +49,7 @@
           gui.nerdFontsVersion = "3";
           git.pagers = [
             {
-              pager = "delta --paging=never --diff-so-fancy --syntax-theme=${self.theme.colorscheme}";
+              pager = "delta --paging=never";
               colorArg = "always";
             }
           ];
