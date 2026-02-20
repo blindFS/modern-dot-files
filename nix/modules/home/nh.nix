@@ -1,6 +1,8 @@
 {
-  flake.homeModules.nh = {
-    programs.nh.enable = true;
-    programs.nh.flake = "${builtins.getEnv "HOME"}/nix";
-  };
+  flake.homeModules.nh =
+    { osConfig, ... }:
+    {
+      programs.nh.enable = true;
+      programs.nh.flake = "${osConfig.environment.variables.HOME}/nix";
+    };
 }
