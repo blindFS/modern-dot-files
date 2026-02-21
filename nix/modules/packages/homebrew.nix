@@ -19,10 +19,7 @@
       onActivation.upgrade = false;
 
       brews = [
-        "neovim"
-        "node"
         "mole"
-        "gemini-cli"
         "openclaw-cli"
         "steipete/tap/remindctl"
       ];
@@ -41,7 +38,6 @@
         "raycast"
         "steam"
         "yam-display"
-        "zed"
       ];
     };
   };

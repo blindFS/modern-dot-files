@@ -77,6 +77,13 @@
       # required for sesh tmux integration
       programs.fzf.tmux.enableShellIntegration = true;
 
+      programs.eza = {
+        enable = true;
+        enableNushellIntegration = false;
+        colors = "always";
+        icons = "always";
+      };
+
       programs.sesh = {
         enable = true;
         enableAlias = false;

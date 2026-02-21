@@ -27,8 +27,6 @@
         };
         users.${self.identity.username} = {
           imports = [
-            self.homeModules.bat
-            self.homeModules.fzf
             self.homeModules.ghostty
             self.homeModules.git
             self.homeModules.nh
@@ -36,6 +34,7 @@
             self.homeModules.shell
             self.homeModules.sketchybar
             self.homeModules.tmux
+            self.homeModules.zed
           ];
 
           # Home Manager needs a bit of information about you and the

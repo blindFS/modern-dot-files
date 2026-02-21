@@ -3,6 +3,17 @@ let
   topiary-nu = inputs.topiary-nu.packages.${self.identity.arch}.default;
 in
 {
+  flake.darwinModules.homebrew = {
+    homebrew.brews = [
+      "neovim"
+      "node"
+      "gemini-cli"
+    ];
+    homebrew.casks = [
+      "flutter"
+    ];
+  };
+
   flake.darwinModules.dev =
     { pkgs, ... }:
     {
