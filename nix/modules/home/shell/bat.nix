@@ -12,7 +12,7 @@ in
           pager = "less -FR";
           theme = cs;
         };
-        themes."${cs}".src = ../../theme/${cs}.tmTheme;
+        themes.${cs}.src = ../../theme/${cs}.tmTheme;
       };
     };
 }

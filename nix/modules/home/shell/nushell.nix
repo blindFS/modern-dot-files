@@ -1,12 +1,13 @@
 { lib, self, ... }:
 {
-  flake.darwinModules.homebrew = {
-    homebrew.brews = [ "nushell" ];
-  };
+  flake.darwinModules.homebrew.homebrew.brews = [ "nushell" ];
 
   flake.homeModules.nushell =
     { config, ... }:
     let
+      fancy = config.programs.starship.enable;
+      prefix = lib.optionalString fancy config.starship.prefix;
+      arrow = lib.optionalString fancy config.starship.arrow;
       cs = self.theme.colors;
       pg = config.programs;
       colorscheme-dash = builtins.replaceStrings [ "_" ] [ "-" ] self.theme.colorscheme;
@@ -46,17 +47,17 @@
                   prompt_decorator
                   $extra_colors.prompt_symbol_color
                   'light_blue'
-                  '▓▒░ Ctrl-d to del '
+                  '${prefix} Ctrl-d to del '
                   false
                 )
               )
             }
           ]
         '';
-      completer_config =
-        if pg.carapace.enable && pg.atuin.enable && pg.fzf.enable then carapace_config else "";
-      vivid_config =
-        if pg.vivid.enable then "$env.LS_COLORS = (vivid generate ${colorscheme-dash} | str trim)" else "";
+      completer_config = lib.optionalString (
+        pg.carapace.enable && pg.atuin.enable && pg.fzf.enable
+      ) carapace_config;
+      vivid_config = lib.optionalString pg.vivid.enable "$env.LS_COLORS = (vivid generate ${colorscheme-dash} | str trim)";
     in
     {
       programs.nushell = {
@@ -100,8 +101,6 @@
               | prepend ($env.HOME | path join ".local" "bin")
               | uniq
 
-            $env.CARAPACE_LENIENT = 1
-            $env.CARAPACE_BRIDGES = 'zsh'
             $env.MANPAGER = "col -bx | bat -l man -p"
             $env.MANPAGECACHE = ($nu.default-config-dir | path join 'mancache.txt')
             $env.RUST_BACKTRACE = 1
@@ -204,7 +203,7 @@
             let fg = {fg: $bg_color}
             let bg = {fg: $font_color bg: $bg_color}
             let startship_leading = if $with_starship { $"(ansi --escape {fg: $bg_color bg: $bg1})" } else ""
-            $"($startship_leading)(ansi --escape $bg)($symbol)(ansi reset)(ansi --escape $fg)(ansi reset) "
+            $"($startship_leading)(ansi --escape $bg)($symbol)(ansi reset)(ansi --escape $fg)${arrow}(ansi reset) "
           }
 
           let dev_tag = if (
@@ -213,9 +212,9 @@
           $env.PROMPT_INDICATOR = {|| "> " }
           $env.PROMPT_INDICATOR_VI_INSERT = {|| prompt_decorator "${cs.black}" "${cs.light_green}" ($dev_tag + "󰏫") }
           $env.PROMPT_INDICATOR_VI_NORMAL = {|| prompt_decorator "${cs.black}" "${cs.yellow}" ($dev_tag + "") }
-          ${vivid_config}
-          $env.FZF_DEFAULT_OPTS = ($env.FZF_DEFAULT_OPTS? | default "") + $" --prompt '(prompt_decorator '${cs.black}' '${cs.green}' '▓▒░ ' false)'"
           const themes_config_file = "themes/${self.theme.colorscheme}.nu"
+
+          ${vivid_config}
         '';
     };
 }

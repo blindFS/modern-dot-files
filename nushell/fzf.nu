@@ -65,17 +65,6 @@ def _quote_if_not_empty [] {
   if ($in | str trim | is-empty) { '' } else { $"`($in)`" }
 }
 
-def _prompt_decorator [
-  fg_color: string
-  bg_color: string
-  symbol: string
-  type: string
-] {
-  let fg = {fg: $bg_color}
-  let bg = {fg: $fg_color bg: $bg_color}
-  $"(ansi --escape $bg)▓▒░ ($type) ($symbol)(ansi reset)(ansi --escape $fg)(ansi reset) "
-}
-
 def _build_fzf_prompt [
   key: string
 ] {
@@ -86,11 +75,10 @@ def _build_fzf_prompt [
     | default $fzf_prompt_default_setting.bg bg
     | default $fzf_prompt_default_setting.symbol symbol
   (
-    _prompt_decorator
+    prompt_decorator
     $prompt_config.fg
     $prompt_config.bg
-    $prompt_config.symbol
-    $key
+    $"($prompt_config.symbol) ($key)"
   )
 }
 

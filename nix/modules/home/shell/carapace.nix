@@ -1,7 +1,10 @@
-{ lib, self, ... }:
+{ lib, ... }:
+let
+  suffix = "/zsh/site-functions";
+in
 {
   flake.homeModules.carapace =
-    { pkgs, ... }:
+    { osConfig, ... }:
     {
       programs.carapace.enable = true;
       # manually handled
@@ -11,14 +14,23 @@
         text =
           # sh
           ''
-            fpath=(/run/current-system/sw/share/zsh/site-functions \
-              /opt/homebrew/share/zsh/site-functions \
-              $(readlink -f /etc/profiles/per-user/${self.identity.username}/share/zsh/site-functions) \
-              $XDG_CONFIG_HOME/carapace/bridge/zsh/site-functions \
-              $fpath)
+            for profile in ''${(z)NIX_PROFILES}; do
+              local fp=$profile/share${suffix}
+              # follow symlinks
+              fpath+=(''${fp:A})
+            done
+
+            fpath+=($XDG_CONFIG_HOME/carapace/bridge${suffix})
+            ${lib.optionalString osConfig.nix-homebrew.enable "fpath+=(${osConfig.homebrew.prefix}${suffix})"}
+
             autoload -U compinit && compinit
           '';
-        onChange = "${lib.getExe pkgs.carapace} --clear-cache";
+        onChange = "carapace --clear-cache";
+      };
+
+      home.sessionVariables = {
+        CARAPACE_LENIENT = "1";
+        CARAPACE_BRIDGES = "zsh";
       };
     };
 }

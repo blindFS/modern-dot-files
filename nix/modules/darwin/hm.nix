@@ -13,7 +13,7 @@
   ];
 
   flake.darwinModules.homeManager =
-    { pkgs, config, ... }:
+    { pkgs, ... }:
     {
       imports = [
         inputs.home-manager.darwinModules.home-manager
@@ -41,7 +41,7 @@
           # paths it should manage.
           home.username = self.identity.username;
           # TODO: get rid of mkForce
-          home.homeDirectory = lib.mkForce config.environment.variables.HOME;
+          home.homeDirectory = lib.mkForce /Users/${self.identity.username};
 
           # use XDG_CONFIG_HOME if set
           xdg.enable = true;

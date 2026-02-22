@@ -8,10 +8,18 @@ let
     "ctrl-s" = "change-multi";
   };
   kbd_opts = lib.mapAttrsToList (k: v: "${k}:${v}") keybindings |> lib.concatStringsSep ",";
+  ansi_black_green = "[30;42m";
+  ansi_reset = "[0m";
+  ansi_green = "[32m";
 in
 {
   flake.homeModules.fzf =
-    { ... }:
+    { config, ... }:
+    let
+      fancy = config.programs.starship.enable;
+      prefix = lib.optionalString fancy config.starship.prefix;
+      arrow = lib.optionalString fancy config.starship.arrow;
+    in
     {
       programs.fd = {
         enable = true;
@@ -37,6 +45,7 @@ in
           "--pointer ▶"
           "--marker 󰍕"
           "--preview-window right,65%"
+          "--prompt '${ansi_black_green}${prefix} ${ansi_reset}${ansi_green}${arrow}${ansi_reset} '"
           "--bind '${kbd_opts}'"
         ];
         colors = {

@@ -1,8 +1,6 @@
 { self, ... }:
 {
-  flake.darwinModules.homebrew = {
-    homebrew.casks = [ "zed" ];
-  };
+  flake.darwinModules.homebrew.homebrew.casks = [ "zed" ];
 
   flake.homeModules.zed =
     { ... }:

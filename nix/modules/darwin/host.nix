@@ -1,8 +1,4 @@
-{
-  inputs,
-  self,
-  ...
-}:
+{ inputs, self, ... }:
 {
   flake.darwinConfigurations.${self.identity.hostname} = inputs.nix-darwin.lib.darwinSystem {
     modules = [ self.darwinModules.hostModule ];
@@ -15,7 +11,6 @@
         self.darwinModules.cli
         self.darwinModules.desktop
         self.darwinModules.dev
-        self.darwinModules.envvar
         self.darwinModules.fonts
         self.darwinModules.homeManager
         self.darwinModules.homebrew

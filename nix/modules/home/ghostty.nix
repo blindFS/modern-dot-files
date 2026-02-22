@@ -1,8 +1,6 @@
 { lib, self, ... }:
 {
-  flake.darwinModules.homebrew = {
-    homebrew.casks = [ "ghostty" ];
-  };
+  flake.darwinModules.homebrew.homebrew.casks = [ "ghostty" ];
 
   flake.homeModules.ghostty =
     { pkgs, ... }:

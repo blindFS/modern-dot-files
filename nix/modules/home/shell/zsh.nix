@@ -72,6 +72,8 @@ in
           zshConfigEarlyInit
           zshConfig
         ];
+        completionInit = "autoload -U compinit && compinit";
+
         sessionVariables = {
           LANG = "en_US.UTF-8";
           LC_ALL = "en_US.UTF-8";
