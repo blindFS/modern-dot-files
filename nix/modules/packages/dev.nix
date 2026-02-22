@@ -21,7 +21,6 @@ in
       environment.systemPackages = with pkgs; [
         elan
         # emacs30
-        helix
         nixd
         nixfmt
         rustup
