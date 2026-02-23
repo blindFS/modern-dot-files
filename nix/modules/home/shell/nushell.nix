@@ -187,6 +187,7 @@
             set auto_pair_keybindings
             use matchit.nu *
             set matchit_keybinding
+            source nix.nu
           '';
       };
 

@@ -16,6 +16,7 @@
         self.darwinModules.homebrew
         self.darwinModules.nix
         self.darwinModules.preferrence
+        self.darwinModules.raycast
       ];
 
       networking.hostName = self.identity.hostname;

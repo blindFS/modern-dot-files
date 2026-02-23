@@ -38,7 +38,7 @@ let
 in
 {
   flake.homeModules.zsh =
-    { ... }:
+    { config, osConfig, ... }:
     {
       programs.zsh = {
         enable = true;
@@ -79,10 +79,12 @@ in
           LC_ALL = "en_US.UTF-8";
         };
         shellAliases = {
-          boc = "brew outdated --cask --greedy";
-          ll = "eza --tree -L 1 -l -a";
           vim = "nvim";
-          zi = "__zoxide_zi";
+          boc = lib.mkIf (
+            lib.hasAttr "homebrew" osConfig && osConfig.homebrew.enable
+          ) "brew outdated --cask --greedy";
+          ll = lib.mkIf config.programs.eza.enable "eza --tree -L 1 -l -a";
+          zi = lib.mkIf config.programs.zoxide.enable "__zoxide_zi";
         };
       };
     };

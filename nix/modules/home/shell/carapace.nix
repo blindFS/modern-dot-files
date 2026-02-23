@@ -21,7 +21,9 @@ in
             done
 
             fpath+=($XDG_CONFIG_HOME/carapace/bridge${suffix})
-            ${lib.optionalString osConfig.nix-homebrew.enable "fpath+=(${osConfig.homebrew.prefix}${suffix})"}
+            ${lib.optionalString (
+              lib.hasAttr "homebrew" osConfig && osConfig.homebrew.enable
+            ) "fpath+=(${osConfig.homebrew.prefix}${suffix})"}
 
             autoload -U compinit && compinit
           '';
