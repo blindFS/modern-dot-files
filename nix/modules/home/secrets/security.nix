@@ -18,5 +18,7 @@
         age.keyFile = "${config.home.homeDirectory}/.ssh/nix.key";
         secrets."llm/gemini_api_key" = { };
       };
+
+      home.sessionVariables.GEMINI_API_KEY = "$(cat ${config.sops.secrets."llm/gemini_api_key".path})";
     };
 }

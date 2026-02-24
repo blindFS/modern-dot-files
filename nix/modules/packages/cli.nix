@@ -14,7 +14,6 @@
         tldr
         uv
         yazi
-        yt-dlp
       ];
     };
 }

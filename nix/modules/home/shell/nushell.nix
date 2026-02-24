@@ -10,7 +10,6 @@
       arrow = lib.optionalString fancy config.starship.arrow;
       cs = self.theme.colors;
       pg = config.programs;
-      colorscheme-dash = builtins.replaceStrings [ "_" ] [ "-" ] self.theme.colorscheme;
       carapace_config =
         # nu
         ''
@@ -57,7 +56,6 @@
       completer_config = lib.optionalString (
         pg.carapace.enable && pg.atuin.enable && pg.fzf.enable
       ) carapace_config;
-      vivid_config = lib.optionalString pg.vivid.enable "$env.LS_COLORS = (vivid generate ${colorscheme-dash} | str trim)";
     in
     {
       programs.nushell = {
@@ -214,8 +212,6 @@
           $env.PROMPT_INDICATOR_VI_INSERT = {|| prompt_decorator "${cs.black}" "${cs.light_green}" ($dev_tag + "󰏫") }
           $env.PROMPT_INDICATOR_VI_NORMAL = {|| prompt_decorator "${cs.black}" "${cs.yellow}" ($dev_tag + "") }
           const themes_config_file = "themes/${self.theme.colorscheme}.nu"
-
-          ${vivid_config}
         '';
     };
 }

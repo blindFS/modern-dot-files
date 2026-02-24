@@ -5,6 +5,7 @@ in
 {
   flake.darwinModules.homebrew = {
     homebrew.brews = [
+      "cocoapods"
       "neovim"
       "node"
       "gemini-cli"
