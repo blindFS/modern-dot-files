@@ -29,6 +29,8 @@
             light = "Ayu Mirage";
             dark = "Ayu Dark";
           };
+          inlay_hints.enabled = true;
+          show_whitespaces = "boundary";
         };
       };
     };

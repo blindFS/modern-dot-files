@@ -4,7 +4,7 @@ let
 in
 {
   flake.homeModules.carapace =
-    { osConfig, ... }:
+    { osConfig, pkgs, ... }:
     {
       programs.carapace.enable = true;
       # manually handled
@@ -23,11 +23,11 @@ in
             fpath+=($XDG_CONFIG_HOME/carapace/bridge${suffix})
             ${lib.optionalString (
               lib.hasAttr "homebrew" osConfig && osConfig.homebrew.enable
-            ) "fpath+=(${osConfig.homebrew.prefix}${suffix})"}
+            ) "fpath+=(${osConfig.homebrew.prefix}/share${suffix})"}
 
             autoload -U compinit && compinit
           '';
-        onChange = "carapace --clear-cache";
+        onChange = "${lib.getExe pkgs.carapace} --clear-cache";
       };
 
       home.sessionVariables = {
