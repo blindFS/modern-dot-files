@@ -8,6 +8,10 @@
       ];
 
       power.sleep.display = "never";
+      system.keyboard = {
+        enableKeyMapping = true;
+        swapLeftCommandAndLeftAlt = true;
+      };
       system.defaults = {
         dock = {
           autohide = true;
@@ -59,5 +63,16 @@
           };
         };
       };
+    };
+
+  flake.homeModules.config =
+    { ... }:
+    {
+      home.file."Library/KeyBindings/DefaultKeyBinding.dict".text = ''
+        {
+            "^u" = "deleteToBeginningOfLine:";
+            "^w" = "deleteWordBackward:";
+        }
+      '';
     };
 }

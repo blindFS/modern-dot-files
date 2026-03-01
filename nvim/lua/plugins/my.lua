@@ -394,6 +394,7 @@ return {
           -- "/Users/farseerhe/Workspace/nushell/target/debug/nu",
           "--config",
           vim.env.XDG_CONFIG_HOME .. "/nushell/lsp.nu",
+          "--experimental-options=[all]",
           "--lsp",
         },
         flags = { debounce_text_changes = 1000 },

@@ -22,7 +22,6 @@
 
         brews = [
           "mole"
-          "steipete/tap/remindctl"
         ];
         casks = [
           "balenaetcher"
@@ -31,7 +30,6 @@
           "discord"
           "dropbox"
           "iloader"
-          "karabiner-elements"
           "kicad"
           "macs-fan-control"
           "openscad"
@@ -41,7 +39,10 @@
         ];
       };
 
-      environment.variables.HOMEBREW_NO_AUTO_UPDATE = "1";
+      environment.variables = {
+        HOMEBREW_NO_AUTO_UPDATE = "1";
+        # HOMEBREW_CASK_OPTS = "--no-quarantine";
+      };
 
       environment.systemPath = [
         "${config.homebrew.prefix}/bin"

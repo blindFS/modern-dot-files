@@ -35,6 +35,7 @@
             self.homeModules.sketchybar
             self.homeModules.tmux
             self.homeModules.zed
+            self.homeModules.config
           ];
 
           # Home Manager needs a bit of information about you and the
