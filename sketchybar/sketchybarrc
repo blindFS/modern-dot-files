@@ -1,4 +1,4 @@
-#!/usr/bin/env nu
+#!/usr/bin/env nu -n --no-std-lib
 
 # This is a demo config to showcase some of the most important commands.
 # It is meant to be changed and configured, as it is intentionally kept sparse.

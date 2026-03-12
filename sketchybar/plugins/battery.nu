@@ -1,4 +1,4 @@
-#!/usr/bin/env nu
+#!/usr/bin/env nu -n --no-std-lib
 
 let raw_info = (pmset -g batt)
 let percentage = (

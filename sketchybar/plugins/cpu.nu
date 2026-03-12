@@ -1,4 +1,4 @@
-#!/usr/bin/env nu
+#!/usr/bin/env nu -n --no-std-lib
 
 let load = (
   sys cpu -l

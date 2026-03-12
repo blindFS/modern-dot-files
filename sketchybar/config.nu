@@ -1,4 +1,4 @@
-#!/usr/bin/env nu
+#!/usr/bin/env nu -n --no-std-lib
 use ./plugins/style.nu [
   colors
   monofont

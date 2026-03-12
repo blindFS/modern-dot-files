@@ -56,10 +56,10 @@ def is_pair_matched [
   } else {
     # for ([{
     mut count = 0
-    for it in $char_list {
-      if $it == $kp.left {
+    for item in $char_list {
+      if $item == $kp.left {
         $count += 1
-      } else if $it == $kp.right {
+      } else if $item == $kp.right {
         $count -= 1
         if $count < 0 {
           return false

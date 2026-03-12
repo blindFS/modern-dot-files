@@ -1,4 +1,4 @@
-#!/usr/bin/env nu
+#!/usr/bin/env nu -n --no-std-lib
 
 # The $NAME variable is passed from sketchybar and holds the name of
 # the item invoking this script:

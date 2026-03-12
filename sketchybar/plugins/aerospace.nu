@@ -1,4 +1,4 @@
-#!/usr/bin/env nu
+#!/usr/bin/env nu -n --no-std-lib
 
 use constants.nu get_icon_by_app_name
 use style.nu colors

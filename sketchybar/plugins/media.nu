@@ -1,4 +1,4 @@
-#!/usr/bin/env nu
+#!/usr/bin/env nu -n --no-std-lib
 
 # osascript -e $'display notification "($env | get -o INFO | default "unk")"'
 const hidden_offset = 30

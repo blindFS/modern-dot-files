@@ -1,4 +1,4 @@
-#!/usr/bin/env nu
+#!/usr/bin/env nu -n --no-std-lib
 
 # The volume_change event supplies a $INFO variable in which the current volume
 # percentage is passed to the script.

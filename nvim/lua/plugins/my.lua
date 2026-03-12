@@ -388,6 +388,16 @@ return {
           },
         },
       })
+      lspconfig.vtsls.setup({
+        settings = {
+          javascript = {
+            format = {
+              -- This removes the spaces: { foo } -> {foo}
+              insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces = false,
+            },
+          },
+        },
+      })
       lspconfig.nushell.setup({
         cmd = {
           "nu",

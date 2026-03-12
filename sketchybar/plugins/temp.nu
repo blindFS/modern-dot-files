@@ -1,4 +1,4 @@
-#!/usr/bin/env nu
+#!/usr/bin/env nu -n --no-std-lib
 use style.nu colors
 let tool_path = ($env.FILE_PWD) | path join popups iSMC
 
