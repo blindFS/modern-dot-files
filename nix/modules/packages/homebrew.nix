@@ -41,7 +41,6 @@
 
       environment.variables = {
         HOMEBREW_NO_AUTO_UPDATE = "1";
-        # HOMEBREW_CASK_OPTS = "--no-quarantine";
       };
 
       environment.systemPath = [
