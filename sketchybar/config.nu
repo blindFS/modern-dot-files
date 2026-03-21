@@ -148,7 +148,7 @@ export const config = {
     {
       name: media
       pos: left
-      events: [media_change]
+      events: [my_media_change]
       args: {
         icon: '󰐎'
         icon.color: $colors.fg
@@ -161,13 +161,13 @@ export const config = {
     {
       name: media_cover
       pos: left
-      events: [media_change]
+      events: [my_media_change]
       args: {
         icon.drawing: off
         label.drawing: off
         background.image.drawing: on
         background.image: media.artwork
-        background.image.scale: 0.7
+        background.image.scale: 0.05
         background.color: $colors.transparent
         background.border_width: 0
       }

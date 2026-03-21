@@ -7,11 +7,12 @@
         ffmpeg
         gotop
         graphviz
-        ispell
         imagemagick
+        ispell
         jc
         ripgrep
         tldr
+        unar
         uv
         yazi
       ];

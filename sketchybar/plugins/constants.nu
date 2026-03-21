@@ -26,6 +26,7 @@ const app_icons = {
   'safari': '󰀹'
   'shadowrocket': ''
   'steam helper': '󰓓'
+  'ryujinx': '󱎓'
   'system settings': '󰒓'
   'wechat': ''
   'zed': '󰬡'

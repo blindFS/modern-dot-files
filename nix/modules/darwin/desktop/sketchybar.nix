@@ -1,15 +1,49 @@
-{ self, ... }:
+{ lib, self, ... }:
+let
+  # Media change event listener
+  media_watcher_script = "sketchybar/plugins/media_watcher.nu";
+in
 {
-  flake.darwinModules.sketchybar = {
-    services.sketchybar.enable = true;
-  };
+  flake.darwinModules.homebrew.homebrew.brews = [ "media-control" ];
+
+  flake.darwinModules.sketchybar =
+    { config, ... }:
+    {
+      services.sketchybar.enable = true;
+      # Run the media change event listener as a service
+      launchd.user.agents.media-watcher = {
+        serviceConfig = {
+          ProgramArguments = [
+            "${config.homebrew.prefix}/bin/nu"
+            "-n"
+            "--no-std-lib"
+            "${config.home-manager.users.${self.identity.username}.xdg.configHome}/${media_watcher_script}"
+          ];
+          KeepAlive = true;
+          RunAtLoad = true;
+        };
+      };
+    };
 
   flake.homeModules.sketchybar =
+    { osConfig, pkgs, ... }:
     let
       cs = self.theme.colors_xargb;
       color-alpha = hex: alpha: builtins.replaceStrings [ "0xff" ] [ "0x${alpha}" ] hex;
     in
     {
+      xdg.configFile.${media_watcher_script}.text =
+        # nu
+        ''
+          ${osConfig.homebrew.prefix}/bin/media-control stream --debounce=2000
+            | each {
+              if ($in | str contains playing) {
+                ${lib.getExe pkgs.sketchybar} --trigger my_media_change;
+                null
+              }
+            }
+        '';
+
       xdg.configFile."sketchybar/plugins/style.nu".text =
         # nu
         ''

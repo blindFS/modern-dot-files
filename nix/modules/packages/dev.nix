@@ -11,7 +11,7 @@ in
       "gemini-cli"
     ];
     homebrew.casks = [
-      "flutter"
+      # "flutter"
       "tailscale-app"
     ];
   };

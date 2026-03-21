@@ -14,6 +14,7 @@ let plugin_dir = $"($env.CONFIG_DIR)/plugins"
   --bar position=top height=25 blur_radius=20 color=0x00000000
   --add event aerospace_mode_change
   --add event aerospace_workspace_change
+  --add event my_media_change
   --default ...($config.default | arg_to_setting $plugin_dir)
   ...(workspace_args $config.workspace_default_args $plugin_dir)
   ...($config.plugin_configs | build_all_plugin_args $plugin_dir)
