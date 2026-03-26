@@ -5,6 +5,7 @@ const hidden_offset = 30
 const shown_offset = 0
 const animation_args = [--animate sin 30]
 const label_max_length = 30
+const max_retry = 5
 
 # let media_info = $env
 #   | get -o INFO
@@ -16,7 +17,9 @@ const label_max_length = 30
 #     } | to json
 #   )
 #   | from json
-let media_info = media-control get | from json
+mut media_info = media-control get | from json
+
+# Text
 let label = $"($media_info | get title) - ($media_info | get artist)"
   | if ($in | str length) > $label_max_length {
     ($in | str substring -g ..$label_max_length) + '... '
@@ -33,10 +36,6 @@ let icon_and_offset = if $media_info.playing {
   ['' $hidden_offset]
 }
 
-let artwork_mime = $media_info | get artworkMimeType | split words | last
-let cover_cache_path = $'($env.HOME)/.cache/cover.($artwork_mime)'
-$media_info | get artworkData | base64 --decode | save -f $cover_cache_path
-
 let args = $animation_args
   | append [
     --set
@@ -45,7 +44,30 @@ let args = $animation_args
     icon=($icon_and_offset.0)
     --set
     media_cover
+    y_offset=($hidden_offset)
+  ]
+
+sketchybar ...$args
+
+# Artwork
+mut retry_count = 0
+# In case the network is poor
+while ($media_info.artworkMimeType? | is-empty) and ($retry_count < $max_retry) {
+  sleep 1sec
+  $media_info = ^media-control get | from json
+  $retry_count += 1
+}
+
+let artwork_mime = $media_info | get artworkMimeType | split words | last
+let cover_cache_path = $'($env.HOME)/.cache/cover.($artwork_mime)'
+$media_info | get artworkData | base64 --decode | save -f $cover_cache_path
+
+let args = $animation_args
+  | append [
+    --set
+    media_cover
     background.image=($cover_cache_path)
     y_offset=($icon_and_offset.1)
   ]
+
 sketchybar ...$args

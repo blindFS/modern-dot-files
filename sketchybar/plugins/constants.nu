@@ -30,6 +30,7 @@ const app_icons = {
   'system settings': '󰒓'
   'wechat': ''
   'zed': '󰬡'
+  'telegram': ''
 }
 
 export def get_icon_by_app_name []: string -> string {
