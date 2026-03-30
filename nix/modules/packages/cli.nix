@@ -10,6 +10,7 @@
         imagemagick
         ispell
         jc
+        pokemon-colorscripts
         ripgrep
         tldr
         unar

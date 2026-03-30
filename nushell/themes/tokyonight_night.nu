@@ -53,7 +53,7 @@ export def main [] {
     shape_externalarg: {fg: '#9e9e7a' attr: 'b'}
     shape_filepath: '#7dcfff'
     shape_flag: {fg: '#7aa2f7' attr: 'b'}
-    shape_float: {fg: '#f7768e' attr: 'b'}
+    shape_float: {fg: '#bb9af7' attr: 'b'}
     shape_garbage: {fg: '#FFFFFF' bg: '#f74f2f' attr: 'b'}
     shape_glob_interpolation: {fg: '#7dcfff' attr: 'b'}
     shape_globpattern: {fg: '#7dcfff' attr: 'b'}
@@ -69,7 +69,7 @@ export def main [] {
     shape_or: {fg: '#bb9af7' attr: 'b'}
     shape_pipe: {fg: '#bb9af7' attr: 'b'}
     shape_range: {fg: '#e0af68' attr: 'b'}
-    shape_raw_string: {fg: '#c0caf5' attr: 'b'}
+    shape_raw_string: {fg: '#ce9e8a' attr: 'b'}
     shape_record: {fg: '#1d8f8f' attr: 'b'}
     shape_redirection: {fg: '#bb9af7' attr: 'b'}
     shape_signature: {fg: '#9ece6a' attr: 'b'}

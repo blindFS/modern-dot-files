@@ -30,6 +30,18 @@ return {
   {
     "folke/snacks.nvim",
     opts = {
+      dashboard = {
+        sections = {
+          {
+            section = "terminal",
+            cmd = "pokemon-colorscripts -n kyogre --no-title",
+            -- indent = 12,
+            height = 13,
+          },
+          { section = "keys", gap = 1, padding = 1 },
+          { section = "startup" },
+        },
+      },
       image = { enabled = true },
       scroll = { enabled = false },
       indent = {

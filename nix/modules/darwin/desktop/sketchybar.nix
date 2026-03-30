@@ -35,7 +35,7 @@ in
       xdg.configFile.${media_watcher_script}.text =
         # nu
         ''
-          ${osConfig.homebrew.prefix}/bin/media-control stream --debounce=2000
+          ${osConfig.homebrew.prefix}/bin/media-control stream --debounce=200
             | each {
               if ($in | str contains playing) {
                 ${lib.getExe pkgs.sketchybar} --trigger my_media_change;
