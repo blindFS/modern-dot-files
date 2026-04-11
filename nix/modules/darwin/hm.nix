@@ -26,16 +26,17 @@
           inherit inputs self pkgs;
         };
         users.${self.identity.username} = {
-          imports = [
-            self.homeModules.ghostty
-            self.homeModules.git
-            self.homeModules.nh
-            self.homeModules.security
-            self.homeModules.shell
-            self.homeModules.sketchybar
-            self.homeModules.tmux
-            self.homeModules.zed
-            self.homeModules.config
+          imports = with self.homeModules; [
+            ghostty
+            git
+            llm
+            nh
+            security
+            shell
+            sketchybar
+            tmux
+            zed
+            config
           ];
 
           # Home Manager needs a bit of information about you and the

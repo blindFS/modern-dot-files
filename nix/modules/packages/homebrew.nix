@@ -27,7 +27,6 @@
           "balenaetcher"
           "betterdisplay"
           "blender"
-          "discord"
           "dropbox"
           "iloader"
           "kicad"

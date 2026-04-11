@@ -7,16 +7,16 @@
   flake.darwinModules.hostModule =
     { ... }:
     {
-      imports = [
-        self.darwinModules.cli
-        self.darwinModules.desktop
-        self.darwinModules.dev
-        self.darwinModules.fonts
-        self.darwinModules.homeManager
-        self.darwinModules.homebrew
-        self.darwinModules.nix
-        self.darwinModules.preferrence
-        self.darwinModules.raycast
+      imports = with self.darwinModules; [
+        cli
+        desktop
+        dev
+        fonts
+        homeManager
+        homebrew
+        nix
+        preferrence
+        raycast
       ];
 
       networking.hostName = self.identity.hostname;

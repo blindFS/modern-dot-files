@@ -1,7 +1,22 @@
+{ self, ... }:
 {
   flake.darwinModules.preferrence =
     { pkgs, ... }:
     {
+      # Disable useless memory hog services
+      # HACK: use `keyboard` as name BC https://github.com/nix-darwin/nix-darwin/issues/1447
+      system.activationScripts.keyboard.text = ''
+        mdutil -i off
+
+        MYUID=$(id -u ${self.identity.username})
+        launchctl disable "gui/$MYUID/com.apple.applespell"
+        launchctl disable "gui/$MYUID/com.apple.mediaanalysisd"
+        launchctl disable "gui/$MYUID/com.apple.suggestd"
+        launchctl disable "gui/$MYUID/com.apple.contactsd"
+        launchctl disable "gui/$MYUID/com.apple.corespotlightd"
+        launchctl disable "gui/$MYUID/com.apple.spotlightknowledged.updater"
+      '';
+
       environment.systemPackages = [
         # Useful cli tool to check system plist values
         pkgs.plistwatch
