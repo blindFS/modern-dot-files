@@ -489,4 +489,19 @@ return {
       { "<leader>gB", "<cmd>Gitsigns blame_line<cr>", desc = "Git blame links" },
     },
   },
+  {
+    "mrcjkb/rustaceanvim",
+    ft = { "rust" },
+    opts = {
+      server = {
+        default_settings = {
+          ["rust-analyzer"] = {
+            cargo = {
+              allFeatures = false,
+            },
+          },
+        },
+      },
+    },
+  },
 }

@@ -32,7 +32,6 @@
           "kicad"
           "macs-fan-control"
           "openscad"
-          "popclip"
           "steam"
           "yam-display"
         ];
