@@ -22,11 +22,14 @@
 
         brews = [
           "mole"
+          "blindfs/tools/glyphlow"
         ];
         casks = [
           "balenaetcher"
           "betterdisplay"
           "blender"
+          "brave-browser"
+          "discord"
           "dropbox"
           "iloader"
           "kicad"
