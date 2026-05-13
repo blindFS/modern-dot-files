@@ -29,6 +29,7 @@
           imports = with self.homeModules; [
             ghostty
             git
+            glyphlow
             llm
             nh
             security

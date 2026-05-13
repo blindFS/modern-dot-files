@@ -22,7 +22,6 @@
 
         brews = [
           "mole"
-          "blindfs/tools/glyphlow"
         ];
         casks = [
           "balenaetcher"

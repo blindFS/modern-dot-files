@@ -19,6 +19,9 @@
     # topiary-nushell
     topiary-nu.url = "github:blindFS/topiary-nushell";
     topiary-nu.inputs.nixpkgs.follows = "nixpkgs";
+    # glyphlow
+    glyphlow.url = "github:blindFS/Glyphlow";
+    glyphlow.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
