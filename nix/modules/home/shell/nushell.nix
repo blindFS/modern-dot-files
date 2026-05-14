@@ -1,9 +1,25 @@
-{ lib, self, ... }:
 {
-  flake.darwinModules.homebrew.homebrew.brews = [ "nushell" ];
+  inputs,
+  lib,
+  self,
+  ...
+}:
+let
+  nushell_from_homebrew = true;
+in
+{
+  flake.darwinModules.homebrew.homebrew.brews = lib.optional nushell_from_homebrew "nushell";
+
+  # Always pass the system-level config (Darwin config) to this function
+  flake.nushell_exe =
+    config:
+    if nushell_from_homebrew then
+      "${config.homebrew.prefix}/bin/nu"
+    else
+      "${inputs.nixpkgs.legacyPackages.${self.identity.arch}.nushell}/bin/nu";
 
   flake.homeModules.nushell =
-    { config, ... }:
+    { config, pkgs, ... }:
     let
       fancy = config.programs.starship.enable;
       prefix = lib.optionalString fancy config.starship.prefix;
@@ -60,8 +76,7 @@
     {
       programs.nushell = {
         enable = true;
-        # installed via homebrew
-        package = null;
+        package = if nushell_from_homebrew then null else pkgs.nushell;
         shellAliases = removeAttrs (
           pg.zsh.shellAliases
           // {

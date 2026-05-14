@@ -14,7 +14,7 @@ in
       launchd.user.agents.media-watcher = {
         serviceConfig = {
           ProgramArguments = [
-            "${config.homebrew.prefix}/bin/nu"
+            (self.nushell_exe config)
             "-n"
             "--no-std-lib"
             "${config.home-manager.users.${self.identity.username}.xdg.configHome}/${media_watcher_script}"

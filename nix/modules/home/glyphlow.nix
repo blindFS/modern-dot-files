@@ -1,7 +1,10 @@
 { inputs, self, ... }:
 {
   flake.homeModules.glyphlow =
-    { ... }:
+    { osConfig, ... }:
+    let
+      nushell_exe = self.nushell_exe osConfig;
+    in
     {
       imports = [
         inputs.glyphlow.homeManagerModules.glyphlow
@@ -11,9 +14,10 @@
         enable = true;
         settings = {
           theme = {
-            menu_font = "${self.font.monofont}:26";
+            menu_font = "${self.font.monofont}:18";
           };
           visibility_checking_level = "Loose";
+          hide_scrolling_menu = true;
           colored_frame_min_size = 100;
           element_min_width = 15;
           element_min_height = 15;
@@ -40,7 +44,7 @@
             {
               display = "󰊭 Google Search";
               key = "G";
-              command = "nu";
+              command = nushell_exe;
               args = [
                 "-c"
                 "r#'{glyphlow_text}'# | url encode | ^open $'https://google.com/search?q=($in)'"
@@ -49,7 +53,7 @@
             {
               display = "󰖬 Wikipedia Search";
               key = "W";
-              command = "nu";
+              command = nushell_exe;
               args = [
                 "-c"
                 "r#'{glyphlow_text}'# | url encode | ^open $'https://en.wikipedia.org/wiki/Special:Search/($in)'"
@@ -58,11 +62,10 @@
             {
               display = "󰊿 Goolge Translate -> zh_cn";
               key = "T";
-              command = "nu";
+              command = nushell_exe;
               args = [
                 "-c"
-                "r#'{glyphlow_text}'# | url encode | ^open
-    $'https://translate.google.com/?sl=auto&tl=zh_cn&text=($in)&op=translate'"
+                "r#'{glyphlow_text}'# | url encode | ^open $'https://translate.google.com/?sl=auto&tl=zh_cn&text=($in)&op=translate'"
               ];
             }
           ];
@@ -140,7 +143,7 @@
               display = "󰳽 Press [Left Click]";
               key = "[";
               starting_role = "Generic";
-              actions = [ "Press" ];
+              actions = [ "Click" ];
             }
             {
               display = " Menu [Right Click]";

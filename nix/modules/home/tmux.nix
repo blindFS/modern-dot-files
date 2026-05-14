@@ -1,3 +1,4 @@
+{ self, ... }:
 {
   flake.homeModules.tmux =
     {
@@ -13,7 +14,7 @@
         keyMode = "vi";
         # for neovim autoread on file change
         focusEvents = true;
-        shell = if config.programs.nushell.enable then "${osConfig.homebrew.prefix}/bin/nu" else "zsh";
+        shell = if config.programs.nushell.enable then (self.nushell_exe osConfig) else "zsh";
         terminal = "xterm-ghostty";
         baseIndex = 1;
         aggressiveResize = true;
