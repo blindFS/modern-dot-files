@@ -140,6 +140,12 @@
               ];
             }
             {
+              display = "󰋱 Hover";
+              key = "H";
+              starting_role = "Generic";
+              actions = [ "Hover" ];
+            }
+            {
               display = "󰳽 Press [Left Click]";
               key = "[";
               starting_role = "Generic";
@@ -173,6 +179,28 @@
               actions = [
                 "GoParent"
                 "GlyphlowMenu"
+              ];
+            }
+            {
+              display = "󱄊 Clear System Notification";
+              key = "NC";
+              starting_role = "Any";
+              valid_app_ids = [ "com.apple.notificationcenterui" ];
+              actions = [
+                {
+                  SearchFor = {
+                    role = "Group";
+                    subrole = "Banner";
+                  };
+                }
+                "Hover"
+                {
+                  SearchFor = {
+                    role = "Button";
+                    description = "Close";
+                  };
+                }
+                "Press"
               ];
             }
           ];

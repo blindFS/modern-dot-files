@@ -13,6 +13,7 @@ in
     homebrew.casks = [
       "flutter"
       "tailscale-app"
+      "antigravity-cli"
     ];
   };
 
