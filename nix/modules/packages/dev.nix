@@ -8,7 +8,6 @@ in
       "cocoapods"
       "neovim"
       "node"
-      "gemini-cli"
     ];
     homebrew.casks = [
       "flutter"

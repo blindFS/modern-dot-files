@@ -219,8 +219,24 @@ def _complete_by_fzf [
       }
     }
     _ if ($cmd in ['z' '__zoxide_z' 'cd' 'zoxide']) => {
-      fd --type=d --strip-cwd-prefix ...$fd_default_args
-      | fzf ...(_build_fzf_args $query 'Directory' $dir_preview_cmd)
+      # keep ~/foo/ all in parent, make stem empty
+      let path_info = ($query + (char nul)) | path parse
+      let base_dir = if ($path_info.parent | is-empty) {
+        '.'
+      } else $path_info.parent
+      if (not ($base_dir | path exists)) {
+        return null
+      }
+      nu -c ([fd --type=d ...$fd_default_args . $base_dir] | str join " ")
+      | fzf ...(
+        _build_fzf_args
+        (
+          $path_info.stem
+          | str trim -r -c (char nul)
+          | str trim -r -c "*"
+        )
+        'Directory' $dir_preview_cmd
+      )
       | _quote_if_not_empty
     }
     "kill" => {

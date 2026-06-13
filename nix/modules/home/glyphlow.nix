@@ -190,7 +190,7 @@
                 {
                   SearchFor = {
                     role = "Group";
-                    subrole = "Banner";
+                    subrole = "Banner | Alert";
                   };
                 }
                 "Hover"
