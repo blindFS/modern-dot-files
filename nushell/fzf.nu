@@ -522,8 +522,8 @@ export def find_command [
 ]: string -> record {
   let cmd = $in
   let nodes = ast -f $cmd | reverse
-  mut query_node = null
-  mut command_node = null
+  mut query_node: any = null
+  mut command_node: any = null
   for node in $nodes {
     if ($node.span.start > $position) { continue }
     if $node.span.end > $position {
