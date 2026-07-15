@@ -1,15 +1,31 @@
-{ lib, self, ... }:
+{
+  self,
+  inputs,
+  lib,
+  ...
+}:
 let
   # Media change event listener
   media_watcher_script = "sketchybar/plugins/media_watcher.nu";
+  sketchybar_from_homebrew = true;
 in
 {
-  flake.darwinModules.homebrew.homebrew.brews = [ "media-control" ];
+  flake.darwinModules.homebrew.homebrew.brews = [
+    "media-control"
+  ]
+  ++ (lib.optional sketchybar_from_homebrew "FelixKratz/formulae/sketchybar");
+
+  flake.sketchybar_exe =
+    config:
+    if sketchybar_from_homebrew then
+      "${config.homebrew.prefix}/bin/sketchybar"
+    else
+      "${inputs.nixpkgs.legacyPackages.${self.identity.arch}.sketchybar}/bin/sketchybar";
 
   flake.darwinModules.sketchybar =
     { config, ... }:
     {
-      services.sketchybar.enable = true;
+      services.sketchybar.enable = !sketchybar_from_homebrew;
       # Run the media change event listener as a service
       launchd.user.agents.media-watcher = {
         serviceConfig = {
@@ -23,13 +39,28 @@ in
           RunAtLoad = true;
         };
       };
-    };
+    }
+    // (lib.optionalAttrs sketchybar_from_homebrew {
+      launchd.user.agents.sketchybar = {
+        path = [ config.environment.systemPath ];
+        serviceConfig = {
+          ProgramArguments = [
+            (self.sketchybar_exe config)
+            "--config"
+            "${config.home-manager.users.${self.identity.username}.xdg.configHome}/sketchybar/sketchybarrc"
+          ];
+          KeepAlive = true;
+          RunAtLoad = true;
+        };
+      };
+    });
 
   flake.homeModules.sketchybar =
-    { osConfig, pkgs, ... }:
+    { osConfig, ... }:
     let
       cs = self.theme.colors_xargb;
       color-alpha = hex: alpha: builtins.replaceStrings [ "0xff" ] [ "0x${alpha}" ] hex;
+      sketchybar_exe = self.sketchybar_exe osConfig;
     in
     {
       xdg.configFile.${media_watcher_script}.text =
@@ -38,7 +69,7 @@ in
           ${osConfig.homebrew.prefix}/bin/media-control stream --debounce=200
             | each {
               if ($in | str contains playing) {
-                ${lib.getExe pkgs.sketchybar} --trigger my_media_change;
+                ${sketchybar_exe} --trigger my_media_change;
                 null
               }
             }

@@ -6,7 +6,7 @@
 # https://github.com/FelixKratz/dotfiles
 
 use config.nu *
-let plugin_dir = $"($env.CONFIG_DIR)/plugins"
+const plugin_dir = $"(path self | path dirname)/plugins"
 
 ##### Aerospace integration #####
 (

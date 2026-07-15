@@ -19,6 +19,10 @@ const max_retry = 5
 #   | from json
 mut media_info = media-control get | from json
 
+if ($media_info | is-empty) {
+  exit 0
+}
+
 # Text
 let label = $"($media_info | get title) - ($media_info | get artist)"
   | if ($in | str length) > $label_max_length {

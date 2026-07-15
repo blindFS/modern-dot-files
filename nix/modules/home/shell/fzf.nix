@@ -37,6 +37,7 @@ in
 
       programs.fzf = {
         enable = true;
+        enableNushellIntegration = false;
         defaultCommand = "fd";
         defaultOptions = [
           "--layout reverse"

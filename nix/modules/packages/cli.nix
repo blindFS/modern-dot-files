@@ -13,7 +13,6 @@
         pokemon-colorscripts
         ripgrep
         tldr
-        unar
         uv
         yazi
       ];

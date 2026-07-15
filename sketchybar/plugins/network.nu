@@ -5,9 +5,9 @@ const symbols = {
   down: ''
   fill: '░'
 }
-let start_info = sys net | select sent recv | math sum
+let start_info: record = sys net | select sent recv | math sum
 sleep 1sec
-let end_info = sys net | select sent recv | math sum
+let end_info: record = sys net | select sent recv | math sum
 let args = (
   [$start_info $end_info]
   | rename up down
