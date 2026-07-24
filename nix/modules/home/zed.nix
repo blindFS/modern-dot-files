@@ -1,14 +1,29 @@
-{ self, ... }:
 {
-  flake.darwinModules.homebrew.homebrew.casks = [ "zed" ];
+  self,
+  lib,
+  inputs,
+  ...
+}:
+let
+  zed_from_homebrew = true;
+in
+{
+  flake.darwinModules.homebrew.homebrew.casks = lib.optional zed_from_homebrew "zed";
+
+  # Always pass the system-level config (Darwin config) to this function
+  flake.zed_exe =
+    config:
+    if zed_from_homebrew then
+      "${config.homebrew.prefix}/bin/zed"
+    else
+      "${inputs.nixpkgs.legacyPackages.${self.identity.arch}.zed}/bin/zed";
 
   flake.homeModules.zed =
-    { ... }:
+    { pkgs, ... }:
     {
       programs.zed-editor = {
         enable = true;
-        # installed via homebrew
-        package = null;
+        package = if zed_from_homebrew then null else pkgs.zed;
         extensions = [
           "dart"
         ];

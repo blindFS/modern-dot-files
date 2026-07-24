@@ -4,6 +4,7 @@
     { osConfig, ... }:
     let
       nushell_exe = self.nushell_exe osConfig;
+      zed_exe = self.zed_exe osConfig;
     in
     {
       imports = [
@@ -33,10 +34,9 @@
           editor = {
             display = " Editor";
             key = "V";
-            command = "open";
+            command = zed_exe;
             args = [
-              "-a"
-              "Zed"
+              "--wait"
               "{glyphlow_temp_file}"
             ];
           };
@@ -117,7 +117,7 @@
                 {
                   SearchFor = {
                     role = "MenuItem";
-                    title = "Copy Image";
+                    title = "Copy Image$";
                   };
                 }
                 "Press"
