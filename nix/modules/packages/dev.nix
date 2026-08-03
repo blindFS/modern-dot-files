@@ -12,7 +12,6 @@ in
     homebrew.casks = [
       "flutter"
       "tailscale-app"
-      "antigravity-cli"
     ];
   };
 
@@ -26,6 +25,7 @@ in
         nixd
         nixfmt
         rustup
+        sdcc
         topiary
         topiary-nu
         tree-sitter

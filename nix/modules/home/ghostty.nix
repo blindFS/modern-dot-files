@@ -18,7 +18,10 @@
           background-opacity = 0.8;
           background = "#000000";
           macos-titlebar-style = "hidden";
-          custom-shader = "shaders/cursor_blaze.glsl";
+          custom-shader = [
+            "shaders/cursor_warp.glsl"
+            "shaders/ripple_cursor.glsl"
+          ];
           quit-after-last-window-closed = true;
         };
       };
