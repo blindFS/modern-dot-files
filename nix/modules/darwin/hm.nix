@@ -27,17 +27,18 @@
         };
         users.${self.identity.username} = {
           imports = with self.homeModules; [
+            config
             ghostty
             git
             glyphlow
             llm
             nh
+            openscad
             security
             shell
             sketchybar
             tmux
             zed
-            config
           ];
 
           # Home Manager needs a bit of information about you and the

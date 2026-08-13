@@ -15,6 +15,7 @@
         homeManager
         homebrew
         nix
+        openscad
         preferrence
         raycast
       ];

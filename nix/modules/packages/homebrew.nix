@@ -33,7 +33,6 @@
           "iloader"
           "kicad"
           "macs-fan-control"
-          "openscad@snapshot"
           "steam"
           "yam-display"
         ];
