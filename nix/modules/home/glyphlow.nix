@@ -3,7 +3,6 @@
   flake.homeModules.glyphlow =
     { osConfig, ... }:
     let
-      nushell_exe = self.nushell_exe osConfig;
       zed_exe = self.zed_exe osConfig;
     in
     {
@@ -44,28 +43,46 @@
             {
               display = "󰊭 Google Search";
               key = "G";
-              command = nushell_exe;
+              command = "bash";
               args = [
                 "-c"
-                "r#'{glyphlow_text}'# | url encode | ^open $'https://google.com/search?q=($in)'"
+                #bash
+                ''
+                  open "https://google.com/search?q=$(cat << 'EOF' | jq -sRr @uri
+                  {glyphlow_text}
+                  EOF
+                  )"
+                ''
               ];
             }
             {
               display = "󰖬 Wikipedia Search";
               key = "W";
-              command = nushell_exe;
+              command = "bash";
               args = [
                 "-c"
-                "r#'{glyphlow_text}'# | url encode | ^open $'https://en.wikipedia.org/wiki/Special:Search/($in)'"
+                #bash
+                ''
+                  open "https://en.wikipedia.org/wiki/Special:Search/$(cat << 'EOF' | jq -sRr @uri
+                  {glyphlow_text}
+                  EOF
+                  )"
+                ''
               ];
             }
             {
               display = "󰊿 Goolge Translate -> zh_cn";
               key = "T";
-              command = nushell_exe;
+              command = "bash";
               args = [
                 "-c"
-                "r#'{glyphlow_text}'# | url encode | ^open $'https://translate.google.com/?sl=auto&tl=zh_cn&text=($in)&op=translate'"
+                #bash
+                ''
+                  open "https://translate.google.com/?sl=auto&tl=zh_cn&text=$(cat << 'EOF' | jq -sRr @uri
+                  {glyphlow_text}
+                  EOF
+                  )&op=translate"
+                ''
               ];
             }
           ];

@@ -10,7 +10,7 @@ in
       "node"
     ];
     homebrew.casks = [
-      "flutter"
+      # "flutter"
       "tailscale-app"
     ];
   };
@@ -27,7 +27,6 @@ in
         rustup
         sdcc
         topiary
-        topiary-nu
         tree-sitter
         uv
       ];

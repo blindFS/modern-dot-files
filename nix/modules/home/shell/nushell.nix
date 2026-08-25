@@ -5,7 +5,7 @@
   ...
 }:
 let
-  nushell_from_homebrew = true;
+  nushell_from_homebrew = false;
 in
 {
   flake.darwinModules.homebrew.homebrew.brews = lib.optional nushell_from_homebrew "nushell";
@@ -75,7 +75,7 @@ in
     in
     {
       programs.nushell = {
-        enable = true;
+        enable = false;
         package = if nushell_from_homebrew then null else pkgs.nushell;
         shellAliases = removeAttrs (
           pg.zsh.shellAliases
@@ -211,7 +211,7 @@ in
             font_color: string
             bg_color: string
             symbol: string
-            with_starship?: bool = ${lib.boolToString pg.starship.enable}
+            with_starship?: bool = ${lib.boolToString fancy}
           ] {
             let bg1 = if $with_starship { '${cs.white}' } else $bg_color
             let fg = {fg: $bg_color}

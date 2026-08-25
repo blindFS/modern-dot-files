@@ -1,0 +1,1 @@
+/nix/store/flkrfwjlgyld4y5xhxvr8ygpikn1n3s6-home-manager-files/.config/sketchybar/plugins/media_watcher.sh

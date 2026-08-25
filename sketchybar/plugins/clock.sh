@@ -1,8 +1,8 @@
-#!/usr/bin/env nu -n --no-std-lib
+#!/usr/bin/env bash
 
 # The $NAME variable is passed from sketchybar and holds the name of
 # the item invoking this script:
 # https://felixkratz.github.io/SketchyBar/config/events#events-and-scripting
 
-let msg = date now | format date "%a %m-%d %H:%M"
-sketchybar --set $env.NAME label=($msg)
+msg=$(date '+%a %m-%d %H:%M')
+sketchybar --set "$NAME" label="$msg"

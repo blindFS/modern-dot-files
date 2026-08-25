@@ -313,16 +313,6 @@ return {
         callback = function()
           ---@type table<string, any>
           local parser_config = require("nvim-treesitter.parsers")
-          -- parser_config.nu = {
-          --   install_info = {
-          --     path = "~/Workspace/tree-sitter-nu", -- local path or git repo
-          --     files = { "src/parser.c", "src/scanner.c" }, -- note that some parsers also require src/scanner.c or src/scanner.cc
-          --     branch = "main", -- default branch in case of git repo if different from master
-          --     generate_requires_npm = false, -- if stand-alone parser without npm dependencies
-          --     requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
-          --   },
-          -- }
-
           parser_config.openscad = {
             install_info = {
               url = "https://github.com/openscad/tree-sitter-openscad",
@@ -410,18 +400,6 @@ return {
           },
         },
       })
-      lspconfig.nushell.setup({
-        cmd = {
-          "nu",
-          -- "/Users/farseerhe/Workspace/nushell/target/debug/nu",
-          "--config",
-          vim.env.XDG_CONFIG_HOME .. "/nushell/lsp.nu",
-          "--experimental-options=[all]",
-          "--lsp",
-        },
-        flags = { debounce_text_changes = 1000 },
-        filetypes = { "nu" },
-      })
       return opts
     end,
   },
@@ -439,16 +417,11 @@ return {
     event = "VeryLazy",
     opts = {
       formatters_by_ft = {
-        nu = { "topiary_nu" },
         openscad = { "topiary_scad" },
       },
       formatters = {
-        topiary_nu = {
-          command = "topiary-nushell",
-          args = { "format", "--language", "nu" },
-        },
         topiary_scad = {
-          command = "topiary-nushell",
+          command = "topiary",
           args = { "format", "--language", "openscad" },
         },
       },

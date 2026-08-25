@@ -1,5 +1,16 @@
 { self, ... }:
 {
+  flake.darwinModules.tmux = {
+    nixpkgs.overlays = [
+      (final: prev: {
+        tmux = prev.tmux.overrideAttrs (oldAttrs: {
+          configureFlags = (oldAttrs.configureFlags or [ ]) ++ [ "--enable-jemalloc" ];
+          buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ final.jemalloc ];
+        });
+      })
+    ];
+  };
+
   flake.homeModules.tmux =
     {
       pkgs,
@@ -14,7 +25,7 @@
         keyMode = "vi";
         # for neovim autoread on file change
         focusEvents = true;
-        shell = if config.programs.nushell.enable then (self.nushell_exe osConfig) else "zsh";
+        shell = if config.programs.nushell.enable then (self.nushell_exe osConfig) else "/bin/zsh";
         terminal = "xterm-ghostty";
         baseIndex = 1;
         aggressiveResize = true;

@@ -6,11 +6,12 @@
 }:
 let
   # Media change event listener
-  media_watcher_script = "sketchybar/plugins/media_watcher.nu";
+  media_watcher_script = "sketchybar/plugins/media_watcher.sh";
   sketchybar_from_homebrew = true;
 in
 {
   flake.darwinModules.homebrew.homebrew.brews = [
+    "ifstat"
     "media-control"
   ]
   ++ (lib.optional sketchybar_from_homebrew "FelixKratz/formulae/sketchybar");
@@ -30,9 +31,7 @@ in
       launchd.user.agents.media-watcher = {
         serviceConfig = {
           ProgramArguments = [
-            (self.nushell_exe config)
-            "-n"
-            "--no-std-lib"
+            "/bin/bash"
             "${config.home-manager.users.${self.identity.username}.xdg.configHome}/${media_watcher_script}"
           ];
           KeepAlive = true;
@@ -64,43 +63,33 @@ in
     in
     {
       xdg.configFile.${media_watcher_script}.text =
-        # nu
+        # bash
         ''
           ${osConfig.homebrew.prefix}/bin/media-control stream --debounce=200
-            | each {
-              if ($in | str contains playing) {
-                ${sketchybar_exe} --trigger my_media_change;
-                null
-              }
-            }
+          | while IFS=read -r line; do
+              if [[ "$line" == *"playing"* ]]; then
+                ${sketchybar_exe} --trigger my_media_change
+              fi
+            done
         '';
 
-      xdg.configFile."sketchybar/plugins/style.nu".text =
-        # nu
+      xdg.configFile."sketchybar/plugins/style.sh".text =
+        # bash
         ''
-          # type int
-          export const colors = {
-            fg: 0x88ffffff
-            bg: 0x55000000
-            white: 0xffffffff
-            black: 0xff000000
-            dark: 0xcc000000
-            transparent: 0x00000000
-            yellow: ${cs.yellow}
-            cyan: ${cs.cyan}
-            blue: ${color-alpha cs.blue "dd"}
-            green: ${cs.light_green}
-            orange: ${cs.red}
-            purple: ${cs.purple}
-          }
-          # type string
-          export const mode_colors = {
-            main: '${color-alpha cs.blue "dd"}'
-            operation: '${cs.red}'
-            resize: '${cs.light_green}'
-            service: '${cs.white}'
-          }
-          export const monofont = '${self.font.monofont}'
+          export COLOR_FG="0x88ffffff"
+          export COLOR_BG="0x55000000"
+          export COLOR_WHITE="0xffffffff"
+          export COLOR_BLACK="0xff000000"
+          export COLOR_DARK="0xcc000000"
+          export COLOR_TRANSPARENT="0x00000000"
+          export COLOR_YELLOW="${cs.yellow}"
+          export COLOR_CYAN="${cs.cyan}"
+          export COLOR_BLUE="${color-alpha cs.blue "dd"}"
+          export COLOR_GREEN="${cs.green}"
+          export COLOR_ORANGE="${cs.red}"
+          export COLOR_PURPLE="${cs.purple}"
+
+          export MONOFONT="${self.font.monofont}"
         '';
     };
 }
