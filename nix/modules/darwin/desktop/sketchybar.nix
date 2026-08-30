@@ -38,9 +38,8 @@ in
           RunAtLoad = true;
         };
       };
-    }
-    // (lib.optionalAttrs sketchybar_from_homebrew {
-      launchd.user.agents.sketchybar = {
+
+      launchd.user.agents.sketchybar = lib.mkIf sketchybar_from_homebrew {
         path = [ config.environment.systemPath ];
         serviceConfig = {
           ProgramArguments = [
@@ -52,7 +51,7 @@ in
           RunAtLoad = true;
         };
       };
-    });
+    };
 
   flake.homeModules.sketchybar =
     { osConfig, ... }:
@@ -65,8 +64,7 @@ in
       xdg.configFile.${media_watcher_script}.text =
         # bash
         ''
-          ${osConfig.homebrew.prefix}/bin/media-control stream --debounce=200
-          | while IFS=read -r line; do
+          ${osConfig.homebrew.prefix}/bin/media-control stream --debounce=200 | while IFS= read -r line; do
               if [[ "$line" == *"playing"* ]]; then
                 ${sketchybar_exe} --trigger my_media_change
               fi

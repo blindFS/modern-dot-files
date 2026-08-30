@@ -18,7 +18,6 @@
         openscad
         preferrence
         raycast
-        tmux
       ];
 
       networking.hostName = self.identity.hostname;

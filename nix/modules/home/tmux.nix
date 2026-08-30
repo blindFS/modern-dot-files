@@ -1,16 +1,5 @@
 { self, ... }:
 {
-  flake.darwinModules.tmux = {
-    nixpkgs.overlays = [
-      (final: prev: {
-        tmux = prev.tmux.overrideAttrs (oldAttrs: {
-          configureFlags = (oldAttrs.configureFlags or [ ]) ++ [ "--enable-jemalloc" ];
-          buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ final.jemalloc ];
-        });
-      })
-    ];
-  };
-
   flake.homeModules.tmux =
     {
       pkgs,

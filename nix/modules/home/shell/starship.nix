@@ -19,6 +19,9 @@ in
 {
   flake.homeModules.starship =
     { config, ... }:
+    let
+      indicator = if config.programs.nushell.enable then "" else "${txt-fg pw.right cs.white} ";
+    in
     {
       options.starship = {
         prefix = lib.mkOption {
@@ -74,8 +77,8 @@ in
           character = {
             success_symbol = txt-fg-bg "" cs.black cs.white;
             error_symbol = txt-fg-bg "󰊠" cs.warn cs.white;
-            vimcmd_symbol = txt-fg-bg "" cs.black cs.white;
-            format = "${txt-fg "▓" cs.white}[ $symbol ](bg:${cs.white})";
+            vimcmd_symbol = txt-fg-bg "" cs.yellow cs.white;
+            format = "${txt-fg "▓" cs.white}[ $symbol ](bg:${cs.white})${indicator}";
           };
 
           cmd_duration.min_time = 20000;
