@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ self, lib, ... }:
 let
   zshConfigEarlyInit =
     lib.mkOrder 500
@@ -38,7 +38,7 @@ let
 in
 {
   flake.homeModules.zsh =
-    { config, osConfig, ... }:
+    { ... }:
     {
       programs.zsh = {
         enable = true;
@@ -78,14 +78,7 @@ in
           LANG = "en_US.UTF-8";
           LC_ALL = "en_US.UTF-8";
         };
-        shellAliases = {
-          vim = "nvim";
-          boc = lib.mkIf (
-            lib.hasAttr "homebrew" osConfig && osConfig.homebrew.enable
-          ) "brew outdated --cask --greedy";
-          ll = lib.mkIf config.programs.eza.enable "eza --tree -L 1 -l -a";
-          zi = lib.mkIf config.programs.zoxide.enable "__zoxide_zi";
-        };
+        shellAliases = self.shellAliases;
       };
     };
 }

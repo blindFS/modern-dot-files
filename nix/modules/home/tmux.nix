@@ -14,7 +14,8 @@
         keyMode = "vi";
         # for neovim autoread on file change
         focusEvents = true;
-        shell = if config.programs.nushell.enable then (self.nushell_exe osConfig) else "/bin/zsh";
+        shell =
+          if config.programs.nushell.enable then (self.nushell_exe osConfig) else (pkgs.lib.getExe pkgs.fish);
         terminal = "xterm-ghostty";
         baseIndex = 1;
         aggressiveResize = true;
