@@ -1,7 +1,4 @@
-{ inputs, self, ... }:
-let
-  topiary-nu = inputs.topiary-nu.packages.${self.identity.arch}.default;
-in
+{ ... }:
 {
   flake.darwinModules.homebrew = {
     homebrew.brews = [
