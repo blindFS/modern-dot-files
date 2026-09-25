@@ -25,7 +25,10 @@
         sdcc
         topiary
         tree-sitter
+        typst
         uv
       ];
+      # Fish completions
+      programs.fish.enable = true;
     };
 }

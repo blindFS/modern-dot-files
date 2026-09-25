@@ -1,9 +1,8 @@
 { ... }:
 {
-  # flake.darwinModules.homebrew.homebrewbrews = [
-  #   "ollama"
-  #   "zeroclaw"
-  # ];
+  flake.darwinModules.homebrew.homebrew.casks = [
+    "workbuddy-ai"
+  ];
 
   flake.homeModules.llm =
     { pkgs, config, ... }:

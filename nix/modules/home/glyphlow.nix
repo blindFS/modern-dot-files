@@ -12,6 +12,7 @@
 
       programs.glyphlow = {
         enable = true;
+        cli.enable = true;
         settings = {
           theme = {
             menu_font = "${self.font.monofont}:18";
