@@ -6,7 +6,7 @@
       trigger = event: variables: "${self.sketchybar_exe config} --trigger ${event} ${variables}";
       aeroswitch = mode: [
         "mode ${mode}"
-        ("exec-and-forget" + trigger "aerospace_mode_change" "MODE=${mode}")
+        ("exec-and-forget" + trigger "wm_mode_change" "MODE=${mode}")
       ];
       move-and-focus = space: [
         "move-node-to-workspace ${space}"
@@ -29,7 +29,7 @@
         exec-on-workspace-change = [
           "/bin/sh"
           "-c"
-          (trigger "aerospace_workspace_change" "FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE")
+          (trigger "wm_workspace_change" "FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE")
         ];
         workspace-to-monitor-force-assignment = {
           "1" = 1;

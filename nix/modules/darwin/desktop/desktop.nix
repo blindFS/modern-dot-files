@@ -4,9 +4,10 @@
     { ... }:
     {
       imports = with self.darwinModules; [
-        aerospace
+        # aerospace
         # borders
         sketchybar
+        rift
       ];
     };
 }

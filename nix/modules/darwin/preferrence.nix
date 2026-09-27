@@ -41,6 +41,7 @@
           ShowPathbar = true;
           ShowStatusBar = true;
         };
+        spaces.spans-displays = false;
         NSGlobalDomain = {
           AppleInterfaceStyle = "Dark";
           AppleMetricUnits = 1;

@@ -19,6 +19,9 @@
     # glyphlow
     glyphlow.url = "github:blindFS/Glyphlow";
     glyphlow.inputs.nixpkgs.follows = "nixpkgs";
+    # rift
+    rift.url = "path:./flakes/rift";
+    rift.inputs.nixpkgs.follows = "nixpkgs";
     # openscad lib
     bosl2.url = "github:BelfrySCAD/BOSL2";
     bosl2.flake = false;

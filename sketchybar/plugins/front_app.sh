@@ -11,7 +11,7 @@ case "$SENDER" in
   sketchybar --set "$NAME" label="$INFO" icon="$icon"
   ;;
 
-"aerospace_mode_change")
+"wm_mode_change")
   # Resolve background color based on current AeroSpace mode
   case "$MODE" in
   "main") color="${COLOR_BLUE}" ;;

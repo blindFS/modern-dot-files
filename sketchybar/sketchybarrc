@@ -43,14 +43,36 @@ workspace_default_args=(
 # Start building sketchybar arguments
 cmd=(
   --bar position=top height=25 blur_radius=20 color=0x00000000
-  --add event aerospace_mode_change
-  --add event aerospace_workspace_change
+  --add event wm_mode_change
+  --add event wm_workspace_change
   --add event my_media_change
   --default "${default_args[@]}"
 )
 
-# Populate Aerospace workspace items
-if command -v aerospace &>/dev/null; then
+# Populate workspace items for whichever window manager is installed. Only one
+# runs at a time, and each needs its own click action and listener plugin.
+ws_plugin="$PLUGIN_DIR/aerospace.sh"
+
+if command -v rift-cli &>/dev/null; then
+  ws_plugin="$PLUGIN_DIR/rift.sh"
+
+  # rift is a login agent too, so its Mach service may not be up yet, and the
+  # workspace list has to come from the daemon. Wait briefly rather than
+  # silently creating no items at all.
+  rift_workspaces=""
+  for _ in {1..10}; do
+    rift_workspaces=$(rift-cli query workspaces 2>/dev/null) && [[ -n "$rift_workspaces" ]] && break
+    sleep 0.5
+  done
+
+  # rift counts workspaces from 0; label them from 1 to match the keybindings.
+  for id in $(jq -r '.[].index + 1' <<<"${rift_workspaces:-[]}" 2>/dev/null); do
+    cmd+=(
+      --add item "space.$id" left
+      --set "space.$id" icon="$id" click_script="rift-cli execute workspace switch $((id - 1))" "${workspace_default_args[@]}"
+    )
+  done
+elif command -v aerospace &>/dev/null; then
   for id in $(aerospace list-workspaces --all); do
     cmd+=(
       --add item "space.$id" left
@@ -63,12 +85,12 @@ fi
 cmd+=(
   # ws_listener
   --add item ws_listener left
-  --subscribe ws_listener aerospace_workspace_change space_windows_change
-  --set ws_listener updates=on drawing=off script="$PLUGIN_DIR/aerospace.sh"
+  --subscribe ws_listener wm_workspace_change space_windows_change
+  --set ws_listener updates=on drawing=off script="$ws_plugin"
 
   # front_app
   --add item front_app left
-  --subscribe front_app front_app_switched aerospace_mode_change
+  --subscribe front_app front_app_switched wm_mode_change
   --set front_app label.color="$COLOR_BLACK" icon.color="$COLOR_BLACK" icon.font.size=20 background.color="$COLOR_BLUE" background.corner_radius=3 background.shadow.drawing=on background.shadow.color="$COLOR_BG" background.shadow.distance=3 script="$PLUGIN_DIR/front_app.sh"
 
   # media
