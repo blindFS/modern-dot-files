@@ -13,8 +13,8 @@ if [[ -z "$media_info" ]]; then
 fi
 
 # Parse media details
-title=$(jq -r '.title // empty' <<<"$media_info")
-artist=$(jq -r '.artist // empty' <<<"$media_info")
+title=$(jq -r '.title // "__"' <<<"$media_info")
+artist=$(jq -r '.artist // "__"' <<<"$media_info")
 playing=$(jq -r '.playing // false' <<<"$media_info")
 
 # Format label text and truncate if necessary

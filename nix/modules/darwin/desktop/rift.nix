@@ -4,25 +4,34 @@
     { config, ... }:
     let
       # Shared verbatim with the aerospace module, so one set of sketchybar
-      # subscriptions serves either window manager. rift can only fire this one:
-      # it emits no mode event, and a key holds a single command, so a mode
-      # switch cannot also trigger one.
+      # subscriptions serves either window manager.
       workspace-signal = "wm_workspace_change";
+      mode-signal = "wm_mode_change";
 
       # rift runs `run_on_start` entries as argv, not through a shell, so
       # `/bin/sh -c` is what gets rift's `RIFT_*` event context to sketchybar.
       # rift appends the event JSON as one more argument; `sh -c` ignores it.
-      on-workspace-change = builtins.concatStringsSep " " [
-        "rift-cli subscribe cli"
-        "--event workspace_changed"
-        "--command /bin/sh"
-        "--args -c"
-        "--args '${self.sketchybar_exe config} --trigger ${workspace-signal} FOCUSED_WORKSPACE=\"$RIFT_WORKSPACE_NAME\"'"
-      ];
+      # `subscribe cli` registers with the daemon and returns immediately, so
+      # one entry per event is fine.
+      on-event =
+        event: signal: variables:
+        builtins.concatStringsSep " " [
+          "rift-cli subscribe cli"
+          "--event ${event}"
+          "--command /bin/sh"
+          "--args -c"
+          "--args '${self.sketchybar_exe config} --trigger ${signal} ${variables}'"
+        ];
 
-      # rift binds a single command per key, so unlike aerospace a mode switch
-      # cannot also fire a side effect. `default` is the name of the `[keys]`
-      # table, so that is what the other modes return to.
+      on-workspace-change =
+        on-event "workspace_changed" workspace-signal
+          "FOCUSED_WORKSPACE=\"$RIFT_WORKSPACE_NAME\"";
+      on-mode-change = on-event "binding_mode_changed" mode-signal "MODE=\"$RIFT_BINDING_MODE\"";
+
+      # rift binds a single command per key, but a binding-mode change is also
+      # broadcast as an event, so the switch notifies the bar on its own.
+      # `default` is the name of the `[keys]` table, so that is what the other
+      # modes return to.
       switch-mode = mode: { binding_mode = mode; };
       switch-workspace = index: { switch_to_workspace = index; };
       move-and-focus = index: {
@@ -76,7 +85,10 @@
 
             # Re-subscribe on every start: subscriptions live in the rift
             # process, so a restart drops them.
-            run_on_start = [ on-workspace-change ];
+            run_on_start = [
+              on-workspace-change
+              on-mode-change
+            ];
           };
 
           virtual_workspaces.default_workspace_count = 5;

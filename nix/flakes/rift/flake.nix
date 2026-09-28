@@ -14,7 +14,7 @@
       ];
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
 
-      version = "0.6.1";
+      version = "0.6.2";
 
       # `rift-universal-macos-<version>.tar.gz` (tag `v<version>`) carries three
       # files: `rift` (the agent), `rift-cli` and `rift.default.toml`. Both
@@ -28,7 +28,7 @@
 
           src = pkgs.fetchurl {
             url = "https://github.com/acsandmann/rift/releases/download/v${version}/rift-universal-macos-${version}.tar.gz";
-            hash = "sha256-sJLjNQU09AQJRE6TeKosW4wDydEMK0VjgmS1x+QhclI=";
+            hash = "sha256-ItRYSb8ZYERxXUmczcaUzyThj5JDSq+RdmBYa1u4UnY=";
           };
 
           sourceRoot = ".";
@@ -160,12 +160,13 @@
                 # Run the binary directly rather than through nix-darwin's
                 # `command`, which wraps it in `/bin/sh -c` — the shell would
                 # take the Accessibility attribution instead of rift.
-                ProgramArguments =
-                  [ "${cfg.package}/bin/rift" ]
-                  ++ lib.optionals (configPath != null) [
-                    "--config"
-                    (toString configPath)
-                  ];
+                ProgramArguments = [
+                  "${cfg.package}/bin/rift"
+                ]
+                ++ lib.optionals (configPath != null) [
+                  "--config"
+                  (toString configPath)
+                ];
 
                 RunAtLoad = true;
                 KeepAlive = {
