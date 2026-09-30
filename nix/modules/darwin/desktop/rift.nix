@@ -26,6 +26,9 @@
       on-workspace-change =
         on-event "workspace_changed" workspace-signal
           "FOCUSED_WORKSPACE=\"$RIFT_WORKSPACE_NAME\"";
+      on-window-change =
+        on-event "windows_changed" workspace-signal
+          "FOCUSED_WORKSPACE=\"$RIFT_WORKSPACE_NAME\"";
       on-mode-change = on-event "binding_mode_changed" mode-signal "MODE=\"$RIFT_BINDING_MODE\"";
 
       # rift binds a single command per key, but a binding-mode change is also
@@ -87,6 +90,7 @@
             # process, so a restart drops them.
             run_on_start = [
               on-workspace-change
+              on-window-change
               on-mode-change
             ];
           };
