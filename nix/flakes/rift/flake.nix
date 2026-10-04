@@ -6,20 +6,13 @@
   outputs =
     { self, nixpkgs }:
     let
-      # Upstream publishes a single universal (arm64 + x86_64) artifact per
-      # release, so both Darwin systems install the same one.
       systems = [
         "aarch64-darwin"
-        "x86_64-darwin"
       ];
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
 
-      version = "0.6.2";
+      version = "0.6.4";
 
-      # `rift-universal-macos-<version>.tar.gz` (tag `v<version>`) carries three
-      # files: `rift` (the agent), `rift-cli` and `rift.default.toml`. Both
-      # binaries are cut from the same tag and upstream says to keep them in
-      # sync, so one derivation installs all three.
       mkRift =
         pkgs:
         pkgs.stdenv.mkDerivation {
@@ -28,7 +21,7 @@
 
           src = pkgs.fetchurl {
             url = "https://github.com/acsandmann/rift/releases/download/v${version}/rift-universal-macos-${version}.tar.gz";
-            hash = "sha256-ItRYSb8ZYERxXUmczcaUzyThj5JDSq+RdmBYa1u4UnY=";
+            hash = "sha256-wOJb7GcByJZ1GvZKeH3f79h0bKlXgLM8+GsIlPNCO5Q=";
           };
 
           sourceRoot = ".";

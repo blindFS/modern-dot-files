@@ -200,6 +200,15 @@
               ];
             }
             {
+              display = "󰋁 Grid Click";
+              key = "G";
+              starting_role = "Window";
+              actions = [
+                "GridMove"
+                "Click"
+              ];
+            }
+            {
               display = "󱄊 Clear System Notification";
               key = "NC";
               starting_role = "Any";

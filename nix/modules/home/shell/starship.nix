@@ -77,7 +77,7 @@ in
           character = {
             success_symbol = txt-fg-bg "" cs.black cs.white;
             error_symbol = txt-fg-bg "󰊠" cs.warn cs.white;
-            vimcmd_symbol = txt-fg-bg "" cs.yellow cs.white;
+            vimcmd_symbol = txt-fg-bg "" cs.grey cs.white;
             format = "${txt-fg "▓" cs.white}[ $symbol ](bg:${cs.white})${indicator}";
           };
 

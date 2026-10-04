@@ -71,7 +71,7 @@
             mouse_hides_on_focus = true;
 
             layout = {
-              mode = "traditional";
+              mode = "scrolling";
               gaps = {
                 outer = {
                   top = 30;
