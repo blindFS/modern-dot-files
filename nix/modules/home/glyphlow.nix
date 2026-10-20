@@ -88,7 +88,18 @@
             }
           ];
           workflows = [
-
+            {
+              display = "󰆟 ScreenShot";
+              key = "R";
+              starting_role = "Any";
+              actions = [ "ScreenShot" ];
+            }
+            {
+              display = "󰅇 Read Clipboard";
+              key = "C";
+              starting_role = "Window";
+              actions = [ "ReadClipboard" ];
+            }
             {
               display = " ProofRead";
               key = "AO";
@@ -204,8 +215,31 @@
               key = "G";
               starting_role = "Window";
               actions = [
-                "GridMove"
-                "Click"
+                {
+                  Repeat = [
+                    99
+                    [
+                      "GridMove"
+                      "Click"
+                    ]
+                  ];
+                }
+              ];
+            }
+            {
+              display = " 99 Hint Press";
+              key = "9";
+              starting_role = "Window";
+              actions = [
+                {
+                  Repeat = [
+                    99
+                    [
+                      { Activate = "Clickable"; }
+                      { Sleep = 1000; }
+                    ]
+                  ];
+                }
               ];
             }
             {

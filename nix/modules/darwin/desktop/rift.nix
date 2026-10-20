@@ -66,12 +66,12 @@
             animate = true;
             animation_duration = 0.3;
             default_disable = false;
-            focus_follows_mouse = true;
-            mouse_follows_focus = true;
+            focus_follows_mouse = false;
+            mouse_follows_focus = false;
             mouse_hides_on_focus = true;
 
             layout = {
-              mode = "scrolling";
+              mode = "traditional";
               gaps = {
                 outer = {
                   top = 30;

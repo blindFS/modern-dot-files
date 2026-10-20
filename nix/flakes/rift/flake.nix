@@ -11,7 +11,7 @@
       ];
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
 
-      version = "0.6.4";
+      version = "0.7.0";
 
       mkRift =
         pkgs:
@@ -21,7 +21,7 @@
 
           src = pkgs.fetchurl {
             url = "https://github.com/acsandmann/rift/releases/download/v${version}/rift-universal-macos-${version}.tar.gz";
-            hash = "sha256-wOJb7GcByJZ1GvZKeH3f79h0bKlXgLM8+GsIlPNCO5Q=";
+            hash = "sha256-ZbJcZm0mYXRD8vT8im17TRr8pXEM1oMgjxQxZDILAAE=";
           };
 
           sourceRoot = ".";
