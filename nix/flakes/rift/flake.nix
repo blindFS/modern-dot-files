@@ -10,63 +10,10 @@
         "aarch64-darwin"
       ];
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
-
-      version = "0.7.0";
-
-      mkRift =
-        pkgs:
-        pkgs.stdenv.mkDerivation {
-          pname = "rift";
-          inherit version;
-
-          src = pkgs.fetchurl {
-            url = "https://github.com/acsandmann/rift/releases/download/v${version}/rift-universal-macos-${version}.tar.gz";
-            hash = "sha256-ZbJcZm0mYXRD8vT8im17TRr8pXEM1oMgjxQxZDILAAE=";
-          };
-
-          sourceRoot = ".";
-
-          installPhase = ''
-            runHook preInstall
-            install -Dm755 rift $out/bin/rift
-            install -Dm755 rift-cli $out/bin/rift-cli
-            install -Dm644 rift.default.toml $out/share/rift/rift.default.toml
-            runHook postInstall
-          '';
-
-          # The artifact is a `lipo` of two separately signed slices, and lipo
-          # merges the slices but not their signatures, so the fat binary's
-          # signature does not validate. macOS TCC keys an Accessibility grant to
-          # the code signature, so with none the grant can never be recorded and
-          # rift re-prompts for permission forever. An ad-hoc re-sign gives it a
-          # real designated requirement. This must be postFixup: fixupPhase
-          # strips the binary, and any write invalidates a signature.
-          postFixup = ''
-            /usr/bin/codesign --force --sign - $out/bin/rift $out/bin/rift-cli
-          '';
-
-          doInstallCheck = true;
-          installCheckPhase = ''
-            runHook preInstallCheck
-            test "$($out/bin/rift --version)" = "rift ${version}"
-            test "$($out/bin/rift-cli --version)" = "rift-cli ${version}"
-            /usr/bin/codesign --verify --strict $out/bin/rift
-            /usr/bin/codesign --verify --strict $out/bin/rift-cli
-            runHook postInstallCheck
-          '';
-
-          meta = {
-            description = "A tiling window manager for macOS";
-            homepage = "https://github.com/acsandmann/rift";
-            license = pkgs.lib.licenses.asl20;
-            platforms = systems;
-            mainProgram = "rift";
-          };
-        };
     in
     {
       packages = forAllSystems (pkgs: rec {
-        rift = mkRift pkgs;
+        rift = pkgs.rift-wm;
         default = rift;
       });
 
