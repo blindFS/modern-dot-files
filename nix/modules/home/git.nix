@@ -47,9 +47,9 @@ in
         enableNushellIntegration = false;
         settings = {
           gui.nerdFontsVersion = "3";
-          git.pagers = [
+          git.diffRenderers = [
             {
-              pager = "delta --paging=never";
+              command = "delta --paging=never";
               colorArg = "always";
             }
           ];

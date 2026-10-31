@@ -16,8 +16,10 @@
         settings = {
           theme = {
             menu_font = "${self.font.monofont}:18";
+            shadow_color = "${self.theme.colors.cyan}d0";
           };
           visibility_checking_level = "Loose";
+          electron_intial_wait_ms = 1000;
           hide_scrolling_menu = true;
           colored_frame_min_size = 100;
           element_min_width = 15;
@@ -221,6 +223,7 @@
                     [
                       "GridMove"
                       "Click"
+                      { Sleep = 100; }
                     ]
                   ];
                 }
